@@ -1,0 +1,48 @@
+﻿@model ProyectoXalli_Gentelella.Models.Menu
+
+@{
+    ViewBag.Title = "Catálogos";
+}
+
+@Styles.Render("~/Content/datatableCSS")
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Lista de Platillos</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a onclick="CargarParcial('/Menus/Create')"><i class="fa fa-plus"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="form-group">
+                    <div class="col-md-offset-8">
+                        <input id="filtro" class="form-control" type="text" autocomplete="off" placeholder="Buscar Platillo" style="margin-top:25px" disabled>
+                    </div>
+                </div>
+                <div class="row" id="menuAdd"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Catalogos/menu.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/jquery.smartWizard.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+    </script>
+}

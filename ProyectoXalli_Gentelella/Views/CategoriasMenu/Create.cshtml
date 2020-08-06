@@ -1,0 +1,90 @@
+﻿@model ProyectoXalli_Gentelella.Models.CategoriaMenu
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+
+        @using (Html.BeginForm("Create", "CategoriasMenu", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" })) {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div data-parsley-validate class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        @Html.Label("Código", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.CodigoCategoriaMenu, new { htmlAttributes = new { @class = "form-control col-md-2 col-sm-2 col-xs-2", @maxlength = 3, @autocomplete = "off", @id = "codigoCatMenu", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.CodigoCategoriaMenu, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        <label>
+                            @Html.CheckBoxFor(model => model.EstadoCategoriaMenu, new { @class = "js-switch col-md-2 col-sm-2 col-xs-2", @readonly = "readonly", @checked = "checked" })
+                            @Html.ValidationMessageFor(model => model.EstadoCategoriaMenu, "", new { @class = "text-danger" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.Label("Área", htmlAttributes: new { @class = "col-md-3 col-sm-3 col-xs-4" })
+                        @Html.DropDownList("BodegaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "categoria" })
+                        @Html.ValidationMessageFor(model => model.BodegaId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.Label("Categoría", htmlAttributes: new { @class = "col-md-3 col-sm-3 col-xs-4" })
+                        @Html.EditorFor(model => model.DescripcionCategoriaMenu, new { htmlAttributes = new { @class = "form-control", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.DescripcionCategoriaMenu, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                        <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    //INICIALIZAR EL SWITCHERY
+    $(document).ready(function () {
+        var elem = document.querySelector('.js-switch');
+        var init = new Switchery(elem);
+
+        //CARGA EL CODIGO DE CATEGORIA
+        $.ajax({
+            type: "GET",
+            url: "/CategoriasMenu/SearchCode",
+            success: function (data) {
+                $("#codigoCatMenu").val(data);
+            }
+        });
+    });
+
+    //INICIALIZAR EL SELECT2
+    $('.js-example-basic-single').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+</script>

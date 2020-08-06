@@ -1,0 +1,94 @@
+﻿@model ProyectoXalli_Gentelella.Models.Menu
+
+@{
+    Layout = null;
+}
+
+<style>
+
+    .prod_title {
+        border-bottom: 0 !important;
+        margin: 0 !important;
+        margin-bottom: 10px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <h1 id="titulo" class="prod_title" style="text-align:center;"></h1>
+        <div class="x_content">
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="product-image">
+                    <img id="img" />
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12" style="border:0px solid #e5e5e5;">
+
+                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">General</a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Ingredientes</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                            <p id="tiempo"></p>
+                            <p id="categoria"></p>
+                            <p id="precio"></p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                            <div class="">
+                                <ul id="ingredientes" class="list-inline prod_color">
+                                    <!--AQUI VAN LOS INGREDIENTES-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Menus/getMenuItem/" + @Model.Id,
+            dataType: "JSON",
+            success: function (data) {
+                $("#titulo").text(data.menu.Platillo);
+                $("#tiempo").text("Tiempo de preparación: " + data.menu.Tiempo);
+                $("#categoria").text("Categoría: " + data.menu.Categoria);
+                $("#precio").text("Precio: $" + data.menu.Precio);
+                //INSERTAR IMAGEN
+                $("#img").attr("src", data.menu.Ruta);
+            }
+        });
+
+
+        $.ajax({
+             type: "GET",
+            url: "/Menus/getDataIngredientes/" + @Model.Id,
+            dataType: "JSON",
+            success: function (data) {
+                //INSERTAR INGREDIENTES
+                var agregar = "";
+
+                for (var i = 0; i < data.length; i++) {
+                    //INSERTAR LAS ETIQUETAS DONDE IRAN LOS INGREDIENTES
+                    agregar += "<li> <p>" + data[i] + "</p> </li>";
+                }
+
+                $("#ingredientes").html(agregar);
+            }
+        });
+    });
+
+</script>

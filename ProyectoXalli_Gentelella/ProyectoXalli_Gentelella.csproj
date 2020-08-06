@@ -183,7 +183,9 @@
     <Compile Include="Areas\API\APIAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
+    <Compile Include="Controllers\Catalogos\CategoriasMenuController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
+    <Compile Include="Controllers\Catalogos\MenusController.cs" />
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
     <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
@@ -470,6 +472,13 @@
     <Content Include="Views\Proveedores\Create.cshtml" />
     <Content Include="Views\Proveedores\Edit.cshtml" />
     <Content Include="Views\Proveedores\Details.cshtml" />
+    <Content Include="Views\Menus\Index.cshtml" />
+    <Content Include="Views\Menus\Create.cshtml" />
+    <Content Include="Views\Menus\Edit.cshtml" />
+    <Content Include="Views\Menus\Details.cshtml" />
+    <Content Include="Views\CategoriasMenu\Index.cshtml" />
+    <Content Include="Views\CategoriasMenu\Create.cshtml" />
+    <Content Include="Views\CategoriasMenu\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,304 @@
+﻿@model ProyectoXalli_Gentelella.Models.Menu
+
+@{
+    Layout = null;
+}
+
+<style>
+    /*PARA MOSTRAR EL PRIMER STEP*/
+    .form_wizard .stepContainer {
+        min-height: 150px !important;
+    }
+</style>
+
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="wizard" class="form_wizard wizard_horizontal">
+            <ul class="wizard_steps">
+                <li>
+                    <a href="#step-1">
+                        <span class="step_no">1</span>
+                        <span class="step_descr">
+                            Paso 1<br />
+                            <small>Edita el Platillo</small>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#step-2">
+                        <span class="step_no">2</span>
+                        <span class="step_descr">
+                            Paso 2<br />
+                            <small>Edita su Receta</small>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#step-3">
+                        <span class="step_no">3</span>
+                        <span class="step_descr">
+                            Paso 3<br />
+                            <small>Edita su Imagen</small>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <div class="stepContainer">
+
+                <div id="step-1">
+
+                    <div class="form-horizontal form-label-left">
+
+                        <div class="col-md-9 center-margin">
+
+                            <div class="form-group col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Código", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
+                                <input id="codigoMenu" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="3" autocomplete="off" readonly>
+                            </div>
+
+                            <div class="form-group col-md-8 col-sm-8 col-xs-8">
+                                @Html.Label("Descripción", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
+                                <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="50" autocomplete="off" style="text-transform:capitalize !important;">
+                            </div>
+
+                            <div class="form-group col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Precio", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
+                                <input id="precio" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" autocomplete="off">
+                            </div>
+
+                            <div class="form-group col-md-8 col-sm-8 col-xs-8">
+                                @Html.Label("Categoría", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
+                                @Html.DropDownList("CategoriaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control col-md-2 col-sm-2 col-xs-2", @id = "categoria", @Style = "width:100%" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="step-2">
+
+                    <div class="col-md-8 center-margin">
+
+                        <div class="form-group col-md-9 col-sm-9 col-xs-9">
+                            @Html.Label("Tiempo estimado de preparación", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                            <input id="tiempo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="10" autocomplete="off">
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                            @Html.Label("Activo", htmlAttributes: new { @class = " col-md-12 col-sm-12 col-xs-12" })
+                            <label>
+                                <input type="checkbox" class="js-switch activo" id="activo" onclick="Check()" />
+                            </label>
+                        </div>
+
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            @Html.Label("Producto", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                            <select class="js-example-basic-single form-control" id="ingredientes" style="width:100%!important;" multiple></select>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div id="step-3">
+                    <div class="col-md-8 center-margin">
+
+                        <div>
+                            <label class="btn btn-default search-file-btn">
+                                <input id="file" name="file1" type="file" accept="image/*" style="display:None;"> <span>Examinar</span>
+                            </label>
+                            <span class="label label-default">
+                                ✓ @Model.DescripcionMenu
+                                <script src="~/Scripts/Catalogos/menuItem.js"></script>
+                            </span>
+                        </div>
+
+
+                        <div id="preview" class="img-preview preview-md">
+                            <img id="img" style="width:100%;height:200px;" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>       <!-- End SmartWizard Content -->
+        </div>
+    </div>
+</div>
+
+<script>
+    //CAMBIAR EL MENU POR CATEGORIAS
+    $("#categoria").on("change", function () {
+        comboBx();
+    });
+
+
+    //INICIALIZAR EL SELECT2
+    $('.js-example-basic-single').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+
+    var elem, init;
+
+    $(document).ready(function () {
+
+        //INICIALIZARDOR DE MASCARA FORMATO PRECIO
+        $("#precio").mask('0,000.00', { reverse: true });
+
+        comboBx();
+
+        //CARGA LAS PRESENTACIONES DEL PRODUCTO
+        $.ajax({
+            type: "GET",
+            url: '/Menus/ProductoPresentacion',
+            dataType: 'JSON',
+            success: function (data) {
+
+                var agregar = "";
+
+                for (var i = 0; i < Object.keys(data).length; i++) {
+                    agregar += '<option value="' + data[i].Id + '">' + data[i].Presentacion + '</option>';
+                }
+
+                $("#ingredientes").append(agregar);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+
+        //FUNCION PARA MOSTRAR EL PLATILLO SELECICONADO
+        $.ajax({
+            type: "GET",
+            url: "/Menus/getMenuItem/" + @Model.Id,
+            success: function (data) {
+                $("#codigoMenu").val(data.menu.codigoMenu);
+                $("#platillo").val(data.menu.Platillo);
+                //ACTIVAR EL SWITCHERY
+                if (data.menu.Estado) {
+                    elem.click();
+                }
+                $("#precio").val(data.menu.Precio);
+                $("#tiempo").val(data.menu.Tiempo);
+                //INSERTAR IMAGEN
+                $("#img").attr("src", data.menu.Ruta);
+
+                //var ing = (data.ingredientes);
+
+                //console.log(ing);
+                //SELECCIONA LOS INGREDIENTES DEL PLATILLO POR DEFAULT
+                $('#ingredientes').select2({}).select2('val', (data.ingredientes));
+                $('#ingredientes').trigger('change'); // Notify any JS components that the value changed
+            },
+            error: function () {
+                Alert("Error al almacenar", "Intentelo de nuevo", "error");
+            }
+        });//FIN AJAX
+
+        //INICIALIZADOR DE STEP WIZARD
+        $('#wizard').smartWizard();
+
+        //INICIALIZAR EL CHECKBOX
+        elem = document.querySelector('.js-switch');
+        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+    });
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function Check() {
+
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elem.checked) {
+
+            swal({
+                title: "¿Desea desactivar el registro?",
+                icon: "warning",
+                buttons: {
+                    activar: {
+                        text: "No",
+                        value: "activar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    },
+                    desactivar: {
+                        text: "Sí",
+                        value: "desactivar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    }
+                }//FIN DE BUTTONS
+            })//FIN DEL SWAL
+
+                .then((value) => {
+                    switch (value) {
+
+                        case "activar":
+                            //ACTIVAR EL CHKBOX
+                            elem.click();
+                            break;
+
+                        case "desactivar":
+                            //DESACTIVAR EL CHKBOX
+                            swal.close();
+                            break;
+
+                        default:
+                            {
+                                swal.close();
+                            }
+                    }//FIN SWITCH
+                });//FIN THEN
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
+
+    //SCRIPT PARA CARGAR UNA IMAGEN AUTOMATICAMENTE
+    document.getElementById("file").onchange = function (e) {
+        // Creamos el objeto de la clase FileReader
+        let reader = new FileReader();
+
+        // Leemos el archivo subido y se lo pasamos a nuestro fileReader
+        reader.readAsDataURL(e.target.files[0]);
+
+        // Le decimos que cuando este listo ejecute el código interno
+        reader.onload = function () {
+            let preview = document.getElementById('preview'),
+                image = document.getElementById('img');
+
+            image.src = reader.result;
+
+            preview.innerHTML = '';
+            preview.append(image);
+        };
+    }
+
+    //EDITAR EL NOMBRE DEL ARCHIVO EN LA ETIQUETA
+    $().ready(function ($) {
+        $('.search-file-btn').children("input").bind('change', function () {
+            var fileName = '';
+            fileName = $(this).val().split("\\").slice(-1)[0];
+            $(this).parent().parent().children("span").html(fileName);
+        })
+    });
+
+    //CARGA LOS INGREDIENTES DEL MENU
+    function comboBx() {
+        $.ajax({
+            type: "GET",
+            url: "/Menus/ComprobarArea/" + $("#categoria").val(),//MANDO EL ID DE LA CATEGORIA
+            dataType: "JSON",
+            success: function (bar) {
+                //SI LA CATEGORIA CORRESPONDE AL AREA DE BAR
+                if (bar === true) {
+                    $("#ingredientes").removeAttr("multiple");
+                } else {
+                    $("#ingredientes").attr("multiple", true);
+                }
+            }
+        });
+    }
+</script>
