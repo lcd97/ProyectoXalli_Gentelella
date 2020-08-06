@@ -191,6 +191,7 @@
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
     <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
+    <Compile Include="Controllers\Catalogos\TiposDePagoController.cs" />
     <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -489,6 +490,9 @@
     <Content Include="Views\Meseros\Create.cshtml" />
     <Content Include="Views\Meseros\Edit.cshtml" />
     <Content Include="Views\Meseros\Details.cshtml" />
+    <Content Include="Views\TiposDePago\Index.cshtml" />
+    <Content Include="Views\TiposDePago\Create.cshtml" />
+    <Content Include="Views\TiposDePago\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
