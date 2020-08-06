@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "Ordenes";
+}
+
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Orden <small>Hotel Xalli</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div data-parsley-validate class="form-horizontal form-label-left">
+
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-2 col-xs-4">
+                            <label>Código</label>
+                            <input id="codigoOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-4 xdisplay_inputx form-group has-feedback">
+                            <label>Fecha</label>
+                            <input type="text" class="form-control has-feedback-left" id="fechaOrden">
+                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+
+
+                        <div class="col-md-3 col-sm-3 col-xs-4 xdisplay_inputx form-group has-feedback">
+                            <label>Hora</label>
+                            <input type="text" class="form-control has-feedback-left" id='Hora' disabled>
+                            <span class="fa fa-clock-o form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+
+
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <label class="col-md-4 col-sm-4 col-xs-4">Mesero</label>
+                            <input id="mesero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-1 col-sm-1 col-xs-4">
+                            <label class="col-md-12 col-sm-12 col-xs-12" id="titleCliente">Visitante</label>
+                            <input type="checkbox" class="js-switch" checked id="tipoCliente" />
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-4">
+                            <label>Identificación</label>
+                            <input id="identificacion" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                        </div>
+
+                        <div class="col-md-1 col-sm-1 col-xs-1" style="margin-top: 25px !important;">
+                            <button type="button" onclick="CargarParcial('/Busquedas/BuscarCliente/')" class="btn btn-primary" data-toggle="tooltip" id="buscarCliente" title="Buscar el cliente" disabled><i class="fa fa-search"></i></button>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-4">
+                            <label>Cliente</label>
+                            <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-4">
+                            <label>Número RUC</label>
+                            <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                        </div>
+
+                        <div class="col-md-1 col-sm-1 col-xs-6" style="margin-top: 25px !important;">
+                            <button type="button" onclick="guardarOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda la entrada">Terminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Menu</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <label>Categoría</label>
+                            @Html.DropDownList("CategoriaId", null, "Seleccione", htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "categoria" })
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <input id="filtro" class="form-control" type="text" autocomplete="off" placeholder="Buscar Platillo" style="margin-top:25px" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="menuCategory">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-6 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Detalle</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="form-horizontal form-label-left">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table jambo_table bulk_action" id="productTable">
+                                <thead>
+                                    <tr class="headings">
+                                        <th class="column-title">Platillo </th>
+                                        <th class="column-title">P/U </th>
+                                        <th class="column-title">Cantidad </th>
+                                        <th class="column-title">Precio Total </th>
+                                        <th class="column-title no-link last">
+                                            <span class="nobr">Acciones</span>
+                                        </th>
+                                        <th class="bulk-actions" colspan="7">
+                                            <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table_body">
+                                    <!--AQUI VA LA LISTA DE LOS PRODUCTOS-->
+
+                                </tbody>
+                                <tfoot>
+                                    <tr class="even pointer">
+                                        <td class="" colspan="2"></td>
+                                        <td class="column-title" Style="text-align: center;">Total</td>
+                                        <td class="" id="total">C$ 0.00</td>
+                                        <td class=""></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Movimientos/ordenes.js"></script>
+    <script src="~/Scripts/Catalogos/menu.js"></script>
+    <script src="~/Scripts/jquery.bootstrap-touchspin.js"></script>
+    <script src="~/Scripts/Busquedas/clientesB.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+    </script>
+}

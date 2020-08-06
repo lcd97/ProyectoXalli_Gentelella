@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div data-parsley-validate class="form-horizontal form-label-left">
+
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label>Platillo</label>
+                    <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <label>Cantidad</label>
+                    <input name="cantidadOrden" id="cantidadOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="2" autocomplete="off" value="1">
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <label>Precio</label>
+                    <input id="precioOrden" class="form-control" type="text" autocomplete="off" readonly prefix="$">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label>Nota</label>
+                    <input id="notaOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cancelar</a>
+                    <a onclick="addDetails()" class="btn btn-success">Guardar</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#notaOrden").focus();
+    });
+
+    //INICIALIZADOR DE TOUCHSPIN CANTIDAD
+    $("input[name='cantidadOrden']").TouchSpin({
+        min: 1,
+        step: 1,
+    });
+</script>
