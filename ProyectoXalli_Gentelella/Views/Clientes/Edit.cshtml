@@ -1,0 +1,179 @@
+﻿@model ProyectoXalli_Gentelella.Models.Cliente
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+        <div data-parsley-validate class="form-horizontal form-label-left">
+
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    @Html.Label("Documento", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <input class="form-control col-md-2 col-sm-2 col-xs-2" id="documento" disabled />
+                </div>
+
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    @Html.Label("Número", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="numero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="16" autocomplete="off" disabled style="text-transform:uppercase">
+                </div>
+
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <label>
+                        @Html.CheckBoxFor(model => model.EstadoCliente, new { @class = "js-switch col-md-6 col-sm-6 col-xs-6", @id = "estado", @onclick = "Check()" })
+                        @Html.ValidationMessageFor(model => model.EstadoCliente, "", new { @class = "text-danger" })
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase">
+                </div>
+
+                <div class="col-md-5 col-sm-5 col-xs-12">
+                    @Html.Label("Correo Electrónico", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <input id="email" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    @Html.Label("Teléfono", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="telefono" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="ln_solid"></div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                    <button type="button" onclick="editCustomer(@Model.Id)" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var elem, init;
+
+    //INICIALIZAR EL CHECKBOX
+    $(document).ready(function () {
+
+        elem = document.querySelector('.js-switch');
+        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+    });
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function Check() {
+
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elem.checked) {
+
+            swal({
+                title: "¿Desea desactivar el registro?",
+                icon: "warning",
+                buttons: {
+                    activar: {
+                        text: "No",
+                        value: "activar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    },
+                    desactivar: {
+                        text: "Sí",
+                        value: "desactivar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    }
+                }//FIN DE BUTTONS
+            })//FIN DEL SWAL
+
+                .then((value) => {
+                    switch (value) {
+
+                        case "activar":
+                            //ACTIVAR EL CHKBOX
+                            elem.click();
+                            break;
+
+                        case "desactivar":
+                            //DESACTIVAR EL CHKBOX
+                            swal.close();
+                            break;
+
+                        default:
+                            {
+                                swal.close();
+                            }
+                    }//FIN SWITCH
+                });//FIN THEN
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
+    //INICIALIZAR EL SELECT2
+    $('.js-example-basic-single').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+
+    //CARGA LOS DATOS DEL CLIENTE PARA LA EDICION
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Clientes/getCustomer/" + @Model.Id,
+            dataType: "JSON",
+            success: function (data) {
+                $("#nombre").val(data.Nombre);
+                $("#apellido").val(data.Apellido);
+                $("#numero").val(data.Documento);
+                $("#ruc").val(data.RUC);
+                $("#email").val(data.Email);
+                $("#telefono").val(data.Telefono);
+
+                if (data.TipoDocumento == 1) {
+                    $("#documento").val("Cédula");
+                } else {
+                    $("#documento").val("Pasaporte");
+                }
+            }
+        });
+
+        //MASCARA PARA NUMERO TELEFONICO
+        $("#telefono").mask("0000-0000");
+        //MASCARA PARA EL NUMERO RUC
+        $("#ruc").mask("A000000000000B", {
+            translation: {
+                'A': { pattern: /[0-6-EeJjNnRr]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+                'B': { pattern: /[0-9-A-Z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+                /*
+                 FORMATO DE RUC - PRIMERA LETRA
+                 PERSONA JURIDICA : J
+                 PERSONA NATURAL SIN CEDULA : N
+                 PERSONA NATURAL CON CEDULA : NUMERO DE CEDULA ( 0 - 6 )
+                 PERSONA RESIDENTE : R
+                 PERSONA NO RESIDENTE : E
+                 */
+            }
+        });
+    });
+</script>

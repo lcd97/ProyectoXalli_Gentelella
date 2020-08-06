@@ -1,0 +1,62 @@
+﻿@model ProyectoXalli_Gentelella.Models.Mesero
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12 profile_details">
+                <div class="col-sm-12">
+                    <div class="left col-xs-7">
+                        <h2 id="nombres"></h2>
+                        <ul class="list-unstyled" id="agregar"></ul>
+                        <p id="Horario"></p>
+                    </div>
+                    <div class="right col-xs-5">
+                        <img src="~/images/user.png" alt="user" class="img-circle img-responsive">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="ln_solid"></div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Meseros/getMeseros/" + @Model.Id,
+            success: function (data) {
+                var r;
+
+                $("#nombres").html(data.Nombre + " " + data.Apellido);
+                var agregarID = '<li><i class="fa fa-list-alt"></i> Cédula: ' + data.Cedula + '</li>';
+                $("#agregar").append(agregarID);
+
+                var agregarInss = '<li><i class="fa fa-plus-square"></i> INSS: ' + data.Inss + '</li>';
+                $("#agregar").append(agregarInss);
+
+                if (data.RUC != null) {
+                    r = data.RUC;
+                } else {
+                    r = "N/A";
+                }
+
+                var agregarRuc = '<li><i class="fa fa-calculator"></i> RUC: ' + r + '</li>';
+                $("#agregar").append(agregarRuc);
+
+                $("#Horario").html("Horario Laboral: " + data.EntradaH + " - " + data.SalidaH);
+            }
+        });
+    });
+</script>

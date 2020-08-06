@@ -1,0 +1,185 @@
+﻿@model ProyectoXalli_Gentelella.Models.Mesero
+
+@{
+    Layout = null;
+}
+
+
+<div class="row">
+    <div class="x_content">
+        <div data-parsley-validate class="form-horizontal form-label-left">
+
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("Activo", htmlAttributes: new { @class = " col-md-12 col-sm-12 col-xs-12" })
+                    <label>
+                        <input type="checkbox" class="js-switch activo" id="activo" onclick="Check()" />
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("Cédula", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" disabled style="text-transform:uppercase;">
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("INSS", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" disabled>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <hr />
+                <h4 style="text-align:center !important;"><strong>Horario Laboral</strong></h4>
+                <br />
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Hora Entrada", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <div class="input-group date" id="hentrada">
+                        <span class="input-group-addon">
+                            <span class="fa fa-clock-o"></span>
+                        </span>
+                        <input type='text' class="form-control" id="entrada" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Hora Salida", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <div class="input-group date" id="hsalida">
+                        <span class="input-group-addon">
+                            <span class="fa fa-clock-o"></span>
+                        </span>
+                        <input type='text' class="form-control" id="salida" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="ln_solid"></div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                    <button type="button" onclick="editWaiter()" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //MASCARA DEL NUMERO RUC
+    $("#ruc").mask("00000000000000", {
+        translation: {
+            '0': { pattern: /[0-9A-Za-z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+        }
+    });
+
+    //INICIALIZO LOS INPUT FECHAS CON FORMATO DE HORAS
+    $('#hentrada').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#hsalida').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#iturno').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#fturno').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    var elem, init;
+
+    //INICIALIZAR EL CHECKBOX
+    $(document).ready(function () {
+
+        elem = document.querySelector('.js-switch');
+        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        //CARGAR LOS DATOS A LA VISTA
+        $.ajax({
+            type: "GET",
+            url: "/Meseros/getMeseros/" + @Model.Id,
+            success: function (data) {
+                //ASIGNO LOS DATOS DE LOS MESEROS
+                $("#nombre").val(data.Nombre);
+                $("#apellido").val(data.Apellido);
+                $("#cedula").val(data.Cedula);
+                $("#inss").val(data.Inss);
+                $("#ruc").val(data.RUC);
+                $("#entrada").val(data.EntradaH);
+                $("#salida").val(data.SalidaH);
+                $("#tInicio").val(data.TurnoI);
+                $("#tFin").val(data.TurnoF);
+
+                if (data.Estado) {
+                    elem.click();
+                }
+            }
+        });
+    });
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function Check() {
+
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elem.checked) {
+
+            swal({
+                title: "¿Desea desactivar el registro?",
+                icon: "warning",
+                buttons: {
+                    activar: {
+                        text: "No",
+                        value: "activar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    },
+                    desactivar: {
+                        text: "Sí",
+                        value: "desactivar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    }
+                }//FIN DE BUTTONS
+            })//FIN DEL SWAL
+
+                .then((value) => {
+                    switch (value) {
+
+                        case "activar":
+                            //ACTIVAR EL CHKBOX
+                            elem.click();
+                            break;
+
+                        case "desactivar":
+                            //DESACTIVAR EL CHKBOX
+                            swal.close();
+                            break;
+
+                        default:
+                            {
+                                swal.close();
+                            }
+                    }//FIN SWITCH
+                });//FIN THEN
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
+</script>

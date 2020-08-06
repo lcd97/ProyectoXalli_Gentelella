@@ -185,7 +185,9 @@
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasMenuController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
+    <Compile Include="Controllers\Catalogos\ClientesController.cs" />
     <Compile Include="Controllers\Catalogos\MenusController.cs" />
+    <Compile Include="Controllers\Catalogos\MeserosController.cs" />
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
     <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
@@ -479,6 +481,14 @@
     <Content Include="Views\CategoriasMenu\Index.cshtml" />
     <Content Include="Views\CategoriasMenu\Create.cshtml" />
     <Content Include="Views\CategoriasMenu\Edit.cshtml" />
+    <Content Include="Views\Clientes\Index.cshtml" />
+    <Content Include="Views\Clientes\Create.cshtml" />
+    <Content Include="Views\Clientes\Edit.cshtml" />
+    <Content Include="Views\Clientes\Details.cshtml" />
+    <Content Include="Views\Meseros\Index.cshtml" />
+    <Content Include="Views\Meseros\Create.cshtml" />
+    <Content Include="Views\Meseros\Edit.cshtml" />
+    <Content Include="Views\Meseros\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

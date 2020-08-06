@@ -1,0 +1,119 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+        <div data-parsley-validate class="form-horizontal form-label-left">
+
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("Cédula", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("INSS", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required style="text-transform:uppercase;">
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <hr />
+                <h4 style="text-align:center !important;"><strong>Horario Laboral</strong></h4>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Hora Entrada", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <div class="input-group date" id="hentrada">
+                        <span class="input-group-addon">
+                            <span class="fa fa-clock-o"></span>
+                        </span>
+                        <input type='text' class="form-control" id="entrada" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Hora Salida", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    <div class="input-group date" id="hsalida">
+                        <span class="input-group-addon">
+                            <span class="fa fa-clock-o"></span>
+                        </span>
+                        <input type='text' class="form-control" id="salida" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="ln_solid"></div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                    <button type="button" onclick="saveWaiter()" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#hentrada').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#hsalida').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#iturno').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    $('#fturno').datetimepicker({
+        format: 'hh:mm A'
+    });
+
+    //MASCARA DE NUMERO TELEFONICO
+    $("#inss").mask("0000000-0");
+
+    //MASCARA PARA NUMERO TELEFONICO
+    $("#telefono").mask("0000-0000");
+    //MASCARA PARA EL NUMERO RUC
+    $("#ruc").mask("A000000000000B", {
+        translation: {
+            'A': { pattern: /[0-6-EeJjNnRr]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+            'B': { pattern: /[0-9-A-Za-z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+            /*
+             FORMATO DE RUC - PRIMERA LETRA
+             PERSONA JURIDICA : J
+             PERSONA NATURAL SIN CEDULA : N
+             PERSONA NATURAL CON CEDULA : NUMERO DE CEDULA ( 0 - 6 )
+             PERSONA RESIDENTE : R
+             PERSONA NO RESIDENTE : E
+             */
+        }
+    });
+    $("#cedula").mask("A00-000000-0000B", {
+        translation: {
+            'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+            'B': { pattern: /[A-Za-z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        }
+    });
+</script>

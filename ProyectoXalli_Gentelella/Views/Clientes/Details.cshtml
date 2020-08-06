@@ -1,0 +1,68 @@
+﻿@model ProyectoXalli_Gentelella.Models.Cliente
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_content">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div>
+                        <div class="list-unstyled top_profiles scroll-view">
+                            <div class="media event">
+                                <div class="media-body" id="agregar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="ln_solid"></div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                        <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Clientes/getCustomer/" + @Model.Id,
+            success: function (data) {
+                var agregar = "", correo="N/A", telefono="N/A";
+
+                if (data.Email != null) {
+                    correo = data.Email;
+                }
+
+                if (data.Telefono != null) {
+                    correo = data.Telefono;
+                }
+
+
+                agregar += '<h3 class="title" style="text-align:center!important;"><i class="fa fa-user">' +
+                    '</i>&nbsp;&nbsp;' + data.Nombre + " " + data.Apellido + '</h3></br>';
+
+                agregar += '<p><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<strong>Documento: </strong><small>' + data.Documento + '</small></p>';
+                agregar += '<p><i class="fa fa-at"></i>&nbsp;&nbsp;<strong>Correo: </strong><small>' + correo + '</small></p>';
+                agregar += '<p><i class="fa fa-phone"></i>&nbsp;&nbsp;<strong>Telefono: </strong><small>' + telefono + '</small></p>';
+
+                if (data.RUC != null) {
+                    agregar += '<p><i class="fa fa-calculator"></i>&nbsp;&nbsp;<strong>RUC: </strong><small>' + data.RUC + '</small></p>';
+                } else {
+                    agregar += '<p><i class="fa fa-calculator"></i>&nbsp;&nbsp;<strong>RUC: </strong><small>N/A</small></p>';
+                }
+
+                $("#agregar").append(agregar);
+
+            }
+        });
+    });
+</script>
