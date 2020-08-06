@@ -1,45 +1,381 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@ViewBag.Title - Xalli Hotel</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/switchery.css" rel="stylesheet" />
+    <link href="~/Content/loading.css" rel="stylesheet" />
+
+    <style>
+        .nav-md {
+            padding-right: 0px !important;
+        }
+
+        .modal-open {
+            padding-right: 0px !important;
+            overflow: hidden !important;
+            overflow-y: scroll !important;
+            overflow-x: hidden !important;
+            position: fixed !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+
 
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Nombre de aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+<!--INICIO DEL BODY-->
+
+<body class="nav-md" onload="startTime()">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="@Url.Action("Index", "Home")" class="site_title col-lg-12" style="padding-top:5px !important">
+                            <img src="~/images/WhiteLogo.png" class="img-responsive" id="change">
+                        </a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <div class="profile clearfix">
+                        <div class="profile_pic">
+                            <img src="~/images/picture.jpg" alt="..." class="img-circle profile_img">
+                        </div>
+                        <div class="profile_info">
+                            <span>Welcome,</span>
+                            <h2>Daniela Cordero</h2>
+                        </div>
+                    </div>
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                        <!--SECCION DE DASHBOARD-->
+                        <div class="menu_section">
+                            <h3>Principal</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a href="@Url.Action("Index", "Home")">
+                                        <i class="fa fa-dashboard"></i>Dashboard
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!--SECCION DE MOVIMIENTOS PRINCIPALES-->
+                        <div class="menu_section">
+                            <h3>Movimientos</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a><i class="fa fa-truck"></i> Control de Insumos <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Entradas")">Entradas</a></li>
+                                        <li><a href="@Url.Action("Index", "Salidas")">Salidas</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-clipboard"></i> Ordenes <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Ordenes")">Nueva Orden</a></li>
+                                        <li><a href="@Url.Action("Index", "Ordenes")">Ver Ordenes</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-credit-card"></i>Facturación</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "Activar")"><i class="fa fa-check-circle"></i>Activar items</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!--SECCION DE CATALOGOS-->
+                        <div class="menu_section">
+                            <h3>Catálogos</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a><i class="fa fa-arrow-down"></i>Control de Insumos<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Bodegas")">Bodegas</a></li>
+                                        <li><a href="@Url.Action("Index", "CategoriasProducto")">Categorias</a></li>
+                                        <li><a href="@Url.Action("Index", "TiposDeEntrada")">Tipos de Entrada</a></li>
+                                        <li><a href="@Url.Action("Index", "UnidadesDeMedida")">Unidades de Medida</a></li>
+                                        <li><a href="@Url.Action("Index", "Productos")">Productos</a></li>
+                                        <li><a href="@Url.Action("Index", "Proveedores")">Proveedores</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-edit"></i>Menu<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Menus")">Platillos</a></li>
+                                        <li><a href="@Url.Action("Index", "CategoriasMenu")">Categorias</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-list-alt"></i>Orden<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Meseros")">Mesero</a></li>
+                                        <li><a href="@Url.Action("Index", "Clientes")">Clientes</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-money"></i>Facturación<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "TiposDePago")">Tipos de Pago</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!--SECCION BUSQUEDA Y REPORTES-->
+                        <div class="menu_section">
+                            <h3>BUSQUEDA &amp; REPORTES</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a><i class="fa fa-file-excel-o"></i>Consultas<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Bodegas")">Clientes Frecuentes</a></li>
+                                        <li><a href="@Url.Action("Index", "Categorias")">Estadísticas de Pago</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-line-chart"></i>Reportes<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="pages/forms/general.html">Producto más vendido</a></li>
+                                        <li><a href="pages/forms/advanced.html">Mesero más productivo</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!--SECCION SEGURIDAD-->
+                        <div class="menu_section">
+                            <h3>SEGURIDAD</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a><i class="fa fa-users"></i>Asignar/Editar<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "Bodegas")">Usuarios</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-tags"></i>Roles/Funciones<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="pages/forms/general.html">Asignar roles</a></li>
+                                        <li><a href="pages/forms/advanced.html">Agregar funciones</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="~/images/picture.jpg" alt="">Daniela Cordero
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a href="javascript:;">Perfil</a></li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="badge bg-red pull-right">50%</span>
+                                            <span>Configuración</span>
+                                        </a>
+                                    </li>
+                                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i>Salir</a></li>
+                                </ul>
+                            </li>
+
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="badge bg-green">6</span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        <a>
+                                            <span class="image"><img src="~/images/user.png" alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span class="image"><img src="~/images/user.png" alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span class="image"><img src="~/images/user.png" alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span class="image"><img src="~/images/user.png" alt="Profile Image" /></span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="text-center">
+                                            <a>
+                                                <strong>Mostrar todas las notificaciones</strong>
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+
+                <div class="">
+                    @RenderBody()
+                    @Html.Partial("_loading")
+                </div>
+
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    Xalli Hotel Ometepe, Rivas - All rights reserved - <strong>Copyright @DateTime.Now.Year </strong> - <b>Version</b> 2.1
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
-        </footer>
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/Scripts/fastclick.js"></script>
+    <!-- SWITCHERY JS -->
+    <script src="~/Scripts/switchery.js"></script>
+    <!--SWAL MODAL-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="~/Scripts/custom.js"></script>
+
+    <script>
+        //ESTABLECE LA HORA EN LA VISTA INDEX ORDENES
+        function startTime() {
+
+            clock = new Date();
+            hours = ((clock.getHours() + 11) % 12 + 1);
+
+            hour = fixTime(hours);
+            minutes = fixTime(clock.getMinutes());
+            seconds = fixTime(clock.getSeconds());
+            suffix = clock.getHours() >= 12 ? 'PM' : 'AM';
+
+            $("#Hora").val(hour + ":" + minutes + ":" + seconds + " " + suffix);
+
+            var time = setTimeout(function () { startTime(); }, 500);
+        }
+
+        //AGREGA EL 0 DE LA HORA, MINUTO O SEGUNDO SI ES MENOR A 10
+        function fixTime(time) {
+            return time < 10 ? "0" + time : time;
+        }
+
+        //PARA CARGAR EL LOADER EN CADA PETICION AJAX
+        $(document).ready(function () {
+            var screen = $('#Cargando'); //obtiene modal Cargando
+            configureLoadingScreen(screen); //llamada a metodo usando AJAX
+        });
+
+        //PARA CARGAR EL LOADER EN CADA PETICION AJAX
+        function configureLoadingScreen(screen) {  // metodo para mostrar Loader
+            $(document)
+                .ajaxStart(function () { //muestra imagen
+                    screen.modal("show");
+                    $('#Cargando').modal({ backdrop: 'static', keyboard: true });//EVITAR SALIRSE DEL CARGANDO PRESIONANDO FUERA DE EL
+                })
+                .ajaxStop(function () { //oculta imagen
+                    screen.modal("hide");
+                });
+        }
+    </script>
+
+    @*@Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/jquery")*@
     @RenderSection("scripts", required: false)
+
 </body>
+
+<!-- / FIN DEL BODY-->
 </html>
