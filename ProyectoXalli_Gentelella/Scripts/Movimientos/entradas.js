@@ -108,59 +108,67 @@ $('.js-example-basic-single').select2({
 //FUNCION PARA ALMACENAR AL PROVEEDOR
 function saveSeller() {
     //VARIABLES DE LA TABLA PROVEEDOR
-    var NombreComercial, Telefono, RUC, EstadoProveedor, Local, RetenedorIR, NombreProveedor, ApellidoProveedor, CedulaProveedor;
+    var NombreComercial = "", Telefono = "", RUC, Local, RetenedorIR = "", NombreProveedor = "", ApellidoProveedor = "", CedulaProveedor = "";
     //ASIGNANDO VALORES GENERALES
     Telefono = $("#telefono").val();
-    RUC = $("#ruc").val();
-    EstadoProveedor = true;
+    RUC = $("#ruc").val().toUpperCase();
     RetenedorIR = $(".ir").is(":checked");
 
     Local = $('.btn-group > .btn.active').attr("value");
     //ASIGNANDO VALORES SEGUN EL TIPO DE PROVEEDOR
     if (Local == "true") {
-        NombreComercial = "0";
         NombreProveedor = $("#nombre").val();
         ApellidoProveedor = $("#apellido").val();
         CedulaProveedor = $("#cedula").val();
     } else {
         NombreComercial = $("#nombre").val();
-        NombreProveedor = "0";
-        ApellidoProveedor = "0";
-        CedulaProveedor = "0";
-    }//FIN IF-ELSE
+    }//FIN IF-ELSE    
 
-    //FUNCION AJAX
-    $.ajax({
-        type: "POST",
-        url: "/Proveedores/Create",
-        data: {
-            //VALORES A ALMACENAR
-            NombreComercial, Telefono, RUC, EstadoProveedor, Local, RetenedorIR, NombreProveedor, ApellidoProveedor, CedulaProveedor
-        },
-        success: function (data) {
-            if (data.success) {
-                //AGREGAR EL REGISTRO AL SELECT 2
-                var agregar = '<option value="' + data.Id + '">' + data.Proveedor + '</option>';
+    if (validado(Local) === true) {
+        $.ajax({
+            type: "POST",
+            url: "/Proveedores/Create",
+            data: {
+                //VALORES A ALMACENAR
+                NombreComercial, Telefono, RUC, Local, RetenedorIR, NombreProveedor, ApellidoProveedor, CedulaProveedor
+            },
+            success: function (data) {
+                if (data.success) {
+                    //AGREGAR EL REGISTRO AL SELECT 2
+                    var agregar = '<option value="' + data.Id + '">' + data.Proveedor + '</option>';
 
-                $("#proveedor").append(agregar);
+                    $("#proveedor").append(agregar);
 
-                $("#small-modal").modal("hide"); //CERRAR MODAL
-                //MOSTRANDO EL SWEET ALERT
-                swal({
-                    title: "Completado",
-                    text: data.message,
-                    icon: "success",
-                    buttons: false,
-                    timer: 1500
-                });
-            } else
-                Alert("Error al almacenar", data.message, "error");//MENSAJE DE ERROR
-        },
-        error: function () {
-            Alert("Error al almacenar", "Intentelo de nuevo", "error");
-        }
-    });//FIN AJAX
+                    $("#small-modal").modal("hide"); //CERRAR MODAL
+                    //MOSTRANDO EL SWEET ALERT
+                    AlertTimer("Completado", data.message, "success");
+                } else
+                    Alert("Error al almacenar", data.message, "error");//MENSAJE DE ERROR
+            },
+            error: function () {
+                Alert("Error al almacenar", "Intentelo de nuevo", "error");
+            }
+        });//FIN AJAX
+    }
 }//FIN FUNCTION
+
+//VALIDACIONES
+function validado(Local) {
+    //SI EL PROVEEDOR ES LOCAL
+    if (Local == "true") {
+        if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#cedula").val() != "" && $("#telefono").val() != "") {
+            return true;
+        } else {
+            return false;
+        }
+    } else {//SI EL PROVEEDOR ES UN COMERCIO
+        if ($("#nombre").val() != "" && $("#ruc").val() != "" && $("#telefono").val() != "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 
 //FUNCION PARA HACER EL CRUD A PRODUCTO POR MEDIO DEL MODAL (RECIBE UN FORM = FORMULARIO)
 function SubmitForm(form) {
@@ -178,16 +186,7 @@ function SubmitForm(form) {
 
                 //CERRAR MODAL
                 $("#small-modal").modal("hide"); //CERRAR MODAL
-
-                //MOSTRANDO EL SWEET ALERT
-                swal({
-                    title: "Completado",
-                    text: data.message,
-                    icon: "success",
-                    buttons: false,
-                    timer: 1500
-                });
-
+                AlertTimer("Completado", data.message, "success");
             }//FIN IF
             else
                 //MANDAR EL ERROR DEL CONTROLADOR
@@ -221,7 +220,7 @@ function TableAdd() {
     } else {
         //GUARDAR LAS FILAS EXISTENTES DE LA TABLA
         var filas = $("#table_body").find("tr");
-        var registrado = false, i = 0; 
+        var registrado = false, i = 0;
 
         //RECORRER LOS VALORES DE LA TABLA
         while (i < filas.length && registrado === false) {
@@ -267,7 +266,7 @@ function TableAdd() {
             $("#cantidad").val("");
         } else {
             Alert("Error", "El producto seleccionado ya se encuentra en la tabla", "error");
-        }      
+        }
     }//FIN ELSE DE VALIDACION CAMPOS VACIOS
 }//FIN FUNCTION
 
@@ -288,7 +287,7 @@ function editProduct(indice) {
         var res = str.split("C$ ");
         $("#precio").val(res[1]);
 
-        $("#cantidad").val(cantidad);        
+        $("#cantidad").val(cantidad);
 
         //RECALCULAR TOTAL TFOOT
         var totalF = $("#total").html();
@@ -312,7 +311,7 @@ function deleteProduct(row) {
     //RECALCULAMOS EL TOTAL
     var resta = parseFloat(CalcularTotal());
     $("#total").html("C$ " + resta);
-    
+
 }//FIN FUNCTION
 
 //FUNCION PARA CALCULAR EL TOTAL GENERAL DE LA TABLA
@@ -350,7 +349,7 @@ function saveInventario() {
             }
 
             item["Id"] = 0;
-            item["CantidadOrden"] = row.find("td").eq(0).attr("value");
+            item["ProductoId"] = row.find("td").eq(0).attr("value");
             var precio = row.find("td").eq(1).html();
             var getPrice = precio.split("C$ ");
             item["PrecioEntrada"] = getPrice[1];
@@ -371,17 +370,11 @@ function saveInventario() {
                 type: "POST",
                 url: "/Entradas/AddEntrada",
                 data: datos,
-                dataType: "JSON",                
+                dataType: "JSON",
                 success: function (data) {
                     if (data.success) {
                         //MOSTRANDO EL SWEET ALERT
-                        swal({
-                            title: "Completado",
-                            text: data.message,
-                            icon: "success",
-                            buttons: false,
-                            timer: 1500
-                        });
+                        AlertTimer("Completado", data.message, "success");
                         limpiarPantalla();
                     } else {
                         Alert("Error", "Hubieron errores al guardar", "error");

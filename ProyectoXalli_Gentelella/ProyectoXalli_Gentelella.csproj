@@ -195,6 +195,7 @@
     <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\Movimientos\EntradasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -493,6 +494,7 @@
     <Content Include="Views\TiposDePago\Index.cshtml" />
     <Content Include="Views\TiposDePago\Create.cshtml" />
     <Content Include="Views\TiposDePago\Edit.cshtml" />
+    <Content Include="Views\Entradas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -500,7 +502,6 @@
     <Folder Include="Areas\API\Models\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Controllers\Busquedas\" />
-    <Folder Include="Controllers\Movimientos\" />
     <Folder Include="images\Comanda\" />
     <Folder Include="images\Pago\" />
   </ItemGroup>

@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Entradas";
+}
+
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+<link href="~/Content/jquery.bootstrap-touchspin.css" rel="stylesheet" />
+<style>
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #394D5F !important;
+        color: white;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>@ViewBag.Title</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2 col-xs-6 form-group">
+                        <label>Código</label>
+                        <input id="codigoEntrada" type="text" class="form-control" maxlength="3" disabled>
+                    </div>
+                    <div class="col-md-5 col-sm-5 col-xs-6 xdisplay_inputx form-group has-feedback">
+                        <label>Fecha entrada</label>
+                        <input class="form-control has-feedback-left" id='fechaEntrada'>
+                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-md-5 col-sm-5 col-xs-5 form-group">
+                        <label>Tipo de entrada</label>
+                        <select class="js-example-basic-single" id="entrada" style="width:100%">
+                            <option value="-1" disabled selected>Ingrese una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-5 form-group">
+                        <label>Proveedor</label>
+                        <select class="js-example-basic-single" id="proveedor" style="width:100%">
+                            <option value="-1" disabled selected>Ingrese una opción</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 col-sm-1 col-xs-1" style="margin-top: 25px !important;">
+                        <button type="button" onclick="CargarParcial('/Proveedores/Create')" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Agrega un nuevo proveedor"><i class="fa fa-plus"></i></button>
+                    </div>
+
+                    <div class="col-md-5 col-sm-5 col-xs-6 form-group">
+                        <label>Área</label>
+                        <select class="js-example-basic-single" id="area" style="width:100%">
+                            <option value="-1" disabled selected>Ingrese una opción</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Lista de productos</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-4 col-sm-4 col-xs-9 form-group">
+                        <label>Producto</label>
+                        <select class="js-example-basic-single" id="producto" style="width:100%">
+                            <option value="-1" disabled selected>Ingrese una opción</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-1 col-sm-1 col-xs-3" style="margin-top: 25px !important;">
+                        <button type="button" onclick="CargarParcial('/Productos/Create')" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Agrega un nuevo producto"><i class="fa fa-plus"></i></button>
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-5 xdisplay_inputx form-group has-feedback">
+                        <label>Precio Unitario</label>
+                        <input type="text" class="form-control has-feedback-left" id="precio">
+                        <span class="fa fa-dollar form-control-feedback left" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-md-2 col-sm-5 col-xs-6">
+                        <label>Cantidad Producto</label>
+                        <input id="cantidad" type="text" value="" name="cantidad">
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-6" style="margin-top: 25px !important;">
+                        <button type="button" onclick="TableAdd()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Agrega el producto a la tabla"><i class="fa fa-check"></i></button>
+                        <button type="button" onclick="saveInventario()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda la entrada">Guardar</button>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action" id="productTable">
+                            <thead>
+                                <tr class="headings">
+                                    <th class="column-title">Descripción </th>
+                                    <th class="column-title">Precio Unitario </th>
+                                    <th class="column-title">Cantidad </th>
+                                    <th class="column-title">Precio Total </th>
+                                    <th class="column-title no-link last">
+                                        <span class="nobr">Acciones</span>
+                                    </th>
+                                    <th class="bulk-actions" colspan="7">
+                                        <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_body">
+                                <!--AQUI VA LA LISTA DE LOS PRODUCTOS-->
+                            </tbody>
+                            <tfoot>
+                                <tr class="even pointer">
+                                    <td class="" colspan="2"></td>
+                                    <td class="column-title">Total</td>
+                                    <td class="" id="total">C$ 0.00</td>
+                                    <td class=""></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Movimientos/entradas.js"></script>
+    <script src="~/Scripts/jquery.bootstrap-touchspin.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script>
+        //INICIALIZADOR DE TOUCHSPIN CANTIDAD
+        $("input[name='cantidad']").TouchSpin({
+            min: 1,
+            decimals: 2,
+            step: 0.1,
+        });
+
+        $(document).ready(function () {
+            $("#precio").mask('000,000.00', { reverse: true });
+        });
+
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+    </script>
+}
