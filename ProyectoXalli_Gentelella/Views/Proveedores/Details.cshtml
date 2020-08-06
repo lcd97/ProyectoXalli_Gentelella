@@ -1,0 +1,81 @@
+﻿@model ProyectoXalli_Gentelella.Models.Proveedor
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_content">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 profile_details">
+                    <div class="col-sm-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12" id="tipoProveedor">
+                            <!--AQUI VA EL TIPO DE PROVEEDOR-->
+                        </div>
+
+                        @*<div class="col-md-12 col-sm-12 col-xs-12" id="nombre">
+                            </div>*@
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <ul class="list-unstyled" id="datos">
+                                <!--AQUI VA EL RUC, CEDULA Y TELEFONO-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Proveedores/getDetails/" + @Model.Id,
+            dataType: "JSON",
+            success: function (data) {
+                var telefono, cedula, nombre, ruc, tipo;
+
+                //ASIGNAR LOS VALORES A MOSTRAR
+                telefono = " " + data.Telefono;
+                ruc = " " + data.RUC;
+                nombre = data.Nombre;
+
+                if (data.RUC != null) {
+                    ruc = " " + data.RUC;
+                } else {
+                    ruc = " N/A"
+                }
+
+                if (data.Local) {
+                    tipo = " Proveedor Local";
+                    //nombre = " " + data.NombreProveedor;
+                    cedula = " " + data.Cedula;
+
+                } else {
+                    tipo = " Proveedor Comercial";
+                    //nombre = " " + data.NombreComercial;
+                    cedula = " N/A";
+                }
+
+                //AGREGAR LOS DATOS A LA VISTA
+                var agregarTipo = "";
+
+                agregarTipo += '<h2 class="brief" style="text-align:center!important;"><i class="fa fa-location-arrow"></i>' + tipo + '</h2>';
+                agregarTipo += '<h4 style="text-align:center !important;">' + nombre + '</h4>';
+
+                $("#tipoProveedor").append(agregarTipo);
+
+                //var agregarNombre = '<h4 style="text-align:center !important;">' + nombre + '</h4>';
+                //$("#nombre").append(agregarNombre);
+
+                var agregarDatos = '<li><i class="fa fa-calculator"></i> RUC: ' + ruc + '</li>' +
+                                    '<li><i class="fa fa-list-alt"></i> Cédula: ' + cedula + '</li>' +
+                                    '<li><i class="fa fa-phone"></i> Telefónico: ' + telefono + '</li>';
+                $("#datos").append(agregarDatos);
+            }
+        });
+    });
+</script>

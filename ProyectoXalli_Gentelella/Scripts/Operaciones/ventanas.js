@@ -28,6 +28,17 @@ function CargarSmallParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
     $("#smallModal").modal("show"); //MUESTRA LA MODAL
     $("#vParcial").html("");//LIMPIA LA MODAL POR DATOS PRECARGADOS
 
+    //AGREGAR EL TITULO A LA MODAL
+    if (url.includes("Edit")) {
+        $("#small-modaltitle").html("Editar");
+    } else
+        if (url.includes("Create")) {
+            $("#small-modaltitle").html("Ingresar nuevo");
+        } else
+            if (url.includes("Details")) {
+                $("#small-modaltitle").html("Detalle");
+            }
+
     $.ajax({
         "type": "GET", //TIPO DE ACCION
         "url": url, //URL DEL METODO A USAR

@@ -1,0 +1,191 @@
+﻿@model ProyectoXalli_Gentelella.Models.Producto
+
+@{
+    ViewBag.Title = "Edición";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+        @using (Html.BeginForm("Edit", "Productos", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" })) {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.CodigoProducto)
+
+            <div data-parsley-validate class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Código", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.CodigoProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.CodigoProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        <label>
+                            @Html.CheckBoxFor(model => model.EstadoProducto, new { @class = "js-switch col-md-12 col-sm-12 col-xs-12", @onclick = "Check()" })
+                            @Html.ValidationMessageFor(model => model.EstadoProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Producto", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.NombreProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.NombreProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Marca", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.MarcaProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.MarcaProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Categoría", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.DropDownList("CategoriaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @style = "width: 100%" })
+                        @Html.ValidationMessageFor(model => model.CategoriaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-6">
+                        @Html.Label("Cantidad", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.PresentacionProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.PresentacionProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-6">
+                        @Html.Label("U/M", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.DropDownList("UnidadMedidaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @style = "width: 100%" })
+                        @Html.ValidationMessageFor(model => model.UnidadMedidaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <div class="form-group has-feedback col-md-4 col-sm-4 col-xs-4">
+                        @Html.Label("Cantidad Actual", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.Editor("Cantidad", new { htmlAttributes = new { @class = "form-control has-feedback-left", @Value = "Sin entradas", id = "cantProd", @disabled = "disabled" } })
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.UnidadMedidaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="form-group has-feedback col-md-4 col-sm-4 col-xs-4">
+                        @Html.Label("Cantidad Mínima", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.EditorFor(model => model.CantidadMinProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Máx.", id = "cantMin" } })
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.CantidadMinProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+
+                    <div class="form-group has-feedback col-md-4 col-sm-4 col-xs-4">
+                        @Html.Label("Cantidad Máxima", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.EditorFor(model => model.CantidadMaxProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Mín.", id = "cantMax" } })
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        @Html.ValidationMessageFor(model => model.CantidadMaxProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                        <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var elem, init;
+
+    //INICIALIZAR EL CHECKBOX
+    $(document).ready(function () {
+
+        elem = document.querySelector('.js-switch');
+        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+         //FUNCION PARA CARGAR LA CANTIDAD ACTUAL DE LOS PRODUCTOS
+         $.ajax({
+            url: "/Productos/CantidadActual/" + @Model.Id,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                //SI EXISTEN ENTRADAS EN ALGUNA DE LAS DOS AREAS
+                if (data != 0) {
+                    $("#cantProd").val(data);//SE CARGA LA CANTIDAD DEL AREA DEL BARkd
+                } else {
+                    $("#cantProd").val("No Disponible");
+                    }
+            },
+            error: function (data) {
+                Alert("Error", "Se produjo un error al cargar la cantidad actual", "error");
+            }
+        });
+
+    });
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function Check() {
+
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elem.checked) {
+
+            swal({
+                title: "¿Desea desactivar el registro?",
+                icon: "warning",
+                buttons: {
+                    activar: {
+                        text: "No",
+                        value: "activar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    },
+                    desactivar: {
+                        text: "Sí",
+                        value: "desactivar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    }
+                }//FIN DE BUTTONS
+            })//FIN DEL SWAL
+
+                .then((value) => {
+                    switch (value) {
+
+                        case "activar":
+                            //ACTIVAR EL CHKBOX
+                            elem.click();
+                            break;
+
+                        case "desactivar":
+                            //DESACTIVAR EL CHKBOX
+                            swal.close();
+                            break;
+
+                        default:
+                            {
+                                swal.close();
+                            }
+                    }//FIN SWITCH
+                });//FIN THEN
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
+
+    //INICIALIZAR EL SELECT2
+    $('.js-example-basic-single').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+</script>

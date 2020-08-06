@@ -1,0 +1,112 @@
+﻿@model ProyectoXalli_Gentelella.Models.UnidadDeMedida
+
+@{
+    ViewBag.Title = "Edición";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+
+        @using (Html.BeginForm("Edit", "UnidadesDeMedida", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" })) {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.CodigoUnidadMedida)
+
+            <div data-parsley-validate class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Código", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.CodigoUnidadMedida, new { htmlAttributes = new { @class = "form-control col-md-2 col-sm-2 col-xs-2", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.CodigoUnidadMedida, "", new { @class = "text-danger col-lg-offset-4" })
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        <label>
+                            @Html.CheckBoxFor(model => model.EstadoUnidadMedida, new { @class = "js-switch col-md-2 col-sm-2 col-xs-2", @onclick = "Check()" })
+                            @Html.ValidationMessageFor(model => model.EstadoUnidadMedida, "", new { @class = "text-danger" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("U/M", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.DescripcionUnidadMedida, new { htmlAttributes = new { @class = "form-control col-md-2 col-sm-2 col-xs-2", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.DescripcionUnidadMedida, "", new { @class = "text-danger col-lg-offset-4" })
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        @Html.Label("Abbr", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.AbreviaturaUM, new { htmlAttributes = new { @class = "form-control col-md-2 col-sm-2 col-xs-2", @maxlength = 10, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.AbreviaturaUM, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                        <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var elem, init;
+
+    //INICIALIZAR EL CHECKBOX
+    $(document).ready(function () {
+
+        elem = document.querySelector('.js-switch');
+        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+    });
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function Check() {
+
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elem.checked) {
+
+            swal({
+                title: "¿Desea desactivar el registro?",
+                icon: "warning",
+                buttons: {
+                    activar: {
+                        text: "No",
+                        value: "activar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    },
+                    desactivar: {
+                        text: "Sí",
+                        value: "desactivar" //VALOR PARA UTILIZARLO EN EL SWITCH
+                    }
+                }//FIN DE BUTTONS
+            })//FIN DEL SWAL
+
+                .then((value) => {
+                    switch (value) {
+
+                        case "activar":
+                            //ACTIVAR EL CHKBOX
+                            elem.click();
+                            break;
+
+                        case "desactivar":
+                            //DESACTIVAR EL CHKBOX
+                            swal.close();
+                            break;
+
+                        default:
+                            {
+                                swal.close();
+                            }
+                    }//FIN SWITCH
+                });//FIN THEN
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
+</script>

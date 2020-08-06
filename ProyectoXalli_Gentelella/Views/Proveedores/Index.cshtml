@@ -1,0 +1,112 @@
+﻿@model ProyectoXalli_Gentelella.Models.Proveedor
+
+@{
+    ViewBag.Title = "Catálogo";
+}
+
+@Styles.Render("~/Content/datatableCSS")
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Lista de Proveedores</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a onclick="CargarParcial('/Proveedores/Create')"><i class="fa fa-plus"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="Table" class="table table-hover table-bordered" style="width:100% !important">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.NombreComercial)</th>
+                            <th>@Html.DisplayNameFor(model => model.Telefono)</th>
+                            <th>Número RUC</th>
+                            <th>Tipo proveedor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Catalogos/proveedor.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+
+    <!--DATATABLE PROVEEDORES-->
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+
+        //LLENANDO EL DATATABLE CRUD
+        $(document).ready(function () {
+            //DEFINIENDO EL DATATABLE
+            $("#Table").DataTable({
+                ajax: {
+                    url: "/Proveedores/GetData", //URL DE LA UBICACION DEL METODO
+                    type: "GET", //TIPO DE ACCION
+                    dataType: "JSON" //TIPO DE DATO A RECIBIR O ENVIAR
+                },
+                //DEFINIENDO LAS COLUMNAS A LLENAR
+                columns: [
+                    { data: "NombreComercial" },
+                    { data: "Telefono" },
+                    { data: "RUC" },
+                    {
+                        //PERSONALIZANDO CELDA
+                        data: "Local", render: function (data) {
+                            if (data) {
+                                return 'Local';
+                            } else {
+                                return 'Comercial';
+                            }
+                        }
+                    },
+                    {   //DEFINIENDO LOS BOTONES PARA EDITAR Y ELIMINAR POR MEDIO DE JS
+                        data: "Id", "render": function (data) {
+                            return "<a class='btn btn-success' onclick=CargarParcial('/Proveedores/Edit/" + data + "')><i class='fa fa-pencil'></i></a>" +
+                                "<a class='btn btn-primary' Style='margin-left: 3px' onclick=CargarSmallParcial('/Proveedores/Details/" + data + "')><i class='fa fa-eye'></i></a>" +
+                                "<a class='btn btn-danger' Style='margin-left: 3px' onclick=deleteAlert('/Proveedores/Delete/'," + data + ")><i class='fa fa-trash'></i></a>"
+                        }
+                    }
+                ],//FIN DE COLUMNAS
+                //IDIOMA DE DATATABLE
+                "language": {
+
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }//FIN IDIOMA DATATABLE
+            });//FIN DECLARACION DEL DATATABLE
+        });//FIN FUNCTION
+    </script>
+}

@@ -1,0 +1,117 @@
+﻿@model ProyectoXalli_Gentelella.Models.Producto
+
+@{
+    ViewBag.Title = "Detalle";
+    Layout = null;
+}
+
+<link href="~/Content/skins/all.css" rel="stylesheet" />
+
+<h3 class="green" style="text-align:center !important;"><i class="fa fa-cutlery"></i> @Model.NombreProducto</h3>
+<p class="title" style="text-align:center!important;" id="presentacion"></p>
+<div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel">
+        <a class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <h4 class="panel-title">General</h4>
+        </a>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <br />
+                <div class="col-md-3 col-sm-3 col-xs-4">
+                    <div class="project_detail">
+                        <p class="title">Código</p>
+                        <p>@Model.CodigoProducto</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-4">
+                    <div class="project_detail">
+                        <p class="title">Categoría</p>
+                        <p id="categoria"></p>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-4">
+                    <div class="project_detail">
+                        <p class="title" id="estado"></p>
+                        <input type="checkbox" class="flat" checked="checked" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <a class="panel-heading collapsed" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <h4 class="panel-title">Inventario</h4>
+        </a>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body" id="inventario">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="project_detail" id="cantAct">
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="project_detail">
+                        <p><strong>Cantidad Mínima : </strong>@Model.CantidadMinProducto</p>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="project_detail">
+                        <p><strong>Cantidad Máxima : </strong>@Model.CantidadMaxProducto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/icheck.js"></script>
+<script>
+    $(document).ready(function () {
+        //INICIALIZA EL CHECKBOX DE ESTADO
+        $('.flat').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+
+        //CARGA LOS CAMPOS A MOSTRAR DEL DETALLLE
+        $.ajax({
+            type: "GET",
+            url: "/Productos/getDetails/" + @Model.Id,
+            dataType: "JSON",
+            success: function (data) {
+                if (data.EstadoProducto) {
+                    $("#estado").text("Activo");
+                } else {
+                    $("#estado").text("Inactivo");
+                }
+                $("#categoria").text(data.Categoria);
+
+                var presentacion = data.MarcaProducto != null ? data.MarcaProducto + " " + data.UnidadMedida : data.UnidadMedida;
+                $("#presentacion").text(presentacion);
+            }
+        });
+
+         //FUNCION PARA CARGAR LA CANTIDAD ACTUAL DE LOS PRODUCTOS
+         $.ajax({
+            url: "/Productos/CantidadActual/" + @Model.Id,
+            type: "GET",
+            dataType: "JSON",
+             success: function (data) {
+                 var text = "";
+
+                 if (data != 0) {
+                     text = "<p><strong>Cantidad Actual  : </strong>" + data + "</p>";
+                 } else {
+                     var text = "<p><strong>Cantidad Actual  : </strong> No disponible</p>";
+                 }
+
+                 $("#cantAct").append(text);//SE CARGA LA CANTIDAD DEL AREA DEL BAR
+
+            },
+            error: function () {
+                Alert("Error", "Se produjo un error al cargar la cantidad Actual", "error");
+            }
+        });
+    });//FIN FUNCTION
+</script>

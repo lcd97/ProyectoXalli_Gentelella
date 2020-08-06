@@ -1,0 +1,68 @@
+﻿@model ProyectoXalli_Gentelella.Models.Bodega
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="x_content">
+
+        @using (Html.BeginForm("Create", "Bodegas", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" })) {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div data-parsley-validate class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        @Html.Label("Código", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                        @Html.EditorFor(model => model.CodigoBodega, new { htmlAttributes = new { @class = "form-control col-md-2 col-sm-2 col-xs-2", @maxlength = 3, @id = "codigoBodega", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.CodigoBodega, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        <label>
+                            @Html.CheckBoxFor(model => model.EstadoBodega, new { @class = "js-switch col-md-6 col-sm-6 col-xs-6", @readonly = "readonly", @checked = "checked" })
+                            @Html.ValidationMessageFor(model => model.EstadoBodega, "", new { @class = "text-danger" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @Html.Label("Área", htmlAttributes: new { @class = "col-md-2 col-sm-2 col-xs-4" })
+                        @Html.EditorFor(model => model.DescripcionBodega, new { htmlAttributes = new { @class = "form-control", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.DescripcionBodega, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="ln_solid"></div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                    <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    //INICIALIZADOR DE SWITCHERY
+    $(document).ready(function () {
+
+        var elem = document.querySelector('.js-switch');
+        var init = new Switchery(elem);
+
+        //CARGA EL CODIGO DE BODEGA
+        $.ajax({
+            type: "GET",
+            url: "/Bodegas/SearchCode",
+            success: function (data) {
+                $("#codigoBodega").val(data);
+            }
+        });
+    });
+</script>

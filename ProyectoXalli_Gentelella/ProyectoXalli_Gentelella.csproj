@@ -182,6 +182,12 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\API\APIAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Catalogos\BodegasController.cs" />
+    <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
+    <Compile Include="Controllers\Catalogos\ProductosController.cs" />
+    <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
+    <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
+    <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -441,6 +447,29 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_loading.cshtml" />
+    <Content Include="Views\Bodegas\Index.cshtml" />
+    <Content Include="Views\Bodegas\Create.cshtml" />
+    <Content Include="Views\Bodegas\Edit.cshtml" />
+    <Content Include="Views\Shared\_small-modal.cshtml" />
+    <Content Include="Views\Shared\_xsModal.cshtml" />
+    <Content Include="Views\CategoriasProducto\Index.cshtml" />
+    <Content Include="Views\CategoriasProducto\Create.cshtml" />
+    <Content Include="Views\CategoriasProducto\Edit.cshtml" />
+    <Content Include="Views\TiposDeEntrada\Index.cshtml" />
+    <Content Include="Views\TiposDeEntrada\Edit.cshtml" />
+    <Content Include="Views\TiposDeEntrada\Create.cshtml" />
+    <Content Include="Views\UnidadesDeMedida\Index.cshtml" />
+    <Content Include="Views\UnidadesDeMedida\Create.cshtml" />
+    <Content Include="Views\UnidadesDeMedida\Edit.cshtml" />
+    <Content Include="Views\UnidadesDeMedida\Details.cshtml" />
+    <Content Include="Views\Productos\Index.cshtml" />
+    <Content Include="Views\Productos\Details.cshtml" />
+    <Content Include="Views\Productos\Create.cshtml" />
+    <Content Include="Views\Productos\Edit.cshtml" />
+    <Content Include="Views\Proveedores\Index.cshtml" />
+    <Content Include="Views\Proveedores\Create.cshtml" />
+    <Content Include="Views\Proveedores\Edit.cshtml" />
+    <Content Include="Views\Proveedores\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -448,7 +477,6 @@
     <Folder Include="Areas\API\Models\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="Controllers\Busquedas\" />
-    <Folder Include="Controllers\Catalogos\" />
     <Folder Include="Controllers\Movimientos\" />
     <Folder Include="images\Comanda\" />
     <Folder Include="images\Pago\" />

@@ -1,0 +1,97 @@
+﻿@model ProyectoXalli_Gentelella.Models.UnidadDeMedida
+
+@{
+    ViewBag.Title = "Catálogo";
+}
+
+@Styles.Render("~/Content/datatableCSS")
+<link href="~/Content/switchery.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Lista de Unidades de Medida</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a onclick="CargarParcial('/UnidadesDeMedida/Create')"><i class="fa fa-plus"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="Table" class="table table-hover table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.CodigoUnidadMedida)</th>
+                            <th>Unidad de Medida</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Catalogos/modelo.js"></script>
+
+    <!--DATATABLE UNIDADES DE MEDIDA-->
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+
+        //LLENANDO EL DATATABLE CRUD
+        $(document).ready(function () {
+            //DEFINIENDO EL DATATABLE
+            $("#Table").DataTable({
+                ajax: {
+                    url: "/UnidadesDeMedida/GetData", //URL DE LA UBICACION DEL METODO
+                    type: "GET", //TIPO DE ACCION
+                    dataType: "JSON" //TIPO DE DATO A RECIBIR O ENVIAR
+                },
+                //DEFINIENDO LAS COLUMNAS A LLENAR
+                columns: [
+                    { data: "CodigoUnidadMedida" },
+                    { data: "DescripcionUnidadMedida" },
+                    {   //DEFINIENDO LOS BOTONES PARA EDITAR Y ELIMINAR POR MEDIO DE JS
+                        data: "Id", "render": function (data) {
+                            return "<a class='btn btn-success' onclick=CargarParcial('/UnidadesDeMedida/Edit/" + data + "')><i class='fa fa-pencil'></i></a>" +
+                                "<a class='btn btn-danger' Style='margin-left: 3px' onclick=deleteAlert('/UnidadesDeMedida/Delete/'," + data + ")><i class='fa fa-trash'></i></a>"
+                        }
+                    }
+                ],//FIN DE COLUMNAS
+                //IDIOMA DE DATATABLE
+                "language": {
+
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }//FIN IDIOMA DATATABLE
+            });//FIN DECLARACION DEL DATATABLE
+        });//FIN FUNCTION
+    </script>
+}
