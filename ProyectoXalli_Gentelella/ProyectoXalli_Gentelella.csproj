@@ -186,9 +186,32 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Bodega.cs" />
+    <Compile Include="Models\CategoriaMenu.cs" />
+    <Compile Include="Models\CategoriaProducto.cs" />
+    <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\Dato.cs" />
+    <Compile Include="Models\DBControl.cs" />
+    <Compile Include="Models\DetalleDeEntrada.cs" />
+    <Compile Include="Models\DetalleDeOrden.cs" />
+    <Compile Include="Models\DetalleDePago.cs" />
+    <Compile Include="Models\Entrada.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Imagen.cs" />
+    <Compile Include="Models\Ingrediente.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\Mesero.cs" />
+    <Compile Include="Models\Orden.cs" />
+    <Compile Include="Models\OrdenPago.cs" />
+    <Compile Include="Models\Pago.cs" />
+    <Compile Include="Models\Producto.cs" />
+    <Compile Include="Models\Proveedor.cs" />
+    <Compile Include="Models\TipoDeEntrada.cs" />
+    <Compile Include="Models\TipoDePago.cs" />
+    <Compile Include="Models\UnidadDeMedida.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
