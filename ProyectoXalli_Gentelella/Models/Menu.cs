@@ -35,7 +35,7 @@ namespace ProyectoXalli_Gentelella.Models {
         [Display(Name = "Precio")]
         public double PrecioMenu { get; set; }
 
-        [Required(ErrorMessage = "El campo es obligatorio")]
+        //[Required(ErrorMessage = "El campo es obligatorio")]
         [StringLength(10, ErrorMessage = "La longitud debe ser de 10 dígitos")]
         [Display(Name = "Código")]
         public string TiempoEstimado { get; set; }

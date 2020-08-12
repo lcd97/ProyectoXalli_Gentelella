@@ -130,6 +130,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,CodigoProducto,NombreProducto,MarcaProducto,PresentacionProducto,CantidadMaxProducto,CantidadMinProducto,EstadoProducto,UnidadMedidaId,CategoriaId")] Producto Producto) {
+            if (Producto.CantidadMaxProducto < Producto.CantidadMinProducto) {
+                mensaje = "La cantidad mínima de producto no debe ser mayor a la cantidad máxima";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
             //BUSCAR LA PRESENTACION DEL PRODUCTO (COMBINACION DE DESCRIPCION, MARCA Y UM - ID -)
             Producto bod = db.Productos.DefaultIfEmpty(null)
                 .FirstOrDefault(b => b.NombreProducto.ToUpper().Trim() == Producto.NombreProducto.ToUpper().Trim() &&

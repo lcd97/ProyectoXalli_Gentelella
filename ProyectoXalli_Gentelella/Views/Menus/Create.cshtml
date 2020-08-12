@@ -6,7 +6,7 @@
 
 <style>
     .form_wizard .stepContainer {
-        min-height: 150px !important;
+        min-height: 200px !important;
     }
 </style>
 
@@ -83,8 +83,8 @@
 
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             @Html.Label("Tiempo preparación", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                            <input id="tiempo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="10" autocomplete="off"
-                                   data-validate="true" data-error="Campo obligatorio">
+                            <input id="tiempo" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="10" autocomplete="off"
+                                   placeholder="Dejar vacío para pedidos inmediatos">
                             <div class="help-block with-errors"></div>
                         </div>
 

@@ -82,7 +82,7 @@
 
                         <div class="form-group col-md-9 col-sm-9 col-xs-9">
                             @Html.Label("Tiempo estimado de preparación", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                            <input id="tiempo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="10" autocomplete="off">
+                            <input id="tiempo" class="form-control col-md-2 col-sm-2 col-xs-2" placeholder="Dejar vacío para pedidos inmediatos" type="text" maxlength="10" autocomplete="off">
                         </div>
 
                         <div class="form-group col-md-3 col-sm-3 col-xs-3">
@@ -109,7 +109,7 @@
                             </label>
                             <span class="label label-default">
                                 ✓ @Model.DescripcionMenu
-                                <script src="~/Scripts/Catalogos/menuItem.js"></script>
+                                @*<script src="~/Scripts/Catalogos/menuItem.js"></script>*@
                             </span>
                         </div>
 

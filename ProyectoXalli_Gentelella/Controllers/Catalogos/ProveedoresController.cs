@@ -296,7 +296,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                         //CONFIRMACION DE CAMBIOS GUARDADOS
                         if (db.SaveChanges() > 0) {
                             //ASIGNAMOS VALORES DE PROVEEDOR
-                            proveedor.NombreComercial = NombreComercial;
+                            //proveedor.NombreComercial = NombreComercial;
                             proveedor.Telefono = Telefono;
                             proveedor.RetenedorIR = RetenedorIR;
                             proveedor.EstadoProveedor = EstadoProveedor;

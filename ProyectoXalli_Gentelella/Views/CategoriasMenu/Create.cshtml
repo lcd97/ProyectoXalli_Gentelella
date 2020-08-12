@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         @Html.Label("Área", htmlAttributes: new { @class = "col-md-3 col-sm-3 col-xs-4" })
-                        @Html.DropDownList("BodegaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "categoria" })
+                        @Html.DropDownList("BodegaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "bodega" })
                         @Html.ValidationMessageFor(model => model.BodegaId, "", new { @class = "text-danger" })
                     </div>
 
@@ -70,6 +70,9 @@
                 $("#codigoCatMenu").val(data);
             }
         });
+
+        var agregar = '<option value="-1" selected>Seleccione</option>';
+        $("#bodega").prepend(agregar);
     });
 
     //INICIALIZAR EL SELECT2

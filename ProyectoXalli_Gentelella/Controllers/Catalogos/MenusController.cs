@@ -145,7 +145,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 item.CategoriaMenuId = categoriaId;
                                 item.ImagenId = obj.Id;//SE ASIGNA EL ID RECIEN ALMACENADO
                                 item.EstadoMenu = true;
-                                item.TiempoEstimado = tiempo;
+                                item.TiempoEstimado = tiempo != "" ? tiempo : null;
 
                                 db.Menus.Add(item);
                                 //SI SE ALMACENO CORRECTAMENTE EL PLATILLO
@@ -351,7 +351,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             menu.PrecioMenu = precio;
                             menu.CategoriaMenuId = categoriaId;
                             menu.EstadoMenu = estado;
-                            menu.TiempoEstimado = tiempo;
+                            menu.TiempoEstimado = tiempo != "" ? tiempo : null;
 
                             db.Entry(menu).State = EntityState.Modified;//SE MODIFICA EL OBJETO
 
@@ -472,7 +472,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                                 //BUSCO EL OBJETO
                                                 Ingrediente Ingrediente = db.Ingredientes.FirstOrDefault(c => c.ProductoId == item && c.MenuId == menu.Id);
                                                 db.Ingredientes.Remove(Ingrediente);
-                                                db.SaveChanges();
+                                                completado = db.SaveChanges() > 0 ? true : false;
                                             }
                                         }
 
@@ -486,18 +486,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                                 Ingrediente.ProductoId = item;
 
                                                 db.Ingredientes.Add(Ingrediente);
-                                                db.SaveChanges();
+                                                completado = db.SaveChanges() > 0 ? true : false;
                                             }
                                         }
 
-                                        if (db.SaveChanges() > 0) {
-                                            completado = db.SaveChanges() > 0 ? true : false;
-                                            mensaje = completado ? "Modificado con éxito" : "Error al modificar";
-                                        }//FIN SAVE_CHANGES RECETA
-                                        else {
-                                            completado = false;
-                                            mensaje = "No se modificó la receta ";
+                                        if (addIt.Count == 0 && deleteIt.Count == 0) {
+                                            completado = true;
                                         }
+
+                                        mensaje = completado ? "Modificado con éxito" : "Error al modificar";
+
                                     }//FIN DE SAVE_CHANGES MENU
                                     else {
                                         completado = false;
@@ -522,7 +520,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                     transact.Rollback();
                 }//FIN TRY-CATCH
             }//FIN USING
-            return Json(new { success = completado, message = mensaje, Id }, JsonRequestBehavior.AllowGet);
+            return Json(new {
+                success = completado, message = mensaje, Id
+            }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

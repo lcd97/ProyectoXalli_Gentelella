@@ -51,7 +51,7 @@ function comprobar() {
     $.ajax({
         type: "GET",
         url: "/Menus/Comprobar/",
-        data: { Codigo : codigoMenu },
+        data: { Codigo: codigoMenu },
         success: function (data) {
             validar(data);
         }
@@ -70,7 +70,7 @@ function validar(nuevo) {
     //SI ES VERDADERO
     if (nuevo == true) {
         //VALIDACIONES SHAMPOO
-        if (code !== "" && a !== "" && precio !== "" && time !== "" && ingredients !== "") {
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
             if (img != null) {
                 saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
             } else {
@@ -81,7 +81,7 @@ function validar(nuevo) {
         }//FIN IF-ELSE VALIDACIONES
     } else {
         //VALIDACIONES SHAMPOO
-        if (code !== "" && a !== "" && precio !== "" && time !== "" && ingredients !== "") {
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
             editMenuItem();//METODO PARA EDITAR UN ELEMENTO
         } else {
             Alert("Error", "Campos vacios", "error");
@@ -170,7 +170,9 @@ function modificarItem(id) {
         success: function (data) {
             //ASIGNAR NUEVOS VALORES EN LA VISTA
             $("#" + id).find("strong").text(data.menu.Platillo);
-            $("#" + id).find("p:last-child").text(data.menu.Precio);
+            $("#" + id).find("p:last-child").text("$ " + data.menu.Precio);
+            $("#" + id).find("img").attr("src", "");
+            $("#" + id).find("img").attr("src", data.menu.Ruta);
         },
         error: function () {
             Alert("Error al modificar", "Recargue la página", "error");
@@ -193,7 +195,7 @@ function agregarItem(id) {
                 '<div class="mask no-caption">' +
                 '<div class="tools tools-bottom">' +
                 '<a onclick=CargarParcial("/Menus/Edit/' + data.menu.PlatilloId + '")><i class="fa fa-pencil"></i></a>' +
-                '<a onclick=CargarParcial("/Menus/Detail/' + data.menu.PlatilloId + '")><i class="fa fa-eye"></i></a>' +
+                '<a onclick=CargarParcial("/Menus/Details/' + data.menu.PlatilloId + '")><i class="fa fa-eye"></i></a>' +
                 '<a onclick=deleteAlert("/Menus/Delete/",' + data.menu.PlatilloId + ')><i class="fa fa-trash"></i></a>' +
                 '</div>' +
                 '</div>' +

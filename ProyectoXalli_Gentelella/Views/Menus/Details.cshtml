@@ -37,9 +37,7 @@
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
-                            <p id="tiempo"></p>
-                            <p id="categoria"></p>
-                            <p id="precio"></p>
+
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
                             <div class="">
@@ -63,10 +61,23 @@
             url: "/Menus/getMenuItem/" + @Model.Id,
             dataType: "JSON",
             success: function (data) {
+
+                var tiempo = data.menu.Tiempo;
                 $("#titulo").text(data.menu.Platillo);
-                $("#tiempo").text("Tiempo de preparación: " + data.menu.Tiempo);
-                $("#categoria").text("Categoría: " + data.menu.Categoria);
-                $("#precio").text("Precio: $" + data.menu.Precio);
+                if (tiempo == null) {
+                    tiempo = "Inmediato";
+                }
+
+
+                var addInfo = '<p id="tiempo">Tiempo de preparación: ' + tiempo + '</p>' +
+                    '<p id="categoria">Categoría: ' + data.menu.Categoria + '</p>' +
+                    '<p id="precio">Precio: $' + data.menu.Precio + '</p>';
+
+                $("#tab_content1").append(addInfo);
+
+                //$("#tiempo").text("Tiempo de preparación: " + tiempo);
+                //$("#categoria").text("Categoría: " + data.menu.Categoria);
+                //$("#precio").text("Precio: $" + data.menu.Precio);
                 //INSERTAR IMAGEN
                 $("#img").attr("src", data.menu.Ruta);
             }

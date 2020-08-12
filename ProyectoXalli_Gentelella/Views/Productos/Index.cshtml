@@ -47,6 +47,7 @@
     <script src="~/Scripts/Catalogos/modelo.js"></script>
     <script src="~/Scripts/select2.full.min.js"></script>
     <script src="~/Scripts/icheck.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
 
     <!--DATATABLE Producto-->
     <script>
@@ -56,6 +57,10 @@
 
         //LLENANDO EL DATATABLE CRUD
         $(document).ready(function () {
+
+            $("#cantMin").mask('00.00', { reverse: true });
+            $("#cantMax").mask('00.00', { reverse: true });
+
             //DEFINIENDO EL DATATABLE
             $("#Table").DataTable({
                 ajax: {

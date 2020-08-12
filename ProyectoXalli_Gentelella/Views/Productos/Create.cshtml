@@ -44,7 +44,7 @@
                 <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         @Html.Label("Categoría", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                        @Html.DropDownList("CategoriaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%" })
+                        @Html.DropDownList("CategoriaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "categoria" })
                         @Html.ValidationMessageFor(model => model.CategoriaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
 
@@ -56,7 +56,7 @@
 
                     <div class="col-md-3 col-sm-3 col-xs-6">
                         @Html.Label("U/M", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                        @Html.DropDownList("UnidadMedidaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%" })
+                        @Html.DropDownList("UnidadMedidaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "um" })
                         @Html.ValidationMessageFor(model => model.UnidadMedidaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                         <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button id="btnGuardar" type="submit" class="btn btn-success">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -112,6 +112,10 @@
                 $("#codigoProd").val(data);
             }
         });
+
+        var agregar = '<option value="-1" selected>Seleccione</option>';
+        $("#categoria").prepend(agregar);
+        $("#um").prepend(agregar);
     });
 
     //INICIALIZAR EL SELECT2
