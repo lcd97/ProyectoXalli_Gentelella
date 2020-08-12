@@ -149,6 +149,8 @@ function saveSeller() {
                 Alert("Error al almacenar", "Intentelo de nuevo", "error");
             }
         });//FIN AJAX
+    } else {
+        Alert("Error", "Campos vacios", "error");
     }
 }//FIN FUNCTION
 

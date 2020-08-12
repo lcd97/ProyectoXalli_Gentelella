@@ -86,3 +86,28 @@ function validado() {
     } else
         return false;
 }//FIN FUNCTION
+
+//FUNCION POST PARA ELIMINAR UN REGISTRO (CRUD) -- SOLO PARA ELIMINAR (RECARGA LA PAGINA CON AJAX -OJO-)
+function Delete(uri, id) {
+
+    //COMIENZO DE LA PETICION AJAX PARA ELIMINAR REGISTRO
+    $.ajax({
+        type: "POST", //TIPO DE ACCION
+        url: uri,//ACCION O METODO A REALIZAR
+        data: { "id": id }, //SERIALIZACION DE LOS DATOS A ENVIAR
+        success: function (data) {
+            if (data.success) {//SI SE ELIMINO CORRECTAMENTE
+                $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
+                AlertTimer(data.message, "El registro ha sido eliminado", "success");
+            }//FIN IF
+            else
+                Alert("Error", data.message, "error");
+        },//FIN SUCCESS
+        error: function () {
+            Alert("Error", "Vuelvalo a intentar", "error");
+        }//FIN ERROR
+    });//FIN AJAX
+
+    return false;
+
+}//FIN FUNCTION
