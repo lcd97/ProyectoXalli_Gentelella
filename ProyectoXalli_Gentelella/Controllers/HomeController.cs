@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers {
     public class HomeController : Controller {
+
+        [Authorize]
         public ActionResult Index() {
             return View();
         }

@@ -17,6 +17,7 @@ namespace ProyectoXalli_Gentelella.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext context = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -75,7 +76,7 @@ namespace ProyectoXalli_Gentelella.Controllers
 
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
             // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -139,6 +140,8 @@ namespace ProyectoXalli_Gentelella.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.RoleList = new SelectList(context.Roles.ToList(), "Name", "Name");
+
             return View();
         }
 
@@ -151,22 +154,27 @@ namespace ProyectoXalli_Gentelella.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Username/*, Email = model.Username*/ };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
 
+                    //SE REGISTRA EL ROL ASIGNADO AL USUARIO
+                    await this.UserManager.AddToRoleAsync(user.Id, model.RoleName);
+
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
+
+            ViewBag.RoleList = new SelectList(context.Roles.ToList(), "Name", "Name");
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             return View(model);
@@ -392,7 +400,7 @@ namespace ProyectoXalli_Gentelella.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

@@ -49,9 +49,9 @@ namespace ProyectoXalli_Gentelella.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Correo electrónico")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Usuario")]
+        //[EmailAddress]
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -65,9 +65,13 @@ namespace ProyectoXalli_Gentelella.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         [Display(Name = "Correo electrónico")]
-        public string Email { get; set; }
+        public string Username { get; set; }
+
+        [Required]
+        [Display(Name = "Rol")]
+        public string RoleName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
