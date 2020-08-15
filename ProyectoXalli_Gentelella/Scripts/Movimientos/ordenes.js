@@ -19,6 +19,22 @@ $(document).ready(function () {
     //LIMPIAR
     limpiarInicio();
     limpiarInputs();
+
+    var loginId = $("#session").val();
+
+    //PONER POR DEFECTO EL EMPLEADO LOGEADO
+    $.ajax({
+        type: "GET",
+        url: "/Ordenes/LoggedUser/",
+        data: { LoginId: loginId },
+        success: function (data) {
+            $("#mesero").val(data.Nombre);
+            $("#mesero").attr("value", data.MeseroId);
+        },
+        error: function () {
+            Alert("Error", "Datos del Colaborador sin cargar", "error");
+        }
+    });
 });
 
 //LIMPIAR TODO

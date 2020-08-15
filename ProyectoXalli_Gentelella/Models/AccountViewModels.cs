@@ -48,12 +48,12 @@ namespace ProyectoXalli_Gentelella.Models
 
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo usuario es obligatorio")]
         [Display(Name = "Usuario")]
         //[EmailAddress]
         public string Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo contraseña es obligatorio")]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
@@ -72,6 +72,8 @@ namespace ProyectoXalli_Gentelella.Models
         [Required]
         [Display(Name = "Rol")]
         public string RoleName { get; set; }
+
+        public int PeopleId { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]

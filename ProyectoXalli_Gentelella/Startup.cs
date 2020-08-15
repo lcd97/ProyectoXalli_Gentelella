@@ -42,7 +42,7 @@ namespace ProyectoXalli_Gentelella
                 //CRAR EL USUARIO PARA EL ROL ADMIN
                 usuario.UserName = "daniela97";
                 usuario.Email = "danycordero9@gmail.com";
-                //usuario.PeopleID = 0;
+                usuario.PeopleId = 0;
 
                 var resultado = AdmUsuario.Create(usuario, "Dcl030197..");
 

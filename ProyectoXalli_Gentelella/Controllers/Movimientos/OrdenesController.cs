@@ -12,6 +12,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         private string mensaje = "";
         private bool completado = false;
 
+        //CONEXION A LA BASE DE DATOS SEGURIDAD
+        private ApplicationDbContext context = new ApplicationDbContext();
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
         // GET: Ordenes
         public ActionResult Index() {
             ViewBag.CategoriaId = new SelectList(db.CategoriasMenu, "Id", "DescripcionCategoriaMenu");
@@ -141,6 +146,25 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 }//FIN TRY-CATCH
             }//FIN USING
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// BUSCA EL EMPLEADO LOGEADO
+        /// </summary>
+        /// <param name="LoginId"></param>
+        /// <returns></returns>
+        public ActionResult LoggedUser(string LoginId) {
+            var user = context.Users.FirstOrDefault(u => u.Id == LoginId);
+
+            var data = (from obj in db.Datos
+                        join m in db.Meseros on obj.Id equals m.DatoId
+                        where m.Id == user.PeopleId
+                        select new {
+                            MeseroId = m.Id,
+                            Nombre = obj.PNombre + " " + obj.PApellido
+                        }).FirstOrDefault();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

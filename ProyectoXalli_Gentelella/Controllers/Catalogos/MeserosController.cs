@@ -16,6 +16,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         private bool completado = false;
         private string mensaje = "";
 
+        //CONEXION A LA BASE DE DATOS SEGURIDAD
+        private ApplicationDbContext context = new ApplicationDbContext();
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
         // GET: Meseros
         public ActionResult Index() {
             return View();
@@ -62,6 +67,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         /// <returns></returns>
         [HttpPost]
         public ActionResult Create(string Nombres, string Apellido, string Cedula, string INSS, string RUC, string HoraEntrada, string HoraSalida) {
+
+            var meseroId = 0;
 
             if (INSS.Length != 9) {
                 mensaje = "El número INSS debe ser de 8 dígitos";
@@ -129,6 +136,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                         //Si todo se hizo correctamente se guardan los datos definitivamente
                         transact.Commit();
 
+
+                        meseroId = mesero.Id;
                     } catch (Exception) {
                         //Si hubo algun error en el almacenamiento de los datos
                         //deshacemos todos lo que habiamos guardado
@@ -170,6 +179,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                             //Si todo se hizo correctamente se guardan los datos definitivamente
                             transact.Commit();
 
+                            meseroId = waiter.Id;
                         }//FIN SAVECHANGES DATO               
                     } catch (Exception) {
 
@@ -182,7 +192,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                 }
             }//FIN ELSE
 
-            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje, meseroId }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -319,10 +329,19 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     var mesero = db.Meseros.Find(id);
+                    var userRole = context.Users.FirstOrDefault(u => u.PeopleId == mesero.Id);
+
+                    bool existe = false;
+
+                    if (userRole != null) {
+                        existe = true;
+                    }
+
+
                     //BUSCANDO QUE Categoria NO TENGA SALIDAS NI ENTRADAS REGISTRADAS CON SU ID
                     Orden orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(p => p.MeseroId == mesero.Id);
 
-                    if (orden == null) {
+                    if (orden == null && existe == false) {
                         db.Meseros.Remove(mesero);
                         completado = await db.SaveChangesAsync() > 0 ? true : false;
                         mensaje = completado ? "Eliminado correctamente" : "Error al eliminar";
@@ -338,6 +357,26 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                 }//FIN TRY-CATCH
             }//FIN USING
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> BuscarColaborador(string Identificacion) {
+
+            var colaborador = await (from obj in db.Datos
+                                     join d in db.Meseros on obj.Id equals d.DatoId
+                                     where obj.Cedula.Trim().ToUpper() == Identificacion.Trim().ToUpper()
+                                     select new {
+                                         DatoId = obj.Id,
+                                         MeseroId = d.Id,
+                                         Nombres = obj.PNombre,
+                                         Apellidos = obj.PApellido,
+                                         Cedula = obj.Cedula,
+                                         INSS = d.INSS,
+                                         RUC = obj.RUC,
+                                         EntradaH = d.HoraEntrada,
+                                         SalidaH = d.HoraSalida,
+                                     }).FirstOrDefaultAsync();
+
+            return Json(colaborador, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing) {

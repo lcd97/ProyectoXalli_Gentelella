@@ -229,6 +229,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\animate.css" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -417,6 +418,7 @@
     <Content Include="Scripts\Movimientos\entradas.js" />
     <Content Include="Scripts\Movimientos\ordenes.js" />
     <Content Include="Scripts\Operaciones\ventanas.js" />
+    <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
     <Content Include="Scripts\switchery.js" />
     <Content Include="Web.config" />

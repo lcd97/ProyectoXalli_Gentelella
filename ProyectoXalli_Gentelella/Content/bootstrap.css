@@ -2900,8 +2900,16 @@ select[multiple].input-lg {
 .has-error .form-control-feedback {
   color: #a94442;
 }
+
+/*AQUI ESTUVE YO*/
+.input-validation-error {
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+/*AQUI ESTUVE YO*/
+
 .has-feedback label ~ .form-control-feedback {
-  top: 25px;
+    top: 25px;
 }
 .has-feedback label.sr-only ~ .form-control-feedback {
   top: 0;
