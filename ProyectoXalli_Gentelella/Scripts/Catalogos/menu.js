@@ -91,6 +91,8 @@ function validar(nuevo) {
 
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU
 function saveMenuItem() {
+    $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
+
     //SE CREA UN OBJETO DE LA CLASE FORMDATA
     var formData = new FormData();
     var a = $("#platillo").val();
@@ -243,6 +245,10 @@ function Delete(uri, id) {
             if (data.success) {//SI SE ELIMINO CORRECTAMENTE
                 $("#" + id).remove(); //ELIMINA EL DIV DEL PLATILLO
                 AlertTimer(data.message, "El registro ha sido eliminado", "success");
+
+                if ($("#menuAdd > div").length == 0) {
+                    $("#filtro").attr("disabled", true);//INHABILITAR EL INPUT FILTRAR
+                }
             }//FIN IF
             else
                 Alert("Error", data.message, "error");

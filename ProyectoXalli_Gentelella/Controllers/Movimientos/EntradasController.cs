@@ -156,5 +156,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
             return Json(num, JsonRequestBehavior.AllowGet);
         }
+
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

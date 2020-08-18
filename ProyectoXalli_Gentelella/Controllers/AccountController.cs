@@ -149,6 +149,8 @@ namespace ProyectoXalli_Gentelella.Controllers {
                 //SE REGISTRA EL ROL ASIGNADO AL USUARIO
                 await this.UserManager.AddToRoleAsync(user.Id, RoleName);
 
+                almacenado = true;//CAMBIOS REALIZADOS
+
                 //return RedirectToAction("Index", "Home");
                 return Json(almacenado, JsonRequestBehavior.AllowGet);
 

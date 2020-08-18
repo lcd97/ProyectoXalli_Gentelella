@@ -20,6 +20,7 @@ $('.js-example-basic-single').select2({
 
 //LIMPIA LA PANTALLA
 function limpiarPantalla() {
+    $("#cedula").val("");
     $("#inss").val("");
     $("#ruc").val("");
     $("#nombre").val("");

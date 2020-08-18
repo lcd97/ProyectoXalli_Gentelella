@@ -43,10 +43,6 @@ function limpiarInicio() {
     $("#categoria").val("-1");
     $('#categoria').trigger('change'); // Notify any JS components that the value changed
 
-    //AGREGAR EL MENSAJE PRINCIOAL DE SECCION MENU
-    var agregar = '<h2 id="nada" style="text-align:center;" col-md-12 col-sm-12 col-xs-12>Seleccione una categoría</h2>';
-    $("#menuCategory").append(agregar);
-
     var elem = document.querySelector('.js-switch');
 
     if (elem.checked == false) {
@@ -56,15 +52,16 @@ function limpiarInicio() {
     $("#titleCliente").html("Visitante");//CAMBIAR EL TITULO DE TIPO CLIENTE
     $("#identificacion").attr("readonly", "true");//DESACTIVAR CAMPO IDENTIFICACION
     $("#buscarCliente").attr("disabled", "true");//DESACTIVAR BOTON BUSCAR CLIENTE
+    $("#agregarCliente").attr("disabled", "true");//DESACTIVAR BOTON BUSCAR CLIENTE
 
     //LIMPIAR TABLA
     $("#table_body").empty();
 
-    var agregarNada = '<tr id="nada">' +
-        ' <td colspan="5" style="text-align:center!important;">- Sin pedidos aun -</td>' +
-        '</tr>';
+    //var agregarNada = '<tr id="nada">' +
+    //    ' <td colspan="5" style="text-align:center!important;">- Sin pedidos aun -</td>' +
+    //    '</tr>';
 
-    $("#table_body").append(agregarNada);
+    //$("#table_body").append(agregarNada);
 
     $("#total").html("$ 0");
 }
@@ -80,6 +77,7 @@ function Check() {
         $("#identificacion").attr("readonly", "true");//DESACTIVAR CAMPO IDENTIFICACION
         $("#identificacion").val("readonly", "true");//DESACTIVAR CAMPO IDENTIFICACION
         $("#buscarCliente").attr("disabled", "true");//DESACTIVAR BOTON BUSCAR CLIENTE
+        $("#agregarCliente").attr("disabled", "true");//DESACTIVAR BOTON BUSCAR CLIENTE
 
         limpiarInputs();
 
@@ -88,6 +86,7 @@ function Check() {
         $("#titleCliente").html("Huesped");//CAMBIAR EL TITULO DE TIPO CLIENTE
         $("#identificacion").removeAttr("readonly");//ACTIVAR CAMPO IDENTIFICACION
         $("#buscarCliente").removeAttr("disabled");//ACTIVAR BOTON BUSCAR CLIENTE
+        $("#agregarCliente").removeAttr("disabled");//ACTIVAR BOTON BUSCAR CLIENTE
     }
 }//FIN FUNCION
 
@@ -97,7 +96,7 @@ function limpiarInputs() {
     $("#identificacion").val("");
     $("#nombreCliente").val("");
     $("#nombreCliente").attr("val", "");
-    $("#ruc").val("");
+    $("#rucOrden").val("");
 }
 
 //INICIALIZADOR DE DATEPICKER
@@ -371,7 +370,7 @@ $("#filtro").on("keyup", function () {
 
 $("#identificacion").blur(function () {
     $("#nombreCliente").val("");
-    $("#ruc").val("");
+    $("#rucOrden").val("");
 
     if ($(this).val() != "") {
         $.ajax({
@@ -385,7 +384,7 @@ $("#identificacion").blur(function () {
                 if (data != null) {
                     $("#nombreCliente").val(data.Nombres);
                     $("#nombreCliente").attr("val", data.ClienteId);
-                    $("#ruc").val(data.RUC);
+                    $("#rucOrden").val(data.RUC);
                 }
             }
         });
@@ -394,10 +393,13 @@ $("#identificacion").blur(function () {
 
 //FUNCION PARA ALMACENAR LA ORDEN
 function guardarOrden() {
-    var codigo = $("#codigoOrden").val(), meseroId = 2, clienteId = $("#nombreCliente").attr("val");
+    var codigo = $("#codigoOrden").val(), meseroId = $("#mesero").attr("value"), clienteId = "";
 
+    //PASAR UN VALOR POR DEFECTO EN CASO QUE NO EXISTA REGISTRO DE UN NUEVO CLIENTE
+    clienteId = $("#nombreCliente").attr("val") != "" ? $("#nombreCliente").attr("val") : 0;
+
+    //CREAR LA FECHA DE ORDEN
     var date = $("#fechaOrden").val() + " " + moment().format('h:mm:ss');
-
 
     var OrdenDetails = new Array();
 
@@ -426,23 +428,96 @@ function guardarOrden() {
 
     //alert(data);
 
-    $.ajax({
-        type: "POST",
-        url: "/Ordenes/Create/",
-        data: data,
-        success: function (data) {
-            if (data.success) {
-                //LIMPIAR PANTALLA
-                limpiarInputs();
-                limpiarInicio();
+    if (validado()) {
+        $.ajax({
+            type: "POST",
+            url: "/Ordenes/Create/",
+            data: data,
+            success: function (data) {
+                if (data.success) {
+                    //LIMPIAR PANTALLA
+                    limpiarInputs();
+                    limpiarInicio();
 
-                //VOLVER A CARGAR EL CODIGO
-                cargarCodigo();
+                    //VOLVER A CARGAR EL CODIGO
+                    cargarCodigo();
 
-                AlertTimer("Completado", data.message, "success");
-            } else {
-                Alert("Error", data.mesage, "error");
+                    AlertTimer("Completado", data.message, "success");
+                } else {
+                    Alert("Error", data.mesage, "error");
+                }
             }
-        }
-    });
+        });
+    }
+    else {
+        Alert("Error", "Se encontraron campos requeridos vacios", "error");
+    }
+}//FIN FUNCTION
+
+//VALIDAR CAMPOS QUE NO QUEDEN VACIOS
+function validado() {
+    var validado = false;
+
+    if ($("#table_body tr").length != 0 && $("#codigoOrden").val() && $("#fechaOrden").val() != "") {
+        //SI ES HUESPED Y NO ESTA VACIO LOS DATOS PASAR TRUE
+        if (!$(".js-switch").is(":checked") && $("#nombreCliente").val() != "") {
+            validado = true;
+        } else
+            //SI NO ES HUESPED Y LOS DATOS ESTAN VACIOS NO HAY PEDO
+            if ($(".js-switch").is(":checked") && $("#nombreCliente").val() == "") {
+                validado = true;
+            }
+    }
+
+    return validado;
+}//FIN FUNCTION
+
+//FUNCION PARA ALMACENAR UN OBJETO CLIENTE
+function saveCustomer() {
+    var nombre, apellido, documento, ruc, email, telefono, tipo;
+
+    nombre = $("#nombre").val();
+    apellido = $("#apellido").val();
+    documento = $("#numero").val().toUpperCase();
+    ruc = $("#ruc").val().toUpperCase();
+    email = $("#email").val();
+    telefono = $("#telefono").val();
+    tipo = $("#documento").val();
+
+    if (validandoCliente() == true) {
+        //FUNCION AJAX
+        $.ajax({
+            type: "POST",
+            url: "/Clientes/Create",
+            dataType: "JSON",
+            data: {
+                Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
+                Email: email, Telefono: telefono, Tipo: tipo
+            },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
+            success: function (data) {
+                if (data.success) {
+                    $("#nombreCliente").val(nombre + " " + apellido);
+                    $("#identificacion").val(documento);
+                    $("#rucOrden").val(ruc);
+
+                    $("#small-modal").modal("hide"); //CERRAR MODAL
+                    AlertTimer("Completado", data.message, "success");
+                } else
+                    Alert("Error al almacenar", data.message, "error");//MENSAJE DE ERROR
+            },
+            error: function () {
+                Alert("Error al almacenar", "Intentelo de nuevo", "error");
+            }
+        });//FIN AJAX
+    } else {
+        Alert("Error", "Campos vacios", "error");
+    }
+}
+
+//FUNCION PARA VALIDAR CAMPOS VACIOS
+function validandoCliente() {
+    if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#numero").val() != "" && $("#email").val() != "") {
+        return true;
+    } else
+        return false;
 }//FIN FUNCTION

@@ -14,8 +14,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         //CONEXION A LA BASE DE DATOS SEGURIDAD
         private ApplicationDbContext context = new ApplicationDbContext();
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
 
         // GET: Ordenes
         public ActionResult Index() {
@@ -108,12 +106,52 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
                     Orden orden = new Orden();
 
+                    Dato plantilla1 = new Dato();
+                    Cliente plantilla2 = new Cliente();
+
+                    Cliente clientePlantilla = new Cliente();
+
                     orden.CodigoOrden = Codigo;
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
                     orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
                     orden.MeseroId = MeseroId;
-                    orden.ClienteId = ClienteId;
-                    orden.ImagenId = 1;
+                    //SI EL CLIENTE ES VISITANTE
+                    if (ClienteId == 0) {
+                        var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
+
+                        //SI NO EXISTE LA PLANTILLA
+                        if (buscarP == null) {
+                            plantilla1.Cedula = "000-000000-0000X";
+                            plantilla1.PNombre = "Default";
+                            plantilla1.PApellido = "User";
+
+                            db.Datos.Add(plantilla1);
+                            db.SaveChanges();
+
+                            plantilla2.DatoId = plantilla1.Id;
+                            plantilla2.EmailCliente = "defaultuser@xalli.com";
+                            plantilla2.EstadoCliente = false;
+
+                            db.Clientes.Add(plantilla2);
+                            db.SaveChanges();
+
+                            clientePlantilla = plantilla2;
+                        } else
+                            clientePlantilla = db.Clientes.FirstOrDefault(c => c.Id == plantilla2.Id);
+                    }
+
+                    orden.ClienteId = ClienteId != 0 ? ClienteId : clientePlantilla.Id;
+
+                    var comandaCero = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "Comanda");
+                    Imagen img = new Imagen();
+
+                    if (comandaCero == null) {
+                        img.Ruta = "Comanda";
+                        db.Imagenes.Add(img);
+                        db.SaveChanges();
+                    }
+                    //ALMACENAMOS UNA PLANTILLA
+                    orden.ImagenId = comandaCero != null ? comandaCero.Id : img.Id;
 
                     //GUARDAR LA ORDEN
                     db.Ordenes.Add(orden);
@@ -165,6 +203,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                         }).FirstOrDefault();
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
