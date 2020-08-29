@@ -23,12 +23,12 @@ namespace MenuAPI.Areas.API.Controllers
         public async Task<JsonResult> DetalleDeOrden(int id)
         {
             var DetalleDeOrdenes = await (from dor in db.DetallesDeOrden
-                                          join m in db.Menus on dor.MenuId equals m.Id
+                                          join m in db.Menus on dor.MenuId equals m.Id                                       
                                           where dor.OrdenId == id
                                           select new DetallesDeOrdenWS
                                           {
                                               id = dor.Id,
-                                              cantidadorden = dor.CantidadOrden,
+                                              cantidadorden =  dor.CantidadOrden,
                                               notaorden = dor.NotaDetalleOrden,
                                               nombreplatillo = m.DescripcionMenu,
                                               preciounitario = dor.PrecioOrden,
@@ -42,6 +42,32 @@ namespace MenuAPI.Areas.API.Controllers
             return Json(DetalleDeOrdenes, JsonRequestBehavior.AllowGet);
 
         }
+
+        //Obtener los detalles de orden de una orden dada
+        [HttpGet]
+        public async Task<JsonResult> DetalleDeOrdenCuenta(int id)
+        {
+            var DetalleDeOrdenes = await (from dor in db.DetallesDeOrden
+                                          join m in db.Menus on dor.MenuId equals m.Id
+                                          where dor.OrdenId == id
+                                          group dor by new { m.DescripcionMenu, dor.PrecioOrden, dor.EstadoDetalleOrden, dor.MenuId, dor.OrdenId } into g
+                                          select new DetallesDeOrdenWS
+                                          {
+                                              cantidadorden = g.Sum(x=>x.CantidadOrden),
+                                              nombreplatillo = g.Key.DescripcionMenu,
+                                              preciounitario = g.Key.PrecioOrden,
+                                              estado = g.Key.EstadoDetalleOrden,
+                                              menuid = g.Key.MenuId,
+                                              ordenid = g.Key.OrdenId,
+                                              fromservice = true
+
+                                          }).ToListAsync();
+
+            return Json(DetalleDeOrdenes, JsonRequestBehavior.AllowGet);
+
+        }
+
+
 
         // Agregar nueva orden y nuevo detalle
         [HttpPost]
@@ -159,83 +185,86 @@ namespace MenuAPI.Areas.API.Controllers
             return Json(resultadoWS);
         }
 
-        //[HttpPost]
-        //public JsonResult NuevosDetalle(List<DetallesDeOrdenWS> nuevoDetallesWS)
-        //{
-        //    ResultadoWS resultadoWS = new ResultadoWS();
+        [HttpPost]
+        public async Task<JsonResult> NuevosDetalle(List<DetallesDeOrdenWS> nuevoDetallesWS)
+        {
+            ResultadoWS resultadoWS = new ResultadoWS();
 
-        //    using (var transact = db.Database.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            foreach (var DetalleActual in nuevoDetallesWS)
-        //            {
-        //                if (esDeBar(DetalleActual.menuid))
-        //                {
-        //                    int existencias = existencia(DetalleActual.menuid);
+            using (var transact = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var DetalleActual in nuevoDetallesWS)
+                    {
+                        if (await esDeBar(DetalleActual.menuid))
+                        {
+                            int existencias = await existencia(DetalleActual.menuid);
 
-        //                    if (existencias >= DetalleActual.cantidadorden)
-        //                    {
-        //                        DetalleDeOrden detallesDeOrden = new DetalleDeOrden
-        //                        {
-        //                            CantidadOrden = DetalleActual.cantidadorden,
-        //                            NotaDetalleOrden = DetalleActual.notaorden,
-        //                            PrecioUnitario = DetalleActual.preciounitario,
-        //                            EstadoDetalleOrden = DetalleActual.estado,
-        //                            MenuId = DetalleActual.menuid,
-        //                            OrdenId = DetalleActual.ordenid
-        //                        };
+                            if (existencias >= DetalleActual.cantidadorden)
+                            {
+                                DetalleDeOrden detallesDeOrden = new DetalleDeOrden
+                                {
+                                    CantidadOrden = DetalleActual.cantidadorden,
+                                    NotaDetalleOrden = DetalleActual.notaorden,
+                                    PrecioOrden = DetalleActual.preciounitario,
+                                    EstadoDetalleOrden = DetalleActual.estado,
+                                    MenuId = DetalleActual.menuid,
+                                    OrdenId = DetalleActual.ordenid
+                                };
 
-        //                        db.DetallesDeOrden.Add(detallesDeOrden);
+                                db.DetallesDeOrden.Add(detallesDeOrden);
 
-        //                    }
-        //                    else
-        //                    {
-        //                        resultadoWS.Mensaje = "La existencia es menor que la cantidad especificada del producto: " + DetalleActual.nombreplatillo;
-        //                        resultadoWS.Resultado = false;
-        //                        throw new Exception();
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    DetalleDeOrden detallesDeOrden = new DetalleDeOrden
-        //                    {
-        //                        CantidadOrden = DetalleActual.cantidadorden,
-        //                        NotaDetalleOrden = DetalleActual.notaorden,
-        //                        PrecioUnitario = DetalleActual.preciounitario,
-        //                        EstadoDetalleOrden = DetalleActual.estado,
-        //                        MenuId = DetalleActual.menuid,
-        //                        OrdenId = DetalleActual.ordenid
-        //                    };
+                            }
+                            else
+                            {
+                                resultadoWS.Mensaje = "La existencia es menor que la cantidad especificada del producto: " + DetalleActual.nombreplatillo;
+                                resultadoWS.Resultado = false;
+                                throw new Exception();
+                            }
+                        }
+                        else
+                        {
+                            DetalleDeOrden detallesDeOrden = new DetalleDeOrden
+                            {
+                                CantidadOrden = DetalleActual.cantidadorden,
+                                NotaDetalleOrden = DetalleActual.notaorden,
+                                PrecioOrden = DetalleActual.preciounitario,
+                                EstadoDetalleOrden = DetalleActual.estado,
+                                MenuId = DetalleActual.menuid,
+                                OrdenId = DetalleActual.ordenid
+                            };
 
-        //                    db.DetallesDeOrden.Add(detallesDeOrden);
-        //                }
+                            db.DetallesDeOrden.Add(detallesDeOrden);
+                        }
 
-        //            }
+                    }
 
-        //            if (db.SaveChanges() > 0)
-        //            {
-        //                resultadoWS.Mensaje = "Almecenado con exito";
-        //                resultadoWS.Resultado = true;
-        //                transact.Commit();
-        //            }
-        //            else
-        //            {
-        //                resultadoWS.Mensaje = "Error al guardar el detalle";
-        //                resultadoWS.Resultado = false;
-        //                throw new Exception();
-        //            }
+                    if (db.SaveChanges() > 0)
+                    {
+                        resultadoWS.Mensaje = "Almecenado con exito";
+                        resultadoWS.Resultado = true;
+                        transact.Commit();
+                    }
+                    else
+                    {
+                        resultadoWS.Mensaje = "Error al guardar el detalle";
+                        resultadoWS.Resultado = false;
+                        throw new Exception();
+                    }
 
 
 
-        //        } catch (Exception e)
-        //        {
-        //            transact.Rollback();
-        //        }
-        //    }
+                }
+                catch (Exception ex)
+                {
+                    resultadoWS.Mensaje = ex.Message;
+                    resultadoWS.Resultado = false;
+                    transact.Rollback();
+                }
+            }
 
-        //    return Json(resultadoWS);
-        //}
+            return Json(resultadoWS);
+        }
 
         protected override void Dispose(bool disposing)
         {
