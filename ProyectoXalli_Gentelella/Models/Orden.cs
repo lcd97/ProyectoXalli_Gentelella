@@ -36,7 +36,6 @@ namespace ProyectoXalli_Gentelella.Models {
         public int MeseroId { get; set; }
         public int ClienteId { get; set; }
         public int ImagenId { get; set; }
-        public int TurnoId { get; set; }
 
         //DECLARACION DE RELACION PADRE
         public virtual Mesero Mesero { get; set; }

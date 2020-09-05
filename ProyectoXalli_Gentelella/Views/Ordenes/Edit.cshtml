@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Ordenes";
+    ViewBag.Title = "Agregar Orden";
 }
 
 <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
@@ -24,15 +24,14 @@
                     <div class="form-group">
                         <div class="col-md-2 col-sm-2 col-xs-6">
                             <label>Código</label>
-                            <input id="codigoOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
+                            <input id="codigoOrden" name="@ViewBag.OrdenId" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
                         </div>
 
                         <div class="col-md-3 col-sm-3 col-xs-6 xdisplay_inputx form-group has-feedback">
                             <label>Fecha</label>
-                            <input type="text" class="form-control has-feedback-left" id="fechaOrden">
+                            <input type="text" class="form-control has-feedback-left" id="fechaOrden" disabled>
                             <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         </div>
-
 
                         <div class="col-md-3 col-sm-3 col-xs-6 xdisplay_inputx form-group has-feedback">
                             <label>Hora</label>
@@ -62,19 +61,20 @@
                             <button type="button" onclick="CargarParcial('/Busquedas/BuscarCliente/')" class="btn btn-primary" data-toggle="tooltip" id="buscarCliente" title="Buscar el cliente" disabled><i class="fa fa-search"></i></button>
                             <button type="button" onclick="CargarParcial('/Clientes/Create/')" class="btn btn-primary" data-toggle="tooltip" id="agregarCliente" title="Buscar el cliente" disabled><i class="fa fa-plus"></i></button>
                         </div>
-                   
+
                         <div class="col-md-3 col-sm-5 col-xs-7">
                             <label>Cliente</label>
                             <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-3 col-sm-3 col-xs-5">
+                        <div class="col-md-2 col-sm-3 col-xs-5">
                             <label>Número RUC</label>
                             <input id="rucOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-1 col-sm-6 col-xs-6" style="margin-top: 25px !important;">
-                            <button type="button" id="btnGuardarOrden" onclick="guardarOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda la entrada">Terminar</button>
+                        <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 25px !important;">
+                            <button type="button" onclick="editOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda los nuevos items">Enviar</button>
+                            <button type="button" onclick="terminarOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Finaliza la orden">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -136,6 +136,7 @@
                                         <th class="column-title">P/U </th>
                                         <th class="column-title">Cantidad </th>
                                         <th class="column-title">Precio Total </th>
+                                        <th class="column-title">Estado </th>
                                         <th class="column-title no-link last">
                                             <span class="nobr">Acciones</span>
                                         </th>
@@ -153,6 +154,7 @@
                                         <td class="" colspan="2"></td>
                                         <td class="column-title" Style="text-align: center;">Total</td>
                                         <td class="" id="total">C$ 0.00</td>
+                                        <td class=""></td>
                                         <td class=""></td>
                                     </tr>
                                 </tfoot>
@@ -174,9 +176,9 @@
     <script src="~/Scripts/select2.full.min.js"></script>
     <script src="~/Scripts/moment-with-locales.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/Scripts/Operaciones/ventanas.js"></script>
-    <script src="~/Scripts/Movimientos/ordenes.js"></script>
     <script src="~/Scripts/Movimientos/cargarSeccionMenu.js"></script>
+    <script src="~/Scripts/Movimientos/editOrden.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
     <script src="~/Scripts/jquery.bootstrap-touchspin.js"></script>
     @*<script src="~/Scripts/Busquedas/clientesB.js"></script>*@
     <script src="~/Scripts/jquery.mask.js"></script>

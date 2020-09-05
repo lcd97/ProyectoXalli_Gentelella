@@ -181,6 +181,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\API\APIAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Busquedas\BusquedasController.cs" />
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasMenuController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
@@ -198,6 +199,10 @@
     <Compile Include="Controllers\Movimientos\OrdenesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008271724172_DeleteTurnoId.cs" />
+    <Compile Include="Migrations\202008271724172_DeleteTurnoId.Designer.cs">
+      <DependentUpon>202008271724172_DeleteTurnoId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -415,8 +420,12 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\Movimientos\activacion.js" />
+    <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
+    <Content Include="Scripts\Movimientos\editOrden.js" />
     <Content Include="Scripts\Movimientos\entradas.js" />
     <Content Include="Scripts\Movimientos\ordenes.js" />
+    <Content Include="Scripts\Movimientos\verComanda.js" />
+    <Content Include="Scripts\Movimientos\verOrden.js" />
     <Content Include="Scripts\Operaciones\ventanas.js" />
     <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
@@ -500,13 +509,16 @@
     <Content Include="Views\Entradas\Index.cshtml" />
     <Content Include="Views\Ordenes\Index.cshtml" />
     <Content Include="Views\Ordenes\DetalleOrden.cshtml" />
+    <Content Include="Views\Ordenes\VerOrdenes.cshtml" />
+    <Content Include="Views\Ordenes\Comanda.cshtml" />
+    <Content Include="Views\Ordenes\Edit.cshtml" />
+    <Content Include="Views\Busquedas\BuscarCliente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\API\Controllers\" />
     <Folder Include="Areas\API\Models\" />
     <Folder Include="Areas\API\Views\Shared\" />
-    <Folder Include="Controllers\Busquedas\" />
     <Folder Include="images\Comanda\" />
     <Folder Include="images\Pago\" />
   </ItemGroup>
@@ -522,6 +534,11 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202008271724172_DeleteTurnoId.resx">
+      <DependentUpon>202008271724172_DeleteTurnoId.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

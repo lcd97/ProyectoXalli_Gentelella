@@ -48,7 +48,7 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            <img src="~/images/picture.jpg" alt="user image" class="img-circle profile_img">
+                            <img src="~/images/user.png" alt="user image" class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             @*<span>Bienvenido,</span>
@@ -100,8 +100,8 @@
                                 <li>
                                     <a><i class="fa fa-clipboard"></i> Ordenes <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="@Url.Action("Index", "Ordenes")">Nueva Orden</a></li>
-                                        <li><a href="@Url.Action("Index", "Ordenes")">Ver Ordenes</a></li>
+                                        <li><a href="@Url.Action("Index", "Ordenes")">Nueva Orden</a></li>                                        
+                                        <li><a href="@Url.Action("VerOrdenes", "Ordenes")">Ver Ordenes</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -220,8 +220,8 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/images/picture.jpg" alt="">@User.Identity.GetUserName()
-                                        <input value="@User.Identity.GetUserId()" id="session" type="hidden"/>
+                                        <img src="~/images/user.png" alt="">@User.Identity.GetUserName()
+                                        <input value="@User.Identity.GetUserId()" id="session" type="hidden" />
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">

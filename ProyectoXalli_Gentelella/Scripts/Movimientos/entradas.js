@@ -84,7 +84,7 @@ function cargarCodigo() {
 
 //INICIALIZADOR DE DATEPICKER
 $('#fechaEntrada').datetimepicker({
-    format: 'MM/DD/YYYY',
+    format: 'DD/MM/YYYY',
     defaultDate: new Date(),
     locale: 'es'
 });

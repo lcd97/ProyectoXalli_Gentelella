@@ -7,17 +7,6 @@
     <div class="x_content">
         <div data-parsley-validate class="form-horizontal form-label-left">
 
-            <div class="form-group">
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
-                </div>
-
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
-                </div>
-            </div>
 
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
@@ -34,6 +23,19 @@
                     <input id="numero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" disabled style="text-transform:uppercase">
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <div class="col-md-4 col-sm-4 col-xs-12">
@@ -82,7 +84,11 @@
     });
 
     //MASCARA DE NUMERO TELEFONICO
-    $("#telefono").mask("0000-0000");
+    $("#telefono").mask("A000-0000", {
+        translation: {
+            'A': {pattern: /[5-7-8]/}
+        }
+    });
 
     //MASCARA PARA EL NUMERO RUC
     $("#ruc").mask("A000000000000B", {
@@ -132,4 +138,27 @@
             selector.val("");//LIMPIAMOS EL INPUT NUMERO
         }
     });
+
+    //BUSQUEDA DE CLIENTE EN CASO DE QUE ESTE REGISTRADO
+    //$("#numero").blur(function () {
+    //    var cedula = $(this).val().toUpperCase();
+
+    //    $.ajax({
+    //        type: "GET",
+    //        dataType: "JSON",
+    //        url: "/Clientes/BuscarDato/",
+    //        data: { cedula },
+    //        succes: function (data) {
+    //            alert("dashdyahj");
+    //            alert(data.Nombre + " " + data.Apellido );
+
+    //            $("#nombre").val(data.Nombre);
+    //            $("#apellido").val(data.Apellido);
+    //            $("#ruc").val(data.RUC);
+    //        },
+    //        error: function () {
+    //            alert("error");
+    //        }
+    //    });
+    //});
 </script>

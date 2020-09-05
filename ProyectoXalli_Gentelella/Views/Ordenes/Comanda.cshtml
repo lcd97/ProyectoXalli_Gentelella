@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "Comanda";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2 id="comandaId" name="@ViewBag.OrdenId">Comanda</h2>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <section class="content invoice">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-xs-12 invoice-header">
+                            <h1>
+                                @*<i class="fa fa-globe"></i> Invoice.*@
+                                <small class="pull-right" id="fechaComanda"></small>
+                                <br />
+                            </h1>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col" id="info">
+                            
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            Mesero
+                            <address>
+                                <strong id="Mesero"></strong>
+                                <br>Ometepe, Rivas
+                                <br>Teléfono: (+505) 2569-4876
+                                <br>Correo: info@ometepebeachhotel.com
+                            </address>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4 invoice-col" id="Customer">
+                            
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-xs-12 table">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cantidad</th>
+                                        <th>Precio Unitario</th>
+                                        <th style="width: 59%">Platillo/Bebida</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbComanda">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-xs-6">
+                            <p class="lead">Nota:</p>
+
+                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                            </p>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-xs-6">
+                            <p class="lead"></p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:50%">Sub-total:</th>
+                                            <td id="subTotal"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>IVA (15%)</th>
+                                            <td id="IVA"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total:</th>
+                                            <td id="Total"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- this row will not appear when printing -->
+                    <div class="row no-print">
+                        <div class="col-xs-12">
+                            <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Imprimir</button>
+                            <button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Facturar</button>
+                            <button class="btn btn-primary pull-right" style="margin-right: 5px;"><i class="fa fa-download"></i> Enviar a Email</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Movimientos/verComanda.js"></script>
+
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+    </script>
+}

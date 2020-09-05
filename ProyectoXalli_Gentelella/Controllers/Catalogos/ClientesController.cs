@@ -57,6 +57,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         /// <returns></returns>
         [HttpPost]
         public ActionResult Create(string Nombre, string Apellido, string Documento, string RUC, string Email, string Telefono, uint? Tipo) {
+            var clienteId = 0;//PARA ENVIAR EN OTRAS VISTAS
+
             //BUSCAR QUE EL RUC INGRESADO NO EXISTA
             var bruc = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC.Trim());
 
@@ -127,6 +129,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
                             completado = db.SaveChanges() > 0 ? true : false;
                             mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
+                            clienteId = customer.Id;
                         }
 
                     } else {
@@ -153,7 +156,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                         db.Clientes.Add(client);
                         completado = db.SaveChanges() > 0 ? true : false;
                         mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
-
+                        clienteId = client.Id;
                     }
 
                     transact.Commit();
@@ -163,7 +166,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                 }//FIN TRY-CATCH
             }//FIN USING
 
-            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje, clienteId }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -280,6 +283,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             }
 
             return View(Cliente);
+        }
+
+        public ActionResult BuscarDato(string Cedula) {
+            var dato = (from obj in db.Datos
+                        where obj.Cedula.Trim() == Cedula.Trim()
+                        select new {
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Proveedor/Delete/5

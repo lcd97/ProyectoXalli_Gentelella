@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Ordenes";
+}
+
+@if (Context.User.IsInRole("Mesero")) {
+    <input val="true" id="rol" type="hidden"  />
+} else {
+    <input val="false" id="rol" type="hidden" />
+}
+
+<!--TABLA DE ORDENES-->
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Ordenes activas</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li class="pull-right">
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-hover">
+                <thead>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Movimientos/verOrden.js"></script>
+}
