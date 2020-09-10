@@ -54,6 +54,29 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
             return Json(cliente, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<JsonResult> ClientesConComanda()
+        {
+            var clientes = await (from c in db.Clientes.Where(c => c.EstadoCliente == true)
+                                  join d in db.Datos on c.DatoId equals d.Id
+                                  join o in db.Ordenes on c.Id equals o.ClienteId
+                                  where o.EstadoOrden == 1 || o.EstadoOrden == 2 && c.Id != 2
+                                  group c by new {c.Id, d.Cedula, c.PasaporteCliente, d.PNombre, d.PApellido } into g
+                                  select new ClienteWS
+                                  {
+
+                                      id = g.Key.Id,
+                                      identificacion = g.Key.Cedula == null ? g.Key.PasaporteCliente : g.Key.Cedula,
+                                      nombre = g.Key.PNombre,
+                                      apellido = g.Key.PApellido
+
+                                  }).ToListAsync();
+
+            return Json(clientes, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         //Cerrar la db
         protected override void Dispose(bool disposing)
         {

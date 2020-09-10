@@ -59,6 +59,30 @@ namespace MenuAPI.Areas.API.Controllers
             return Json(codigo, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult OrdenesPorHuesped(int id)
+        {
+            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1 || x.EstadoOrden == 2)
+                           join m in db.Meseros on o.MeseroId equals m.Id
+                           join c in db.Clientes on o.ClienteId equals c.Id
+                           join d in db.Datos on c.DatoId equals d.Id
+                           where c.Id==id
+                           orderby o.FechaOrden descending
+                           select new OrdenWS
+                           {
+                               id = o.Id,
+                               codigo = o.CodigoOrden,
+                               fechaorden = o.FechaOrden,
+                               estado = o.EstadoOrden,
+                               meseroid = m.Id,
+                               clienteid = c.Id,
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+
+                           }).ToList();
+
+            return Json(ordenes, JsonRequestBehavior.AllowGet);
+        }
+
         //cerrando la db
         protected override void Dispose(bool disposing)
         {
