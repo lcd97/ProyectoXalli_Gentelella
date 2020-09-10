@@ -111,7 +111,7 @@ function limpiarInputs() {
 
 //INICIALIZADOR DE DATEPICKER
 $('#fechaOrden').datetimepicker({
-    format: 'DD/MM/YYYY',
+    format: 'MM/DD/YYYY',
     defaultDate: new Date(),
     locale: 'es'
 });

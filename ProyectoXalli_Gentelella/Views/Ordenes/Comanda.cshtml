@@ -106,7 +106,7 @@
                         <div class="col-xs-12">
                             <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Imprimir</button>
                             <button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Facturar</button>
-                            <button class="btn btn-primary pull-right" style="margin-right: 5px;"><i class="fa fa-download"></i> Enviar a Email</button>
+                            <button class="btn btn-primary pull-right" onclick="enviar()" style="margin-right: 5px;"><i class="fa fa-download"></i> Enviar a Email</button>
                         </div>
                     </div>
                 </section>
@@ -129,5 +129,18 @@
         $("#small-modal").draggable({
             handle: ".modal-header"
         });
+
+
+        function enviar() {
+            myfunction();
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/Ordenes/SendEmail/",
+            //    success: function () {
+
+            //    }
+            //});
+        }
     </script>
 }

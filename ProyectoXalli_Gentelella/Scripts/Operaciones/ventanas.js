@@ -14,6 +14,8 @@ function CargarParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
                 $("#modal-title").html("Detalle");
             }
 
+    $('body').toggleClass("modal-open");
+
     $.ajax({
         "type": "GET", //TIPO DE ACCION
         "url": url, //URL DEL METODO A USAR
@@ -39,6 +41,8 @@ function CargarSmallParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
                 $("#small-modaltitle").html("Detalle");
             }
 
+    $('body').toggleClass("modal-open");
+
     $.ajax({
         "type": "GET", //TIPO DE ACCION
         "url": url, //URL DEL METODO A USAR
@@ -51,7 +55,9 @@ function CargarSmallParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
 //FUNCION PARA CERRAR LA MODAL
 function CerrarModal() {
     $("#small-modal").modal("hide"); //CERRAR MODAL                
-    $("#smallModal").modal("hide"); //CERRAR MODAL                
+    $("#smallModal").modal("hide"); //CERRAR MODAL    
+
+    $("body").toggleClass("modal-open");
 }//FIN FUNCION
 
 //MANDAR EL SWEET ALERT DE ERROR
@@ -63,6 +69,7 @@ function Alert(title, message, status) {
     });//FIN DEL SWEET ALERT
 }//FIN FUNCION
 
+//MANDA EL SWEET ALERT CON TIEMPO
 function AlertTimer(title, mensaje, status) {
     swal({
         title: title,
@@ -99,3 +106,21 @@ function deleteAlert(uri, id) {
             }//FIN SWITCH
         });//FIN THEN
 }//FIN FUCTION DELETE
+
+//function myfunction() {
+//    swal({
+//        title: "",
+//        text: "Ingrese el correo del cliente:",
+//        type: "input",
+//        showCancelButton: true,
+//        closeOnConfirm: false,
+//        inputPlaceholder: "example@hotmail.com"
+//    }, function (inputValue) {
+//        if (inputValue === false) return false;
+//        if (inputValue === "") {
+//            swal.showInputError("You need to write something!");
+//            return false;
+//        }
+//        swal("Nice!", "You wrote: " + inputValue, "success");
+//    });
+////}

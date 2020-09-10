@@ -49,6 +49,7 @@
     });
 });
 
+//CALCULA EL TOTAL DE LA TABLA
 function CalcularTotales() {
     var subTotal = 0;
 

@@ -79,7 +79,7 @@ function cargarCodigo(data) {
 
 //INICIALIZADOR DE DATEPICKER
 $('#fechaOrden').datetimepicker({
-    format: 'DD/MM/YYYY',
+    format: 'MM/DD/YYYY',
     defaultDate: new Date(),
     locale: 'es'
 });
@@ -193,9 +193,7 @@ function editOrden(terminar) {
     });
 
     if (itemsNuevos) {
-        EstadoTerminar = terminar != "true" ? 2 : 1;
-
-        var data = "Codigo=" + codigo + "&FechaOrden=" + date + "&EstadoOrden=" + EstadoTerminar + "&detalleOrden=" + JSON.stringify(OrdenDetails);
+        var data = "Codigo=" + codigo + "&FechaOrden=" + date + "&EstadoOrden=" + terminar + "&detalleOrden=" + JSON.stringify(OrdenDetails);
 
         $.ajax({
             type: "POST",

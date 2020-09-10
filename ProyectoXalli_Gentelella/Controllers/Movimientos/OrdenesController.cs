@@ -357,26 +357,41 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { Principal = OrderHead, Details = OrderDetails }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult SendEmail() {
-            string email = "danycordero9@gmail.com";
-            string password = "canelaazul1";
+        /// <summary>
+        /// ENVIA UN MENSJAE CON LA COMANDA AL CORREO ELECTRONICO
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <param name="Cliente"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SendEmail(string Email, string Cliente) {
+            string emailHotel = "proyectoshotel2020@gmail.com";
+            string passwordHotel = "2020canelaazul";
+            string error = "ENVIADO";
 
-            var loginInfo = new NetworkCredential(email, password);
-            var msg = new MailMessage();
-            var smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            try {
+                MailMessage correo = new MailMessage();
+                correo.From = new MailAddress(emailHotel);
+                correo.To.Add("danycordero9@gmail.com");
+                correo.Subject = "Pruebas de campo";
+                correo.Body = "Este mensaje es de prueba";
+                correo.IsBodyHtml = true;
+                correo.Priority = MailPriority.Normal;
 
-            msg.From = new MailAddress(email);
-            msg.To.Add(new MailAddress("danielacorderol@yahoo.com"));
-            msg.Subject = "probando";
-            msg.Body = "sigo probando";
-            msg.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;                
+                smtp.Credentials = new NetworkCredential(emailHotel, passwordHotel);
 
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = loginInfo;
-            smtpClient.Send(msg);
+                smtp.Send(correo);
 
-            return Json(true, JsonRequestBehavior.AllowGet);
+            } catch (Exception ex) {
+
+                error = ex.Message;
+            }
+
+            return Json(error, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

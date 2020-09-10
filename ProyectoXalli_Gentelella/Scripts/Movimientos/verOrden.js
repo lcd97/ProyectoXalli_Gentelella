@@ -37,6 +37,7 @@ function cargarCodigo(data) {
     return code;
 }
 
+//CARGA LA TABLA DE LAS ORDENES SEGUN EL ROL DEL EMPLEADO
 function cargarTabla(EmpleadoId) {
     //RECUPERAR TODAS LAS ORDENES DEL DIA
     $.ajax({
