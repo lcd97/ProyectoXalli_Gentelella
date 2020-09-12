@@ -132,7 +132,11 @@
     //AGREGAR EL TIPO DE FORMATO DE LOS CAMPOS
     $(document).ready(function () {
         //MASCARA PARA NUMERO TELEFONICO
-        $("#telefono").mask("0000-0000");
+        $("#telefono").mask("A000-0000", {
+            translation: {
+                'A': { pattern: /[2-7-8-9]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+            }
+        });
         //MASCARA PARA EL NUMERO RUC
         $("#ruc").mask("A000000000000B", {
             translation: {

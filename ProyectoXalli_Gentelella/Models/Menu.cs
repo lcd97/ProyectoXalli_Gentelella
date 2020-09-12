@@ -24,7 +24,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public string CodigoMenu { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
-        [StringLength(100, ErrorMessage = "La longitud no debe exceder de 100 dígitos")]
+        [StringLength(350, ErrorMessage = "La longitud no debe exceder de 100 dígitos")]
         [Display(Name = "Platillo")]
         public string DescripcionMenu { get; set; }
 

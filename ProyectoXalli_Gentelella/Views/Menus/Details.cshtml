@@ -5,7 +5,7 @@
 }
 
 <style>
-
+    /*QUITA LINEA EN EL ENCABEZADO*/
     .prod_title {
         border-bottom: 0 !important;
         margin: 0 !important;
@@ -68,10 +68,11 @@
                     tiempo = "Inmediato";
                 }
 
+                var precio = "Precio: $" + data.menu.Precio;
 
                 var addInfo = '<p id="tiempo">Tiempo de preparación: ' + tiempo + '</p>' +
                     '<p id="categoria">Categoría: ' + data.menu.Categoria + '</p>' +
-                    '<p id="precio">Precio: $' + data.menu.Precio + '</p>';
+                    '<p id="precio">' + precio + '</p>';
 
                 $("#tab_content1").append(addInfo);
 

@@ -14,7 +14,7 @@ function CargarParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
                 $("#modal-title").html("Detalle");
             }
 
-    $('body').toggleClass("modal-open");
+    $('body').addClass("modal-open");
 
     $.ajax({
         "type": "GET", //TIPO DE ACCION
@@ -41,7 +41,7 @@ function CargarSmallParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
                 $("#small-modaltitle").html("Detalle");
             }
 
-    $('body').toggleClass("modal-open");
+    $('body').addClass("modal-open");
 
     $.ajax({
         "type": "GET", //TIPO DE ACCION
@@ -57,7 +57,7 @@ function CerrarModal() {
     $("#small-modal").modal("hide"); //CERRAR MODAL                
     $("#smallModal").modal("hide"); //CERRAR MODAL    
 
-    $("body").toggleClass("modal-open");
+    $("body").removeClass("modal-open");
 }//FIN FUNCION
 
 //MANDAR EL SWEET ALERT DE ERROR
@@ -78,6 +78,8 @@ function AlertTimer(title, mensaje, status) {
         buttons: false,
         timer: 1500
     });
+
+    $("body").removeClass("modal-open");
 }
 
 //MANDAR EL SWEET ALERT PARA ELIMINAR
@@ -124,3 +126,10 @@ function deleteAlert(uri, id) {
 //        swal("Nice!", "You wrote: " + inputValue, "success");
 //    });
 ////}
+
+//CAPTURAR LA TECLA SCAPE
+jQuery(document).on('keyup', function (evt) {
+    if (evt.keyCode == 27) {
+        $("body").removeClass("modal-open");
+    }
+});

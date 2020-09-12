@@ -56,6 +56,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,CodigoProducto,NombreProducto,MarcaProducto,PresentacionProducto,CantidadMaxProducto,CantidadMinProducto,EstadoProducto,UnidadMedidaId,CategoriaId")] Producto Producto) {
 
+            if (Producto.CategoriaId == -1) {
+                mensaje = "Seleccione una categoría";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (Producto.UnidadMedidaId == -1) {
+                mensaje = "Seleccione una unidad de medida";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
             if (Producto.CantidadMaxProducto < Producto.CantidadMinProducto) {
                 mensaje = "La cantidad mínima de producto no debe ser mayor a la cantidad máxima";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
@@ -103,7 +113,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
             //ESTO ES PARA AGREGARLO EN EL FORMULARIO DE ENTRADAS
             var um = db.UnidadesDeMedida.Find(Producto.UnidadMedidaId);
-            var pro = Producto.NombreProducto + " " + Producto.MarcaProducto + " " + um.DescripcionUnidadMedida;
+            var pro = Producto.NombreProducto + "-" + Producto.MarcaProducto + "-" + um.AbreviaturaUM;
 
             return Json(new { success = completado, message = mensaje, Id = Producto.Id, Producto = pro }, JsonRequestBehavior.AllowGet);
         }
@@ -249,7 +259,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                 if (valor <= 8)
                     num = "00" + (valor + 1);
                 else
-                if (valor >= 9 && valor < 100)
+                if (valor >= 9 && valor < 99)
                     num = "0" + (valor + 1);
                 else
                     num = (valor + 1).ToString();

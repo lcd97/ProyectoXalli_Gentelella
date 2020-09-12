@@ -44,6 +44,12 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,CodigoCategoriaMenu,DescripcionCategoriaMenu,EstadoCategoriaMenu,BodegaId")] CategoriaMenu CategoriaMenu) {
+
+            if (CategoriaMenu.BodegaId == -1) {
+                mensaje = "Seleccione la bodega que corresponda a esta categoría";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+            
             //BUSCAR QUE EXISTA UNA CATEGORIA CON ESA DESCRIPCION
             CategoriaMenu bod = db.CategoriasMenu.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionCategoriaMenu.ToUpper().Trim() == CategoriaMenu.DescripcionCategoriaMenu.ToUpper().Trim());
 
@@ -142,7 +148,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                 if (valor <= 8)
                     num = "00" + (valor + 1);
                 else
-                if (valor >= 9 && valor < 100)
+                if (valor >= 9 && valor < 99)
                     num = "0" + (valor + 1);
                 else
                     num = (valor + 1).ToString();

@@ -544,7 +544,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                 if (valor <= 8)
                     num = "00" + (valor + 1);
                 else
-                if (valor >= 9 && valor < 100)
+                if (valor >= 9 && valor < 99)
                     num = "0" + (valor + 1);
                 else
                     num = (valor + 1).ToString();

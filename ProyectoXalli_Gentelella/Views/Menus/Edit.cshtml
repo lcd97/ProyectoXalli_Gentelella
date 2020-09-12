@@ -60,7 +60,7 @@
 
                             <div class="form-group col-md-8 col-sm-8 col-xs-8">
                                 @Html.Label("Descripción", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
-                                <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="50" autocomplete="off" style="text-transform:capitalize !important;">
+                                <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="350" autocomplete="off" style="text-transform:capitalize !important;">
                             </div>
 
                             <div class="form-group col-md-4 col-sm-4 col-xs-4">
@@ -126,10 +126,10 @@
 </div>
 
 <script>
-    //CAMBIAR EL MENU POR CATEGORIAS
-    $("#categoria").on("change", function () {
-        comboBx();
-    });
+    ////CAMBIAR EL MENU POR CATEGORIAS
+    //$("#categoria").on("change", function () {
+    //    comboBx();
+    //});
 
 
     //INICIALIZAR EL SELECT2
@@ -155,7 +155,7 @@
         //INICIALIZARDOR DE MASCARA FORMATO PRECIO
         $("#precio").mask('0,000.00', { reverse: true });
 
-        comboBx();
+        //comboBx();
 
         //CARGA LAS PRESENTACIONES DEL PRODUCTO
         $.ajax({
@@ -177,7 +177,7 @@
             }
         });
 
-        //FUNCION PARA MOSTRAR EL PLATILLO SELECICONADO
+        //FUNCION PARA MOSTRAR EL PLATILLO SELECCIONADO
         $.ajax({
             type: "GET",
             url: "/Menus/getMenuItem/" + @Model.Id,
@@ -285,20 +285,20 @@
         })
     });
 
-    //CARGA LOS INGREDIENTES DEL MENU
-    function comboBx() {
-        $.ajax({
-            type: "GET",
-            url: "/Menus/ComprobarArea/" + $("#categoria").val(),//MANDO EL ID DE LA CATEGORIA
-            dataType: "JSON",
-            success: function (bar) {
-                //SI LA CATEGORIA CORRESPONDE AL AREA DE BAR
-                if (bar === true) {
-                    $("#ingredientes").removeAttr("multiple");
-                } else {
-                    $("#ingredientes").attr("multiple", true);
-                }
-            }
-        });
-    }
+    ////CARGA LOS INGREDIENTES DEL MENU
+    //function comboBx() {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/Menus/ComprobarArea/" + $("#categoria").val(),//MANDO EL ID DE LA CATEGORIA
+    //        dataType: "JSON",
+    //        success: function (bar) {
+    //            //SI LA CATEGORIA CORRESPONDE AL AREA DE BAR
+    //            if (bar === true) {
+    //                $("#ingredientes").removeAttr("multiple");
+    //            } else {
+    //                $("#ingredientes").attr("multiple", true);
+    //            }
+    //        }
+    //    });
+    //}
 </script>

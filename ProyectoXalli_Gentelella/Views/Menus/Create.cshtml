@@ -59,7 +59,7 @@
 
                             <div class="form-group col-md-8 col-sm-8 col-xs-8">
                                 @Html.Label("Descripción", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-12" })
-                                <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="50"
+                                <input id="platillo" class="form-control col-md-2 col-sm-2 col-xs-2" required="required" type="text" maxlength="350"
                                        autocomplete="off" style="text-transform:capitalize !important;" data-validate="true" data-error="Campo obligatorio">
                             </div>
 
@@ -90,7 +90,7 @@
 
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             @Html.Label("Producto", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                            <select class="js-example-basic-single form-control" id="ingredientes" style="width:100%!important;" multiple disabled></select>
+                            <select class="js-example-basic-single form-control" id="ingredientes" style="width:100%!important;" multiple></select>
                         </div>
                     </div>
 
@@ -118,33 +118,33 @@
 </div>
 
 <script>
-    //CAMBIAR EL MENU POR CATEGORIAS
-    $("#categoria").on("change", function () {
+    ////CAMBIAR EL MENU POR CATEGORIAS
+    //$("#categoria").on("change", function () {
 
-        //LIMPIA EL SELECT DE INGREDIENTE
-        $('#ingredientes').val("-1");
-        $('#ingredientes').trigger('change'); // Notify any JS components that the value changed
+    //    //LIMPIA EL SELECT DE INGREDIENTE
+    //    $('#ingredientes').val("-1");
+    //    $('#ingredientes').trigger('change'); // Notify any JS components that the value changed
 
-        $.ajax({
-            type: "GET",
-            url: "/Menus/ComprobarArea/" + $(this).val(),//MANDO EL ID DE LA CATEGORIA
-            dataType: "JSON",
-            success: function (bar) {
-                //SI SELECT CATEGORIA NO TIENE SELECCIONADO ALGO
-                if ($(this).val != 0) {
-                    $("#ingredientes").removeAttr("disabled");
-                    //SI LA CATEGORIA CORRESPONDE AL AREA DE BAR
-                    if (bar === true) {
-                        $("#ingredientes").removeAttr("multiple");
-                    } else {
-                        $("#ingredientes").attr("multiple", true);
-                    }
-                } else {
-                    $("#ingredientes").attr("disabled", true);
-                }
-            }
-        });
-    });
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/Menus/ComprobarArea/" + $(this).val(),//MANDO EL ID DE LA CATEGORIA
+    //        dataType: "JSON",
+    //        success: function (bar) {
+    //            //SI SELECT CATEGORIA NO TIENE SELECCIONADO ALGO
+    //            if ($(this).val != 0) {
+    //                $("#ingredientes").removeAttr("disabled");
+    //                //SI LA CATEGORIA CORRESPONDE AL AREA DE BAR
+    //                if (bar === true) {
+    //                    $("#ingredientes").removeAttr("multiple");
+    //                } else {
+    //                    $("#ingredientes").attr("multiple", true);
+    //                }
+    //            } else {
+    //                $("#ingredientes").attr("disabled", true);
+    //            }
+    //        }
+    //    });
+    //});
 
     //INICIALIZAR EL SELECT2
     $('.js-example-basic-single').select2({
@@ -165,8 +165,7 @@
 
     $(document).ready(function () {
         //INICIALIZARDOR DE MASCARA FORMATO PRECIO
-        $("#precio").mask('0,000.00', { reverse: true });
-
+        $("#precio").mask('000.00', { reverse: true });
 
         //CARGA EL CODIGO DE PLATILLO
         $.ajax({

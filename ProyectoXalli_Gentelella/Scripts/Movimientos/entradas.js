@@ -69,6 +69,8 @@
             $("#area").append(agregar);
         }
     });
+
+    limpiarPantalla();
 });
 
 //CARGA EL CODIGO DE LA ENTRADA AUTOMATICAMENTE
@@ -84,7 +86,7 @@ function cargarCodigo() {
 
 //INICIALIZADOR DE DATEPICKER
 $('#fechaEntrada').datetimepicker({
-    format: 'MM/DD/YYYY',
+    format: 'DD/MM/YYYY',
     defaultDate: new Date(),
     locale: 'es'
 });
@@ -366,6 +368,8 @@ function saveInventario() {
 
         if (data) {
 
+            //CAMBIAR FORMATO DE FECHA
+
             var datos = "Codigo=" + codigoEntrada + "&FechaEntrada=" + fecha + "&TipoEntradaId=" + entrada + "&BodegaId=" + area + "&ProveedorId=" + proveedor + "&detalleEntrada=" + JSON.stringify(detalleEntrada);
 
             $.ajax({
@@ -377,6 +381,7 @@ function saveInventario() {
                     if (data.success) {
                         //MOSTRANDO EL SWEET ALERT
                         AlertTimer("Completado", data.message, "success");
+                        cargarCodigo();
                         limpiarPantalla();
                     } else {
                         Alert("Error", "Hubieron errores al guardar", "error");
@@ -397,13 +402,13 @@ function saveInventario() {
 //FUNCION PARA LIMPIAR LA PANTALLA
 function limpiarPantalla() {
     //LIMPIAR INPUTS
-    $("#codigoEntrada").val(cargarCodigo());
+    //$("#codigoEntrada").val(cargarCodigo());
     $("#total").html("C$ 0.00");
+    $("#precio").html("");
+    $("#cantidad").html("");
     //LIMPIAR TABLA
     $("#table_body tr").remove();
     //LIMPIAR LOS SELECT2
-    $("#entrada").select2("val", "-1");
-    $("#area").select2("val", "-1");
-    $("#producto").select2("val", "-1");
-    $("#proveedor").select2("val", "-1");
+    $('.js-example-basic-single').val('-1');
+    $('.js-example-basic-single').trigger('change'); // Notify any JS components that the value changed
 }
