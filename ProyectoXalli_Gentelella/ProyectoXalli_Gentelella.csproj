@@ -180,10 +180,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\API\APIAreaRegistration.cs" />
     <Compile Include="Areas\API\Controllers\CategoriasWSController.cs" />
     <Compile Include="Areas\API\Controllers\ClientesWSController.cs" />
-    <Compile Include="Areas\API\Controllers\ComandaController.cs" />
+    <Compile Include="Areas\API\Controllers\ComandaWSController.cs" />
     <Compile Include="Areas\API\Controllers\DetallesDeOrdenWSController.cs" />
     <Compile Include="Areas\API\Controllers\IngredientesWSController.cs" />
     <Compile Include="Areas\API\Controllers\InventarioWSController.cs" />

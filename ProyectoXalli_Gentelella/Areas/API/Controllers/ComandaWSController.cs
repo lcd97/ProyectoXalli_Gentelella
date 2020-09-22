@@ -13,41 +13,10 @@ using System.Data.Entity;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
-    public class ComandaController : Controller
+    public class ComandaWSController : Controller
     {
         //conexion con la db
         private DBControl db = new DBControl();
-
-        [HttpPost]
-        public JsonResult addPhoto()
-        {
-            ResultadoWS resultadoWS = new ResultadoWS();
-
-            try
-            {
-                var photo = Request.Files["photo"];
-
-                if (photo.ContentLength > 0 || photo != null)
-                {
-                    string path = Path.Combine(Server.MapPath("~/images/Comanda"), photo.FileName);
-                    photo.SaveAs(path);
-
-                    resultadoWS.Mensaje = "Almecenado con exito";
-                    resultadoWS.Resultado = true;
-                }
-
-            }
-            catch(Exception ex)
-            {
-                resultadoWS.Mensaje =ex.Message;
-                resultadoWS.Resultado = false;
-            }
-
-            return Json(resultadoWS, JsonRequestBehavior.AllowGet);
-        }
-
-
-
 
         [HttpPost]
         public async Task<JsonResult> addPhotoComanda(HttpPostedFileBase photo, int idorden)
@@ -69,14 +38,19 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                 {
                     try
                     {
+                        Imagen img = new Imagen();
                         string imgexte = ("/images/Comanda" + @"\" + photo.FileName);
 
-                        //buscar en la db de imagenes para ver si existe
-                        var img = await db.Imagenes.DefaultIfEmpty(null).FirstOrDefaultAsync(i => i.Ruta.Trim() == imgexte.Trim());
                         //buscar la orden para modificarla
                         Orden orden = await db.Ordenes.DefaultIfEmpty(null).FirstOrDefaultAsync(o => o.Id == idorden);
 
-                        if (img == null)
+                        //buscar en la db de imagenes para ver si existe
+                        if (orden != null)
+                        {
+                           img = await db.Imagenes.DefaultIfEmpty(null).FirstOrDefaultAsync(i => i.Id == orden.ImagenId && i.Ruta.Trim() == imgexte.Trim());
+                        }
+
+                        if (img == null && orden != null)
                         {
                             //Crear la ruta y guardar la imagen
                             path = Path.Combine(Server.MapPath("~/images/Comanda"), photo.FileName);
@@ -128,13 +102,19 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                                 throw new Exception();
                             }
                         }
-                        else
+                        else if (img != null && orden != null)
                         {
+                            //modificar
                             path = Path.Combine(Server.MapPath("~/images/Comanda"), photo.FileName);
                             photo.SaveAs(path);
 
                             resultadoWS.Mensaje = "Almecenado con exito";
                             resultadoWS.Resultado = true;
+                        }
+                        else {
+
+                            resultadoWS.Mensaje = "No existe la orden para agregar la imagen";
+                            resultadoWS.Resultado = false;
                         }
                     }
                     catch (Exception ex)
@@ -158,8 +138,8 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
         {
             ResultadoWS resultadoWS = new ResultadoWS();
 
-            string root = "http://192.168.1.52/ProyectoXalli_Gentelella";
-            //string root = "http://proyectoxally.somee.com";
+            //string root = "http://192.168.1.52/ProyectoXalli_Gentelella";
+            string root = "http://proyectoxally.somee.com";
             Orden orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Id == id);
 
             if (orden != null)

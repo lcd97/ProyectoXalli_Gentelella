@@ -59,8 +59,8 @@ namespace MenuAPI.Areas.API.Controllers
         public async Task<JsonResult> MenusCategoria(int id)
         {
             //ruta de la imagen desde la db para la local
-            string root = "http://192.168.1.52/ProyectoXalli_Gentelella";
-            //string root = "http://proyectoxally.somee.com";
+            //string root = "http://192.168.1.52/ProyectoXalli_Gentelella";
+            string root = "http://proyectoxally.somee.com";
 
             var menu = await (from m in db.Menus
                               join i in db.Imagenes on m.ImagenId equals i.Id
