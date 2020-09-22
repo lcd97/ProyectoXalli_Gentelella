@@ -180,6 +180,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\API\BasicAuthenticationAttribute.cs" />
     <Compile Include="Areas\API\Controllers\CategoriasWSController.cs" />
     <Compile Include="Areas\API\Controllers\ClientesWSController.cs" />
     <Compile Include="Areas\API\Controllers\ComandaWSController.cs" />
