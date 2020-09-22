@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Activar Catálogos";
+}
+
+@Styles.Render("~/Content/datatableCSS")
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="clearfix"></div>
+            <div class="x_content">
+                <br />
+                <div class="col-md-1 col-sm-1 col-xs-3">
+                    <label class="control-label" style="font-size:17px; line-height:36px; font-weight:500;">Catálogo</label>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-7 form-group">
+                    <select class="select2_group form-control" id="catalogo">
+                        <optgroup label="Control de Insumos">
+                            <option value="0">Bodegas</option>
+                            <option value="1">Categoría productos</option>
+                            <option value="2">Tipos de entrada</option>
+                            <option value="3">Unidades de medida</option>
+                            <option value="4">Productos</option>
+                            <option value="5">Proveedores</option>
+                        </optgroup>
+                        <optgroup label="Menu">
+                            <option value="6">Categoría de menú</option>
+                            <option value="7">Platillos/Bebidas</option>
+                        </optgroup>
+                        <optgroup label="Ordenes">
+                            <option value="8">Meseros</option>
+                            <option value="9">Clientes</option>
+                        </optgroup>
+                        <optgroup label="Facturacion">
+                            <option value="10">Tipos de pago</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-md-1 col-sm-1 col-xs-2">
+                    <button type="button" class="btn btn-round btn-success" onclick="obtenerURL()">Buscar</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="x_panel" id="hide">
+            <div class="x_title">
+                <h2>Lista de catálogo</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div id="cargar" class="x_content">
+                <br />
+
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script src="~/Scripts/Movimientos/activacion.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/jquery.smartWizard.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/Catalogos/modelo.js"></script>
+    <script src="~/Scripts/Catalogos/cliente.js"></script>
+    <script src="~/Scripts/Catalogos/mesero.js"></script>
+    <script src="~/Scripts/Catalogos/proveedor.js"></script>
+    <script src="~/Scripts/Catalogos/menu.js"></script>
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+        $("#catalogo").select2({
+            //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+            language: {
+                noResults: function () {
+                    return "No hay resultado";
+                },
+                searching: function () {
+                    return "Buscando...";
+                }
+            }
+        });
+    </script>
+}

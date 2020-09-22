@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 {
+    [Authorize]
     public class MeserosController : Controller
     {
         private DBControl db = new DBControl();
@@ -21,6 +22,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        [Authorize(Roles = "Admin")]
         // GET: Meseros
         public ActionResult Index() {
             return View();
@@ -44,6 +46,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { data = meseros }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// RETORNA LA VISTA CREATE
         /// </summary>
@@ -195,6 +198,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje, meseroId }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// OBTIENE LA VISTA EDIT
         /// </summary>
@@ -309,6 +313,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Meseros/Details/5
         public async Task<ActionResult> Details(int? id) {
             if (id == null) {

@@ -127,6 +127,7 @@ function saveMenuItem() {
 
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU
 function editMenuItem() {
+
     //SE CREA UN OBJETO DE LA CLASE FORMDATA
     var formData = new FormData();
     var a = $("#platillo").val();
@@ -152,8 +153,12 @@ function editMenuItem() {
         contentType: false,
         success: function (data) {
             if (data.success) {
-                $("#small-modal").modal("hide"); //CERRAR MODAL
+                $("#small-modal").modal("hide"); //CERRAR MODAL                
+
                 modificarItem(data.Id);//MODIFICAR EL REGISTRO EN LA VISTA INDEX
+
+                estadoMenu(data.estado, data.Id);
+
                 AlertTimer("Completado", data.message, "success");
             } else
                 Alert("Error", data.message, "error");//MENSAJE DE ERROR
@@ -248,6 +253,9 @@ function Delete(uri, id) {
 
                 if ($("#menuAdd > div").length == 0) {
                     $("#filtro").attr("disabled", true);//INHABILITAR EL INPUT FILTRAR
+
+                    agregarPlatillo = '<h2 id="txt" style="text-align:center;">Sin elementos disponibles</h2>';//AGREGA LETRERO
+                    $("#menuAdd").html(agregarPlatillo);
                 }
             }//FIN IF
             else

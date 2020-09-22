@@ -10,12 +10,14 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 {
+    [Authorize]
     public class BodegasController : Controller
     {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: Bodegas
         public ActionResult Index() {
             return View();
@@ -51,6 +53,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return View(bodega);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Bodegas/Create
         public ActionResult Create() {
             return View();
@@ -100,6 +103,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Bodegas/Edit/5
         public async Task<ActionResult> Edit(int? id) {
             if (id == null) {

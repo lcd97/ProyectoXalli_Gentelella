@@ -9,11 +9,14 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+
+    [Authorize]
     public class ProductosController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: Productos
         public ActionResult Index() {
             return View();
@@ -41,6 +44,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = productos }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Productos/Create
         public ActionResult Create() {
             ViewBag.CategoriaId = new SelectList(db.CategoriasProducto, "Id", "DescripcionCategoria");
@@ -118,6 +122,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje, Id = Producto.Id, Producto = pro }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: CategoriasProducto/Edit/5
         public async Task<ActionResult> Edit(int? id) {
             if (id == null) {
@@ -184,6 +189,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: CategoriasProducto/Details/5
         public async Task<ActionResult> Details(int? id) {
             if (id == null) {

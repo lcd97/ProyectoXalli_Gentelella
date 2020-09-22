@@ -71,7 +71,7 @@ namespace ProyectoXalli_Gentelella
             //SI NO EXISTE EL PERMISO RESPONSABLE
             if (!AdmPermisos.RoleExists("Recepcionista")) {
                 permiso = new IdentityRole();
-                permiso.Name = "Responsable";
+                permiso.Name = "Recepcionista";
                 AdmPermisos.Create(permiso);
             }
         }

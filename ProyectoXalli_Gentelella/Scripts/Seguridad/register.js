@@ -29,6 +29,10 @@ function limpiarPantalla() {
     $("#salida").val("");
     $("#username").val("");
     $("#password").val("");
+
+    //LIMPIAR SELECT 2
+    $('.js-example-basic-single').val('');
+    $('.js-example-basic-single').trigger('change'); // Notify any JS components that the value changed
 }
 
 $('#hentrada').datetimepicker({
@@ -121,8 +125,10 @@ $("#nombre").blur(function () {
 
     $("#username").val(userName);
 
-    var pass = generatePasswordRand();
-    $("#password").val(pass);
+    if (userName != "") {
+        var pass = generatePasswordRand();
+        $("#password").val(pass);
+    }
 });
 
 //GENERA LA CONTRASEÑA ALEATORIAMENTE

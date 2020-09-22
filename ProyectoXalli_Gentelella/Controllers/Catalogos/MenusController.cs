@@ -10,12 +10,15 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+
+    [Authorize]
     public class MenusController : Controller {
 
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         //GET: Platillos
         public ActionResult Index() {
             return View();
@@ -56,6 +59,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(completado, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// MUESTRA LA VISTA DEL CREATE
         /// </summary>
@@ -192,6 +196,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje, Id = EnviarId }, JsonRequestBehavior.AllowGet);
         }//FIN POST CREATE
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// METODO GET PARA MOSTRAR LA VISTA EDIT
         /// </summary>
@@ -226,7 +231,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             PlatilloId = obj.Id,
                             codigoMenu = obj.CodigoMenu,
                             Platillo = obj.DescripcionMenu,
-                            Precio = obj.PrecioMenu,
+                            Precio = obj.PrecioMenu.ToString(),
                             Categoria = c.DescripcionCategoriaMenu,
                             CategoriaId = c.Id,
                             Tiempo = obj.TiempoEstimado,
@@ -260,6 +265,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(bar, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// METODO GET PARA MOSTRAR LA VISTA DETAIL
         /// </summary>
@@ -520,9 +526,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                     transact.Rollback();
                 }//FIN TRY-CATCH
             }//FIN USING
-            return Json(new {
-                success = completado, message = mensaje, Id
-            }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje, Id, estado }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

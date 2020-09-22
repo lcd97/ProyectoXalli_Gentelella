@@ -10,12 +10,14 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 {
+    [Authorize]
     public class ProveedoresController : Controller
     {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: Proveedor
         public ActionResult Index() {
             return View();
@@ -41,6 +43,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { data = proveedores }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Productos/Create
         public ActionResult Create() {
             return View();
@@ -206,6 +209,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
         }//FIN POST CREATE
 
+        [Authorize(Roles = "Admin")]
         // GET: Categorias/Edit/5
         public async Task<ActionResult> Edit(int? id) {
             if (id == null) {
@@ -336,6 +340,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: CategoriasProducto/Details/5
         public async Task<ActionResult> Details(int? id) {
             if (id == null) {

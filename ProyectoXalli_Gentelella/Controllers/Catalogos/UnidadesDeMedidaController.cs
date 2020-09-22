@@ -10,12 +10,14 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 {
+    [Authorize]
     public class UnidadesDeMedidaController : Controller
     {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: UnidadesDeMedida
         public ActionResult Index() {
             return View();
@@ -38,6 +40,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { data = unidades }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UnidadesDeMedida/Details/5
         public async Task<ActionResult> Details(int? id) {
             if (id == null) {
@@ -50,6 +53,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return View(unidad);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UnidadDeMedida/Create
         public ActionResult Create() {
             return View();
@@ -91,6 +95,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UnidadDeMedida/Edit/5
         public async Task<ActionResult> Edit(int? id) {
             if (id == null) {
@@ -136,7 +141,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
-
 
         /// <summary>
         /// RETORNA EL CODIGO AUTOMATICAMENTE A LA VISTA CREATE

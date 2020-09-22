@@ -9,12 +9,15 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+
+    [Authorize]
     public class ClientesController : Controller {
 
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: Clientes
         public ActionResult Index() {
             return View();
@@ -37,6 +40,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// RETORNA LA VISTA CREATE
         /// </summary>
@@ -169,6 +173,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje, clienteId }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// DEVULVE LA VISTA EDITAR DEL CLIENTE
         /// </summary>
@@ -268,6 +273,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin")]
         /// <summary>
         /// RECUPERA LA VISTA DETALLE DE CLIENTE
         /// </summary>

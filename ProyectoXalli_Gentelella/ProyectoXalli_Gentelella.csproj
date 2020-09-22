@@ -195,6 +195,7 @@
     <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\Movimientos\ActivacionesController.cs" />
     <Compile Include="Controllers\Movimientos\EntradasController.cs" />
     <Compile Include="Controllers\Movimientos\OrdenesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -512,6 +513,7 @@
     <Content Include="Views\Ordenes\Comanda.cshtml" />
     <Content Include="Views\Ordenes\Edit.cshtml" />
     <Content Include="Views\Busquedas\BuscarCliente.cshtml" />
+    <Content Include="Views\Activaciones\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

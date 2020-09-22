@@ -12,6 +12,8 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
+    
+    [Authorize]
     public class OrdenesController : Controller {
         private DBControl db = new DBControl();
         private string mensaje = "";
@@ -20,6 +22,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         //CONEXION A LA BASE DE DATOS SEGURIDAD
         private ApplicationDbContext context = new ApplicationDbContext();
 
+        [Authorize(Roles = "Admin, Mesero")]
         // GET: Ordenes
         public ActionResult Index() {
             ViewBag.CategoriaId = new SelectList(db.CategoriasMenu, "Id", "DescripcionCategoriaMenu");
@@ -216,6 +219,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin, Mesero")]
         /// <summary>
         /// RETORNA LA VISTA DE ORDENES
         /// </summary>

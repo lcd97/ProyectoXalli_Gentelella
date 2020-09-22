@@ -1,5 +1,8 @@
 ﻿//FUNCION PARA HACER EL CRUD A BODEGA POR MEDIO DEL MODAL (RECIBE UN FORM = FORMULARIO)
-function SubmitForm(form) {
+function SubmitForm(form) { 
+
+    $('select').prop('disabled', false);
+
     $.validator.unobtrusive.parse(form);
     if ($(form).valid()) {
         $.ajax({

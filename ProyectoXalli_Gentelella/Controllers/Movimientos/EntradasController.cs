@@ -7,11 +7,14 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
+
+    [Authorize]
     public class EntradasController : Controller {
         private DBControl db = new DBControl();
         bool completado = false;
         string mensaje = "";
 
+        [Authorize(Roles = "Admin, Cocinero, Recepcionista")]
         /// <summary>
         /// MUESTRA INDEX DE ENTRADAS RESTAURANTE
         /// </summary>
@@ -85,6 +88,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { data = bodegas }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// ALMACENA LA ENTRADA NUEVA
+        /// </summary>
+        /// <param name="Codigo"></param>
+        /// <param name="FechaEntrada"></param>
+        /// <param name="TipoEntradaId"></param>
+        /// <param name="BodegaId"></param>
+        /// <param name="ProveedorId"></param>
+        /// <param name="detalleEntrada"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult AddEntrada(string Codigo, DateTime FechaEntrada, int TipoEntradaId, int BodegaId, int ProveedorId, string detalleEntrada) {
 
@@ -156,7 +169,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
             return Json(num, JsonRequestBehavior.AllowGet);
         }
-
 
         protected override void Dispose(bool disposing) {
             if (disposing) {

@@ -45,69 +45,74 @@ function cargarTabla(EmpleadoId) {
         url: "/Ordenes/Ordenes/",
         data: { EmpleadoId },
         success: function (data) {
+            if (data.length == 0) {
+                var agregar = '<h2 id="txt" style="text-align:center;">No hay ordenes activas</h2>';//AGREGA LETRERO
+                $(".x_content").append(agregar);
+            } else {
+                //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
+                var thead = '<tr> <th>No. Orden</th> <th>Hora ordenada</th> <th>Cliente</th>';
+                var theadFin = "";
 
-            //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
-            var thead = '<tr> <th>No. Orden</th> <th>Hora ordenada</th> <th>Cliente</th>';
-            var theadFin = "";
+                //CREA EL TBODY DE LA TABLA ORDENES
+                var tbodyFin = "";
+                var tbody = "";
 
-            //CREA EL TBODY DE LA TABLA ORDENES
-            var tbodyFin = "";
-            var tbody = "";
+                for (var i = 0; i < Object.keys(data).length; i++) {
 
-            for (var i = 0; i < Object.keys(data).length; i++) {
+                    tbody = '<tr><th scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</th><th>' + data[i].HoraOrden + '</th><td>' + data[i].Cliente + '</td>';
 
-                tbody = '<tr><th scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</th><th>' + data[i].HoraOrden + '</th><td>' + data[i].Cliente + '</td>';
+                    //DEPENDIENDO SI EL ROL ES DIFERENTE A MESERO
+                    if ($("#rol").attr("val") == "false") {
+                        theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
 
-                //DEPENDIENDO SI EL ROL ES DIFERENTE A MESERO
-                if ($("#rol").attr("val") == "false") {
-                    theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
+                        tbodyFin = '<td>' + data[i].Mesero + '</td>' +
+                            '<td>' +
+                            '<div class="btn-group">' +
+                            '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
+                            'Acción   <span class="caret"></span>' +
+                            '</button>' +
+                            '<ul role="menu" class="dropdown-menu">' +
+                            '<li>' +
+                            '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
+                            '</li>' +
+                            '<li>' +
+                            '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    }
+                    else {
+                        theadFin = '<th>Acciones</th> </tr>';
+                        tbodyFin = '<td>' +
+                            '<div class="btn-group">' +
+                            '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
+                            'Acción   <span class="caret"></span>' +
+                            '</button>' +
+                            '<ul role="menu" class="dropdown-menu">' +
+                            '<li>' +
+                            '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
+                            '</li>' +
+                            '<li>' +
+                            '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    }
 
-                    tbodyFin = '<td>' + data[i].Mesero + '</td>' +
-                        '<td>' +
-                        '<div class="btn-group">' +
-                        '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
-                        'Acción   <span class="caret"></span>' +
-                        '</button>' +
-                        '<ul role="menu" class="dropdown-menu">' +
-                        '<li>' +
-                        '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
-                        '</li>' +
-                        '<li>' +
-                        '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
-                        '</li>' +
-                        '</ul>' +
-                        '</div>' +
-                        '</td>' +
-                        '</tr>';
+                    //AGREGA EL ENCABEZADO A LA TABLA
+                    $("thead").html(thead + theadFin);
+                    //AGREGA EL CUERPO DE LA TABLA
+                    $("tbody").append(tbody + tbodyFin);
                 }
-                else {
-                    theadFin = '<th>Acciones</th> </tr>';
-                    tbodyFin = '<td>' +
-                        '<div class="btn-group">' +
-                        '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
-                        'Acción   <span class="caret"></span>' +
-                        '</button>' +
-                        '<ul role="menu" class="dropdown-menu">' +
-                        '<li>' +
-                        '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
-                        '</li>' +
-                        '<li>' +
-                        '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
-                        '</li>' +
-                        '</ul>' +
-                        '</div>' +
-                        '</td>' +
-                        '</tr>';
-                }
-
-                //AGREGA EL ENCABEZADO A LA TABLA
-                $("thead").html(thead + theadFin);
-                //AGREGA EL CUERPO DE LA TABLA
-                $("tbody").append(tbody + tbodyFin);
             }
         }
     });//FIN AJAX
-}
+
+}//FIN FUNCTION
 
 //FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
 function RedirectToEdit(OrderId) {

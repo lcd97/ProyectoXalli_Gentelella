@@ -21,6 +21,12 @@ function CargarParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
         "url": url, //URL DEL METODO A USAR
         success: function (parcial) {
             $("#VistaParcial").html(parcial);//CARGA LA PARCIAL CON ELEMENTOS QUE CONTEGA
+
+
+            if (url.includes("/Menus/Edit")) {
+                //QUITAR LA CLASE QUE DESHABILITA EL BOTON GUARDAR
+                $("#finalizar").removeClass("buttonDisabled");
+            }
         }//FIN SUCCESS
     });//FIN AJAX
 }//FIN FUNCTION

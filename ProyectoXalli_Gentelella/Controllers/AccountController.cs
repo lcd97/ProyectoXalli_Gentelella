@@ -116,9 +116,9 @@ namespace ProyectoXalli_Gentelella.Controllers {
             }
         }
 
+        [Authorize(Roles = "Admin")]
         //
         // GET: /Account/Register
-        [AllowAnonymous]
         public ActionResult Register() {
             ViewBag.RoleList = new SelectList(context.Roles.ToList(), "Name", "Name");
 
@@ -138,7 +138,7 @@ namespace ProyectoXalli_Gentelella.Controllers {
             var user = new ApplicationUser { UserName = Username, PeopleId = PeopleId /*, Email = model.Username*/ };
             var result = await UserManager.CreateAsync(user, Password);
             if (result.Succeeded) {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false); INICIA SESION AUTOMATICAMENTE
 
                 // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                 // Enviar correo electrónico con este vínculo

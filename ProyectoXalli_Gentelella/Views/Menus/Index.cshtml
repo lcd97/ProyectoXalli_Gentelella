@@ -63,5 +63,20 @@
         $("#small-modal").draggable({
             handle: ".modal-header"
         });
+
+        //FUNCION PARA ELIMINAR EL DIV DEL MENU ENCASO DE QUE ESTE ACTIVO
+        function estadoMenu(estado, id) {
+            //ELIMINAR SI EL REGISTRO ESTA DESACTIVADO
+            if (estado == false) {
+                $("#" + id).remove(); //ELIMINA EL DIV DEL PLATILLO
+            }
+
+            if ($("#menuAdd > div").length == 0) {
+                $("#filtro").attr("disabled", true);//INHABILITAR EL INPUT FILTRAR
+
+                agregarPlatillo = '<h2 id="txt" style="text-align:center;">Sin elementos disponibles</h2>';//AGREGA LETRERO
+                $("#menuAdd").html(agregarPlatillo);
+            }
+        }
     </script>
 }
