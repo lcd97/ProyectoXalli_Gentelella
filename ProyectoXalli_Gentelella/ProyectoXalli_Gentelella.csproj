@@ -179,7 +179,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\API\APIAreaRegistration.cs" />
+    <Compile Include="Areas\API\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Areas\API\Controllers\CategoriasWSController.cs" />
+    <Compile Include="Areas\API\Controllers\ClientesWSController.cs" />
+    <Compile Include="Areas\API\Controllers\ComandaWSController.cs" />
+    <Compile Include="Areas\API\Controllers\DetallesDeOrdenWSController.cs" />
+    <Compile Include="Areas\API\Controllers\IngredientesWSController.cs" />
+    <Compile Include="Areas\API\Controllers\InventarioWSController.cs" />
+    <Compile Include="Areas\API\Controllers\MenusWSController.cs" />
+    <Compile Include="Areas\API\Controllers\OrdenesWSController.cs" />
+    <Compile Include="Areas\API\Models\CategoriaWS.cs" />
+    <Compile Include="Areas\API\Models\ClienteWS.cs" />
+    <Compile Include="Areas\API\Models\DetallesDeOrdenWS.cs" />
+    <Compile Include="Areas\API\Models\IngredienteWS.cs" />
+    <Compile Include="Areas\API\Models\MenuWS.cs" />
+    <Compile Include="Areas\API\Models\OrdenWS.cs" />
+    <Compile Include="Areas\API\Models\ResultadoWS.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Busquedas\BusquedasController.cs" />
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
@@ -430,7 +445,9 @@
     <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
     <Content Include="Scripts\switchery.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -517,8 +534,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\API\Controllers\" />
-    <Folder Include="Areas\API\Models\" />
+    <Folder Include="Areas\API\Views\Clientes\" />
+    <Folder Include="Areas\API\Views\Comanda\" />
+    <Folder Include="Areas\API\Views\InventarioWS\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="images\Comanda\" />
     <Folder Include="images\Pago\" />
