@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Perfil";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Perfil de usuario</h2>
+               
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
+                    <div class="profile_img">
+                        <div id="crop-avatar">
+                            <!-- Current avatar -->
+                            <img class="img-responsive avatar-view img-rounded" src="~/images/user.png" alt="Avatar" title="Change the avatar">
+                        </div>
+                    </div>
+                    <h3></h3>
+                  
+                    <br />
+
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12">
+
+                   
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Datos personales</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Credenciales</a>
+                            </li>
+                            @*<li role="presentation" class="">
+                                <a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Profile</a>
+                            </li>*@
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                <div class="message_wrapper">
+                                    <h4 class="heading">Nombre:</h4>
+                                    <blockquote class="message">Daniela Cordero Leiva</blockquote>                                    
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+
+                                <!-- start user projects -->
+                                <table class="data table table-striped no-margin">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Project Name</th>
+                                            <th>Client Company</th>
+                                            <th class="hidden-phone">Hours Spent</th>
+                                            <th>Contribution</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>New Company Takeover Review</td>
+                                            <td>Deveint Inc</td>
+                                            <td class="hidden-phone">18</td>
+                                            <td class="vertical-align-mid">
+                                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>New Partner Contracts Consultanci</td>
+                                            <td>Deveint Inc</td>
+                                            <td class="hidden-phone">13</td>
+                                            <td class="vertical-align-mid">
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Partners and Inverstors report</td>
+                                            <td>Deveint Inc</td>
+                                            <td class="hidden-phone">30</td>
+                                            <td class="vertical-align-mid">
+                                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>New Company Takeover Review</td>
+                                            <td>Deveint Inc</td>
+                                            <td class="hidden-phone">28</td>
+                                            <td class="vertical-align-mid">
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- end user projects -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Catalogos/menu.js"></script>    
+}

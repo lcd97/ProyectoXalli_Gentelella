@@ -74,6 +74,12 @@ namespace ProyectoXalli_Gentelella
                 permiso.Name = "Recepcionista";
                 AdmPermisos.Create(permiso);
             }
+
+            if (!AdmPermisos.RoleExists("Bartender")) {
+                permiso = new IdentityRole();
+                permiso.Name = "Bartender";
+                AdmPermisos.Create(permiso);
+            }
         }
     }
 }

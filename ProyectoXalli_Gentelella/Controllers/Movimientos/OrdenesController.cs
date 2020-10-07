@@ -12,7 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
-    
+
     [Authorize]
     public class OrdenesController : Controller {
         private DBControl db = new DBControl();
@@ -242,27 +242,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// MUESTRA LA LISTA DE TODAS LAS ORDENES
         /// </summary>
         /// <returns></returns>
-        public ActionResult Ordenes(int empleadoId) {
-
-            //            SELECT o.id AS NumeroOrden,
-            //		o.CodigoOrden AS Codigo,
-            //		o.fechaorden AS Fecha,
-            //		d.PNombre + ' ' + d.PApellido AS Cliente,
-            //		(SELECT d.PNombre + ' ' + d.PApellido AS Cliente
-            //        FROM ord.Ordenes r
-            //        INNER JOIN ord.Meseros m
-            //        ON r.MeseroId = m.Id
-            //        INNER JOIN inv.datos d
-            //        ON m.datoid = d.Id
-            //        WHERE o.id = r.id) AS Mesero
-            //FROM ord.Ordenes o
-            //INNER JOIN ord.clientes c
-            //ON o.ClienteId = c.Id
-            //INNER JOIN inv.datos d
-            //ON c.datoid = d.Id
+        public ActionResult Ordenes(int empleadoId, string EmpleadoRol) {
             var orden = (dynamic)null;
 
-            if (empleadoId != 0) {
+            if (EmpleadoRol == "Mesero") {
                 orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
@@ -286,7 +269,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
-                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),                            
+                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
                              Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
                              Mesero = (from o in db.Ordenes
                                        join m in db.Meseros on o.MeseroId equals m.Id
@@ -295,7 +278,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                        select a.PNombre + " " + a.PApellido).FirstOrDefault()
                          }).ToList();
             }
-
 
             return Json(orden, JsonRequestBehavior.AllowGet);
         }
@@ -385,7 +367,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 SmtpClient smtp = new SmtpClient();
                 smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
-                smtp.EnableSsl = true;                
+                smtp.EnableSsl = true;
                 smtp.Credentials = new NetworkCredential(emailHotel, passwordHotel);
 
                 smtp.Send(correo);

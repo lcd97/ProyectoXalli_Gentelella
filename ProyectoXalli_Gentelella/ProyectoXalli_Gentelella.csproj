@@ -411,6 +411,7 @@
     <Content Include="Scripts\Catalogos\mesero.js" />
     <Content Include="Scripts\Catalogos\modelo.js" />
     <Content Include="Scripts\Catalogos\proveedor.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\datatable\dataTables.bootstrap.js" />
     <Content Include="Scripts\datatable\jquery.dataTables.js" />
@@ -438,6 +439,7 @@
     <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
     <Content Include="Scripts\Movimientos\editOrden.js" />
     <Content Include="Scripts\Movimientos\entradas.js" />
+    <Content Include="Scripts\Movimientos\home.js" />
     <Content Include="Scripts\Movimientos\ordenes.js" />
     <Content Include="Scripts\Movimientos\verComanda.js" />
     <Content Include="Scripts\Movimientos\verOrden.js" />
@@ -531,6 +533,7 @@
     <Content Include="Views\Ordenes\Edit.cshtml" />
     <Content Include="Views\Busquedas\BuscarCliente.cshtml" />
     <Content Include="Views\Activaciones\Index.cshtml" />
+    <Content Include="Views\Account\UserProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

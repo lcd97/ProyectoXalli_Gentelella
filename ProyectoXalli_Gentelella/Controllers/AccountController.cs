@@ -20,6 +20,34 @@ namespace ProyectoXalli_Gentelella.Controllers {
         public AccountController() {
         }
 
+        /// <summary>
+        /// RETORNA LA VISTA DE PERFIL DE USUARIO
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserProfile() {
+            return View();
+        }
+
+        /// <summary>
+        /// CONSULTA PARA VER EL TIPO DE ROL DE USUARIO
+        /// </summary>
+        /// <param name="empleado"></param>
+        /// <returns></returns>
+        public ActionResult ColaboradorRole(string empleado) {
+
+            var result = (from tb1 in context.Users
+                          from tb2 in tb1.Roles
+                          join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                          where tb1.Id == empleado
+                          orderby tb1.UserName, tb3.Name
+                          select new {
+                              Role = tb3.Name,
+                              ColaboradorId = tb1.PeopleId
+                          }).FirstOrDefault();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
             UserManager = userManager;
             SignInManager = signInManager;

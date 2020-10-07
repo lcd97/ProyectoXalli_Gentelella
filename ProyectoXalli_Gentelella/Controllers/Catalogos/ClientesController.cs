@@ -40,7 +40,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Mesero")]
         /// <summary>
         /// RETORNA LA VISTA CREATE
         /// </summary>

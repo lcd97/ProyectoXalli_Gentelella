@@ -2,43 +2,69 @@
     ViewBag.Title = "Dashboard";
 }
 
+<style>
+    .colorDisabled {
+        color: #DEDEDE;
+    }
+</style>
+
 <!--LETREROS DASHBOARD-->
 <div class="row top_tiles">
     <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-shopping-cart"></i></div>
-            <div class="count">150</div>
-            <h3>Ordenes Totales</h3>
-            <p>Lorem ipsum psdea itgum rixt.</p>
+            <div class="count" id="ordenesActivas"></div>
+            <h3>Ordenes Activas</h3>
+            <p>Ordenes del día</p>
         </div>
     </div>
     <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-check-square-o"></i></div>
-            <div class="count">101</div>
-            <h3>Visitas Totales</h3>
-            <p>Lorem ipsum psdea itgum rixt.</p>
+            <div class="count" id="ordenesTotales"></div>
+            <h3>Ordenes Totales</h3>
+            <p>Ordenes del mes</p>
         </div>
     </div>
     <div class="animated flipInY col-lg-4 col-md-4 co l-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-dollar"></i></div>
-            <div class="count">15,000</div>
+            <div class="count" id="ventasTotales"></div>
             <h3>Ventas Totales</h3>
-            <p>Lorem ipsum psdea itgum rixt.</p>
+            <p>No inlcuye gastos de impuestos y/o descuentos</p>
         </div>
     </div>
 </div>
 
 <!--TABLA DE ORDENES-->
-<div class="col-md-12 col-sm-12 col-xs-12">
+<div class="col-md-8 col-sm-8 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
             <h2>Tabla de Ordenes<small>Ordenadas por pedido</small></h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li class="pull-right">
-                    <a class="close-link"><i class="fa fa-close"></i></a>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                 </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content" id="x_content">
+            <table class="table table-hover">
+                <thead id="hOrdenes">
+                </thead>
+                <tbody id="bOrdenes"></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!--SECCION DE LOS 5 PRODUCTOS MAS PEDIDOS-->
+<div class="col-md-4 col-sm-4 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Productos más solicitados</h2>
+            <ul class="nav navbar-right panel_toolbox">
                 <li class="pull-right">
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                 </li>
@@ -46,89 +72,40 @@
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>No. Orden</th>
-                        <th>Hora llegada</th>
-                        <th>Cliente</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">174</th>
-                        <th>10 : 30</th>
-                        <td>Mark Zuckerberg</td>
-                        <td>
-                            <span class="label label-success">Atendiendo</span>
-                        </td>
-                        <td>
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">
-                                    Acción   <span class="caret"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li>
-                                        <a href="#">Ver</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Completar</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">123</th>
-                        <th>10 : 45</th>
-                        <td>Josiel Castillo</td>
-                        <td>
-                            <span class="label label-success">Atendiendo</span>
-                        </td>
-                        <td>
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">
-                                    Acción   <span class="caret"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li>
-                                        <a href="#">Ver</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Completar</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">174</th>
-                        <th>10 : 45</th>
-                        <td>N / A</td>
-                        <td>
-                            <span class="label label-warning">Sin atender</span>
-                        </td>
-                        <td>
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">
-                                    Acción  <span class="caret"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li>
-                                        <a href="#">Ver</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Completar</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="col-md-6 col-md-offset-3">
+                <canvas id="productosSolicitados" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+            </div>
 
+            <div class="col-md-12">
+                <div class="col-md-12" id="producto1"></div>
+                <div class="col-md-12" id="producto2"></div>
+                <div class="col-md-12" id="producto3"></div>
+            </div>
         </div>
     </div>
 </div>
+
+<!--SECCION DE LAS VENTAS REALIZADAS POR DIA (SEMANAL - SOLO PARA ADMIN Y RECEPCIONISTA)-->
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>General</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li class="pull-right">
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Chart.min.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Movimientos/home.js"></script>
+}
