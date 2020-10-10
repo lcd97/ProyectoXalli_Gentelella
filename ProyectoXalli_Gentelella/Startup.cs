@@ -11,8 +11,11 @@ namespace ProyectoXalli_Gentelella
     {
         public void Configuration(IAppBuilder app)
         {
+            //inicialización de los mapeos
+            app.MapSignalR();
+
             ConfigureAuth(app);
-            CrearPermisos();
+            CrearPermisos();            
         }
 
         private void CrearPermisos() {

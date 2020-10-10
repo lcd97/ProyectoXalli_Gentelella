@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ProyectoXalli_Gentelella.Models;
+using ProyectoXalli_Gentelella.Web_Sockets;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -74,7 +75,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <returns></returns>
         public ActionResult DataClient(string identificacion) {
             string mensaje = "";
-            var validacionOrden =(dynamic)null;
+            var validacionOrden = (dynamic)null;
 
             var cliente = (from obj in db.Datos
                            join c in db.Clientes on obj.Id equals c.DatoId
@@ -88,10 +89,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                            }).FirstOrDefault();
 
             if (cliente != null) {
-               validacionOrden= (from obj in db.Clientes
-                 join c in db.Ordenes on obj.Id equals c.ClienteId
-                 where c.EstadoOrden == 1 && c.ClienteId == cliente.ClienteId
-                 select obj).FirstOrDefault();
+                validacionOrden = (from obj in db.Clientes
+                                   join c in db.Ordenes on obj.Id equals c.ClienteId
+                                   where c.EstadoOrden == 1 && c.ClienteId == cliente.ClienteId
+                                   select obj).FirstOrDefault();
             }
 
             mensaje = validacionOrden != null ? "Ya existe una orden activa asociada al cliente" : "-1";
@@ -465,6 +466,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 (Minuto < 10 ? "0" + Minuto.ToString() : Minuto.ToString()) + " " + Meridiano;
 
             return horaEnviar;
+        }
+
+        public void RetornarAlgoFelix() {
+            dynamic obj = new {
+                NoOrden = "1",
+                Hora = "10 00 AM",
+                Cliente = "Felix Hdez"
+            };
+
+
+
+            AddNewOrder.Preppend(obj);
         }
 
         protected override void Dispose(bool disposing) {
