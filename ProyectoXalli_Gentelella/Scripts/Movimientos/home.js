@@ -22,12 +22,14 @@
         dataType: "JSON",
         success: function (data) {
 
-            if (data.length >= 0) {
+            var doughnutData, doughnutOptions, ctx4;
+
+            if (data.length <= 0) {
 
                 $("#producto1").append('<p><i class="fa fa-square colorDisabled"></i> Sin registros disponibles</p>');
 
                 //SI NO EXISTE NINGUN DATO
-                var doughnutData = {
+                doughnutData = {
                     labels: ["Sin registro"],
                     datasets: [{
                         data: [100],
@@ -36,14 +38,14 @@
                 };
 
 
-                var doughnutOptions = {
+                doughnutOptions = {
                     responsive: false,
                     legend: {
                         display: false
                     }
                 };
 
-                var ctx4 = document.getElementById("productosSolicitados").getContext("2d");
+                ctx4 = document.getElementById("productosSolicitados").getContext("2d");
                 new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
             } else {
                 var menu = new Array();
@@ -58,7 +60,7 @@
                     cantidad.push(data[i].Cantidad);
                 }
 
-                var doughnutData = {
+                doughnutData = {
                     labels: menu,
                     datasets: [{
                         data: cantidad,
@@ -67,14 +69,14 @@
                 };
 
 
-                var doughnutOptions = {
+                doughnutOptions = {
                     responsive: false,
                     legend: {
                         display: false
                     }
                 };
 
-                var ctx4 = document.getElementById("productosSolicitados").getContext("2d");
+                ctx4 = document.getElementById("productosSolicitados").getContext("2d");
                 new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
             }
         }//FIN SUCCESS

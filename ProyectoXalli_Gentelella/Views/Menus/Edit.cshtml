@@ -188,7 +188,7 @@
                 if (data.menu.Estado) {
                     elem.click();
                 }
-                $("#precio").val(data.menu.Precio);
+                $("#precio").val(formatoPrecio(data.menu.Precio));
                 $("#tiempo").val(data.menu.Tiempo);
                 //INSERTAR IMAGEN
                 $("#img").attr("src", data.menu.Ruta);

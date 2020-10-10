@@ -444,6 +444,7 @@
     <Content Include="Scripts\Movimientos\verComanda.js" />
     <Content Include="Scripts\Movimientos\verOrden.js" />
     <Content Include="Scripts\Operaciones\ventanas.js" />
+    <Content Include="Scripts\pagination.js" />
     <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
     <Content Include="Scripts\switchery.js" />

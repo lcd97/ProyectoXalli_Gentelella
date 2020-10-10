@@ -45,9 +45,9 @@ $("#categoria").change(function () {
                             '</div>' +
                             '<div class="caption" id="data">' +
                             '<p>' +
-                            '<strong>' + data[i].Platillo + '</strong>' +
+                            '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].Platillo + '">' + data[i].Platillo + '</strong>' +
                             '</p>' +
-                            '<p> $ ' + data[i].Precio + '</p>' +
+                            '<p> $ ' + formatoPrecio(data[i].Precio) + '</p>' +
                             '</div>' +
                             '</div >' +
                             '</div >';

@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+
     //CARGA TODOS LO PLATILLOS DEL MENU
     $.ajax({
         type: "GET",
@@ -14,6 +15,7 @@
                 $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
 
                 for (var i = 0; i < data.length; i++) {
+
                     agregarPlatillo += '<div class="col-md-55 items" id="' + data[i].Id + '">' +
                         '<div class="thumbnail">' +
                         '<div class="image view view-first">' +
@@ -28,9 +30,9 @@
                         '</div>' +
                         '<div class="caption" id="data">' +
                         '<p>' +
-                        '<strong>' + data[i].DescripcionPlatillo + '</strong>' +
+                        '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].DescripcionPlatillo + '">' + data[i].DescripcionPlatillo + '</strong>' +
                         '</p>' +
-                        '<p> $ ' + data[i].Precio + '</p>' +
+                        '<p> $ ' + formatoPrecio(data[i].Precio) + '</p>' +
                         '</div>' +
                         '</div >' +
                         '</div >';
@@ -177,7 +179,7 @@ function modificarItem(id) {
         success: function (data) {
             //ASIGNAR NUEVOS VALORES EN LA VISTA
             $("#" + id).find("strong").text(data.menu.Platillo);
-            $("#" + id).find("p:last-child").text("$ " + data.menu.Precio);
+            $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
             $("#" + id).find("img").attr("src", "");
             $("#" + id).find("img").attr("src", data.menu.Ruta);
         },
@@ -211,7 +213,7 @@ function agregarItem(id) {
                 '<p>' +
                 '<strong>' + data.menu.Platillo + '</strong>' +
                 '</p>' +
-                '<p> $ ' + data.menu.Precio + '</p>' +
+                '<p> $ ' + formatoPrecio(data.menu.Precio) + '</p>' +
                 '</div>' +
                 '</div >' +
                 '</div >';

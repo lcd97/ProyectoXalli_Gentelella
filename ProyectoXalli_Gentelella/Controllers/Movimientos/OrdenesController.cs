@@ -73,6 +73,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="identificacion"></param>
         /// <returns></returns>
         public ActionResult DataClient(string identificacion) {
+            string mensaje = "";
+            var validacionOrden =(dynamic)null;
+
             var cliente = (from obj in db.Datos
                            join c in db.Clientes on obj.Id equals c.DatoId
                            where obj.Cedula.Trim() == identificacion.Trim() || c.PasaporteCliente.Trim() == identificacion.Trim()
@@ -84,7 +87,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                Documento = obj.Cedula != null ? obj.Cedula : c.PasaporteCliente
                            }).FirstOrDefault();
 
-            return Json(cliente, JsonRequestBehavior.AllowGet);
+            if (cliente != null) {
+               validacionOrden= (from obj in db.Clientes
+                 join c in db.Ordenes on obj.Id equals c.ClienteId
+                 where c.EstadoOrden == 1 && c.ClienteId == cliente.ClienteId
+                 select obj).FirstOrDefault();
+            }
+
+            mensaje = validacionOrden != null ? "Ya existe una orden activa asociada al cliente" : "-1";
+
+            return Json(new { cliente, mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

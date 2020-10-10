@@ -6,28 +6,26 @@
 
 <div class="row">
     <div class="x_content">
-        <div class="form-group">
-            <div class="col-md-12 col-sm-12 col-xs-12 profile_details">
-                <div class="col-sm-12">
-                    <div class="left col-xs-7">
-                        <h2 id="nombres"></h2>
-                        <ul class="list-unstyled" id="agregar"></ul>
-                        <p id="Horario"></p>
-                    </div>
-                    <div class="right col-xs-5">
-                        <img src="~/images/user.png" alt="user" class="img-circle img-responsive">
-                    </div>
+        <div class="">
+            <div class="col-sm-12 col-md-6 col-lg-12 col-md-offset-1">
+                <div class="left col-xs-7">
+                    <h2 id="nombres" style="margin-bottom:0px; text-align:center"></h2>
+                    <p style="text-align:center;"><strong id="rol"> </strong> </p>
+                    <ul class="list-unstyled" id="agregar"></ul>
+                </div>
+                <div class="right col-xs-3 text-center">
+                    <img src="~/images/user.png" alt="" class="img-circle img-responsive">
                 </div>
             </div>
-
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="ln_solid"></div>
 
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                <div class="col-md-6 col-sm-6 col-xs-12 pull-right">
                     <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -37,25 +35,17 @@
             type: "GET",
             url: "/Meseros/getMeseros/" + @Model.Id,
             success: function (data) {
-                var r;
 
-                $("#nombres").html(data.Nombre + " " + data.Apellido);
-                var agregarID = '<li><i class="fa fa-list-alt"></i> Cédula: ' + data.Cedula + '</li>';
-                $("#agregar").append(agregarID);
+                var r = data.mesero.RUC != null ? data.mesero.RUC : "N/A";
 
-                var agregarInss = '<li><i class="fa fa-plus-square"></i> INSS: ' + data.Inss + '</li>';
-                $("#agregar").append(agregarInss);
+                $("#nombres").html(data.mesero.Nombre + " " + data.mesero.Apellido);
+                $("#rol").html(data.rol);
 
-                if (data.RUC != null) {
-                    r = data.RUC;
-                } else {
-                    r = "N/A";
-                }
-
-                var agregarRuc = '<li><i class="fa fa-calculator"></i> RUC: ' + r + '</li>';
-                $("#agregar").append(agregarRuc);
-
-                $("#Horario").html("Horario Laboral: " + data.EntradaH + " - " + data.SalidaH);
+                var agregar = '<li><i class="fa fa-credit-card"></i> INSS: ' + data.mesero.Cedula +
+                    '</li>' + '<li><i class="fa fa-plus-square"></i> INSS: ' + data.mesero.Inss + '</li>'+
+                    '<li><i class="fa fa-calculator"></i> RUC: ' + r + '</li>' +
+                    '<li><i class="fa fa-clock-o"></i> Horario Laboral: ' + data.mesero.EntradaH + " - " + data.mesero.SalidaH + '</li>';
+                $("#agregar").append(agregar);
             }
         });
     });

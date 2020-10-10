@@ -123,17 +123,15 @@
             url: "/Meseros/getMeseros/" + @Model.Id,
             success: function (data) {
                 //ASIGNO LOS DATOS DE LOS MESEROS
-                $("#nombre").val(data.Nombre);
-                $("#apellido").val(data.Apellido);
-                $("#cedula").val(data.Cedula);
-                $("#inss").val(data.Inss);
-                $("#ruc").val(data.RUC);
-                $("#entrada").val(data.EntradaH);
-                $("#salida").val(data.SalidaH);
-                $("#tInicio").val(data.TurnoI);
-                $("#tFin").val(data.TurnoF);
+                $("#nombre").val(data.mesero.Nombre);
+                $("#apellido").val(data.mesero.Apellido);
+                $("#cedula").val(data.mesero.Cedula);
+                $("#inss").val(data.mesero.Inss);
+                $("#ruc").val(data.mesero.RUC);
+                $("#entrada").val(data.mesero.EntradaH);
+                $("#salida").val(data.mesero.SalidaH);
 
-                if (data.Estado) {
+                if (data.mesero.Estado) {
                     elem.click();
                 }
             }

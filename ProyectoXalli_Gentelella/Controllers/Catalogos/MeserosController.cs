@@ -216,6 +216,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return View(Mesero);
         }
 
+        /// <summary>
+        /// OBTIENE LOS DATOS DEL MESERO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult getMeseros(int id) {
             var mesero = (from obj in db.Meseros
                           join a in db.Datos on obj.DatoId equals a.Id
@@ -231,7 +236,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                               Estado = obj.EstadoMesero
                           }).FirstOrDefault();
 
-            return Json(mesero, JsonRequestBehavior.AllowGet);
+            var rol = (from tb1 in context.Users
+                          from tb2 in tb1.Roles
+                          join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                          where tb1.PeopleId == id
+                          orderby tb1.UserName, tb3.Name
+                          select tb3.Name).FirstOrDefault();
+
+            return Json(new { mesero,  rol}, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

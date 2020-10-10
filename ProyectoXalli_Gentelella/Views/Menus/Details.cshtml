@@ -68,10 +68,10 @@
                     tiempo = "Inmediato";
                 }
 
-                var precio = "Precio: $" + data.menu.Precio;
+                var precio = "<strong>Precio:</strong> $" + formatoPrecio(data.menu.Precio);
 
-                var addInfo = '<p id="tiempo">Tiempo de preparación: ' + tiempo + '</p>' +
-                    '<p id="categoria">Categoría: ' + data.menu.Categoria + '</p>' +
+                var addInfo = '<p id="tiempo"><strong>Tiempo de preparación:</strong> ' + tiempo + '</p>' +
+                    '<p id="categoria"><strong>Categoría:</strong> ' + data.menu.Categoria + '</p>' +
                     '<p>' + precio + '</p>';
 
                 $("#tab_content1").append(addInfo);

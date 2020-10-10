@@ -214,7 +214,7 @@ function TableAdd() {
     //QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
     var precSb = precio.replace(/,/g, "");
     var cantSb = cantidad.replace(/,/g, "");
-    var precioTotal = precSb * cantSb;
+    var precioTotal = cortarDecimales((precSb * cantSb).toString());
 
     var agregar = "";
 
@@ -261,7 +261,7 @@ function TableAdd() {
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
             //AGREGAR EL TOTAL TFOOT
-            $("#total").html("C$ " + (total + precioTotal));
+            $("#total").html("C$ " + cortarDecimales((total + precioTotal).toString()));
 
             //LIMPIAR LOS INPUTS Y SELECT
             $("#producto").val("-1");
@@ -337,7 +337,7 @@ function saveInventario() {
     var data = false, codigoEntrada = $("#codigoEntrada").val(), fecha = $("#fechaEntrada").val(), entrada = $("#entrada").find("option:selected").val(),
         proveedor = $("#proveedor").find("option:selected").val(), area = $("#area").find("option:selected").val();
 
-    if (codigoEntrada !== "" && fecha !== "" && entrada !== "" && proveedor !== "" && area !== "") {
+    if (codigoEntrada !== "" && fecha !== "" && entrada !== "-1" && proveedor !== "-1" && area !== "-1") {
 
         var detalleEntrada = new Array();
 

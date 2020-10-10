@@ -8,7 +8,7 @@ function cargarCodigo() {
                 $("#codigoOrden").val("000" + data);
             } else if (data >= 10 || data < 100) {
                 $("#codigoOrden").val("00" + data);
-            } else if (data >= 100 || data < 1000){
+            } else if (data >= 100 || data < 1000) {
                 $("#codigoOrden").val("0" + data);
             } else {
                 $("#codigoOrden").val(data);
@@ -209,10 +209,20 @@ $("#identificacion").blur(function () {
             },
             dataType: "JSON",
             success: function (data) {
-                if (data != null) {
-                    $("#nombreCliente").val(data.Nombres);
-                    $("#nombreCliente").attr("val", data.ClienteId);
-                    $("#rucOrden").val(data.RUC);
+                $("#btnGuardarOrden").attr("disabled", false);
+
+                if (data.cliente != null) {
+                    $("#nombreCliente").val(data.cliente.Nombres);
+                    $("#nombreCliente").attr("val", data.cliente.ClienteId);
+                    $("#rucOrden").val(data.cliente.RUC);
+                } else {
+                    Alert("Error", "No existe registros con esa identificación", "error");
+                    $("#btnGuardarOrden").attr("disabled", true);
+                }
+
+                if (data.mensaje != "-1") {
+                    Alert("Alerta", data.mensaje, "warning");
+                    $("#btnGuardarOrden").attr("disabled", true);
                 }
             }
         });

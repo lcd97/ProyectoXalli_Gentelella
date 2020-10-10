@@ -139,3 +139,30 @@ jQuery(document).on('keyup', function (evt) {
         $("body").removeClass("modal-open");
     }
 });
+
+//CREA FORMATO PARA LOS PRECIOS CUYO DECIMALES ES 1
+function formatoPrecio(precio) {
+    var decimales = (precio).toString().split(".");
+    var precioFin;
+
+    if (decimales[1].length == 1) {
+        precioFin = decimales[0] + "." + decimales[1] + "0";
+    } else {
+        precioFin = precio;
+    }
+
+    return precioFin;
+}
+
+//CREAR FORMATO CON DOS DECIMALES SIN REDONDEAR
+function cortarDecimales(precio) {
+    var precioFinal = precio;
+
+    if (precio.includes(".")) {
+        var decimales = (precio).split(".");
+
+        precioFinal = parseFloat(decimales[0] + "." + decimales[1].substring(0, 2));
+    }
+
+    return parseFloat(precioFinal);
+}
