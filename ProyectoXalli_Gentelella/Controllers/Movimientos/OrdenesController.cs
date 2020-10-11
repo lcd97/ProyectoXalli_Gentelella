@@ -469,6 +469,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
         public void RetornarAlgoFelix() {
+
+            var primero = db.Ordenes.FirstOrDefault();
+
+            primero.CodigoOrden = 30;
+
+            db.Entry(primero).State = EntityState.Modified;
+            db.SaveChanges();
+
             dynamic obj = new {
                 NoOrden = "1",
                 Hora = "10 00 AM",
