@@ -149,7 +149,7 @@ function addDetails() {
 
     var filas = $("#table_body").find("tr");
     var registrado = false, i = 0;
-    var precioTotal = precio * cantidad;
+    var precioTotal = formatoPrecio(precio * cantidad);
 
     var agregar = "";
 
@@ -183,17 +183,20 @@ function addDetails() {
         agregar += '</tr>';
 
         //CALCULAR EL TOTAL
-        var total = parseFloat(CalcularTotal());
+        var total = CalcularTotal();
 
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").append(agregar);
         //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + (total + precioTotal));
+        $("#total").html("$ " + formatoPrecio(total + precioTotal));
 
         $("#smallModal").modal("hide");
     } else {
         Alert("Error", "El platillo seleccionado ya se encuentra en la tabla", "error");
     }
+
+    $("body").removeClass("modal-open");
+
 }//FIN FUNCTION
 
 $("#identificacion").blur(function () {
@@ -256,7 +259,7 @@ function guardarOrden() {
         item["NotaDetalleOrden"] = row.find("td").eq(1).attr("value");
         item["MenuId"] = row.find("td").eq(0).attr("value");
         item["OrdenId"] = 0;
-        item["EstadoDetalleOrden"] = true;
+        item["EstadoDetalleOrden"] = false;
 
         OrdenDetails.push(item);
     });

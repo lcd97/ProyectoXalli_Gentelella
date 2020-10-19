@@ -99,7 +99,7 @@ function cargarDetalle(id){
         type: "GET", //TIPO DE ACCION
         url: "/Menus/getMenuItem/" + id, //URL DEL METODO A USAR
         success: function (data) {
-            $("#precioOrden").val("$ " + data.menu.Precio);
+            $("#precioOrden").val("$ " + formatoPrecio(data.menu.Precio));
             $("#platillo").val(data.menu.Platillo);
             $("#platillo").attr("name", data.menu.PlatilloId);
         }//FIN SUCCESS
@@ -159,7 +159,7 @@ function editPlatillo(indice) {
         var prodPrecio = totalF.split("$ ");//QUITARLE EL SIGNO DE DOLAR
         var resta = parseFloat(prodPrecio[1] - (prec[1] * cantidad));
 
-        $("#total").html("$ " + resta);
+        $("#total").html("$ " + formatoPrecio(resta));
 
         indice.closest("tr").remove();//ELIMINAR LA FILA
 
@@ -174,6 +174,8 @@ function deletePlatillo(row) {
 
     //RECALCULAMOS EL TOTAL
     var resta = parseFloat(CalcularTotal());
-    $("#total").html("$ " + resta);
+
+    alert(resta);
+    $("#total").html("$ " + formatoPrecio(resta));
 
 }//FIN FUNCTION

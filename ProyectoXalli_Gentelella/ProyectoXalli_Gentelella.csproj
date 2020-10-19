@@ -449,6 +449,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\Movimientos\activacion.js" />
     <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
+    <Content Include="Scripts\Movimientos\preparacion.js" />
     <Content Include="Scripts\Movimientos\editOrden.js" />
     <Content Include="Scripts\Movimientos\entradas.js" />
     <Content Include="Scripts\Movimientos\home.js" />
@@ -547,6 +548,7 @@
     <Content Include="Views\Busquedas\BuscarCliente.cshtml" />
     <Content Include="Views\Activaciones\Index.cshtml" />
     <Content Include="Views\Account\UserProfile.cshtml" />
+    <Content Include="Views\Ordenes\Preparacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

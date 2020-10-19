@@ -214,7 +214,7 @@ function TableAdd() {
     //QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
     var precSb = precio.replace(/,/g, "");
     var cantSb = cantidad.replace(/,/g, "");
-    var precioTotal = cortarDecimales((precSb * cantSb).toString());
+    var precioTotal = formatoPrecio(precSb * cantSb);
 
     var agregar = "";
 
@@ -261,7 +261,7 @@ function TableAdd() {
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
             //AGREGAR EL TOTAL TFOOT
-            $("#total").html("C$ " + cortarDecimales((total + precioTotal).toString()));
+            $("#total").html("C$ " + formatoPrecio((total + precioTotal).toString()));
 
             //LIMPIAR LOS INPUTS Y SELECT
             $("#producto").val("-1");

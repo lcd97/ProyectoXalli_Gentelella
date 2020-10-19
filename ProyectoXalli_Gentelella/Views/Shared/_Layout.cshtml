@@ -11,6 +11,8 @@
     @*@Scripts.Render("~/bundles/modernizr")*@
     <link href="~/Content/switchery.css" rel="stylesheet" />
     <link href="~/Content/loading.css" rel="stylesheet" />
+    <link href="~/Content/skins/all.css" rel="stylesheet" />
+
 
     <style>
         .nav-md {
@@ -381,7 +383,7 @@
         }
     </script>
 
-    <script>
+    @*<script>
         $(function () {
             //INSTANCIA DEL HUB DE SIGNAL (WEB-SOCKET)
             var hub = $.connection.rowAdd;
@@ -455,7 +457,7 @@
             }
             $.connection.hub.start().done();
         }
-    </script>
+    </script>*@
 
 
     @*@Scripts.Render("~/bundles/bootstrap")

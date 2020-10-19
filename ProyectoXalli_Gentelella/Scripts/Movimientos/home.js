@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    var role, ColabId;
+
     //CARGANDO LOS LETREROS DEL DASHBOARD
     dashboardSign();
 
@@ -11,18 +13,45 @@
         url: "/Account/ColaboradorRole/",
         data: { empleado: loginId },
         success: function (data) {
-            CrearTabla(data.ColaboradorId, data.Role);
+            ColabId = data.ColaboradorId;
+            role = data.Role;
+
+            CrearTabla(ColabId, role);
+            doughnutChart(role);
         }
     });
+
+    lineChart();
+
+});
+
+//MUESTRA EL GRAFICO DE PASTEL EN EL INDEX HOME
+function doughnutChart(role) {
+    //AGREGA EL TITULO DEL GRAFICO DE PASTEL
+    if (role == "Cocinero") {
+        $("#titleProducts").html("Platillos más solicitados");
+    } else if (role == "Bartender") {
+        $("#titleProducts").html("Bebidas más solicitados");
+    } else {
+        $("#titleProducts").html("Productos más solicitados");
+    }
 
     //CARGA LOS PRODUCTOS MAS VENDIDOS DEL RESTAURANTE EN GENERAL
     $.ajax({
         type: "GET",
         url: "/Busquedas/ProductosFavoritos/",
+        data: { Role: role },
         dataType: "JSON",
         success: function (data) {
 
-            var doughnutData, doughnutOptions, ctx4;
+            var doughnutData, ctx4;
+
+            var doughnutOptions = {
+                responsive: true,
+                legend: {
+                    display: true
+                }
+            };
 
             if (data.length <= 0) {
 
@@ -36,28 +65,28 @@
                         backgroundColor: ["#dedede"]
                     }]
                 };
-
-
-                doughnutOptions = {
-                    responsive: false,
-                    legend: {
-                        display: false
-                    }
-                };
-
-                ctx4 = document.getElementById("productosSolicitados").getContext("2d");
-                new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
             } else {
                 var menu = new Array();
                 var cantidad = new Array();
-
-                $("#producto1").append('<p><i class="fa fa-square green"></i> ' + data[0].DescripcionMenu + '</p>');
-                $("#producto2").append('<p><i class="fa fa-square blue"></i> ' + data[1].DescripcionMenu + '</p>');
-                $("#producto3").append('<p><i class="fa fa-square aero"></i> ' + data[2].DescripcionMenu + '</p>');
+                var clase = ["green", "blue", "aero"];
 
                 for (var i = 0; i < data.length; i++) {
-                    menu.push(data[i].DescripcionMenu);
-                    cantidad.push(data[i].Cantidad);
+                    var itemP = data[i].DescripcionMenu;
+                    var itemC = data[i].Cantidad;
+
+                    menu.push(itemP);
+                    cantidad.push(itemC);
+                }
+
+                if (data.length == 1) {
+                    $("#producto1").append('<p id="platilloDesc"><i id="p1" class="fa fa-square green"></i> ' + data[0].DescripcionMenu + '</p>');
+                } else if (data.length == 2) {
+                    $("#producto1").append('<p id="platilloDesc"><i id="p1" class="fa fa-square green"></i> ' + data[0].DescripcionMenu + '</p>');
+                    $("#producto2").append('<p id="platilloDesc"><i id="p1" class="fa fa-square blue"></i> ' + data[1].DescripcionMenu + '</p>');
+                } else {
+                    $("#producto1").append('<p id="platilloDesc"><i id="p1" class="fa fa-square green"></i> ' + data[0].DescripcionMenu + '</p>');
+                    $("#producto2").append('<p id="platilloDesc"><i id="p1" class="fa fa-square blue"></i> ' + data[1].DescripcionMenu + '</p>');
+                    $("#producto3").append('<p id="platilloDesc"><i id="p1" class="fa fa-square aero"></i> ' + data[2].DescripcionMenu + '</p>');
                 }
 
                 doughnutData = {
@@ -68,20 +97,14 @@
                     }]
                 };
 
-
-                doughnutOptions = {
-                    responsive: false,
-                    legend: {
-                        display: false
-                    }
-                };
-
-                ctx4 = document.getElementById("productosSolicitados").getContext("2d");
-                new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
             }
+
+            ctx4 = document.getElementById("productosSolicitados").getContext("2d");
+            new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
+
         }//FIN SUCCESS
     });
-});
+}//FIN FUNCTION
 
 //BUSCA LOS DATOS PARA CARGAR LOS LETREROS DEL DASHSBOARD
 function dashboardSign() {
@@ -95,7 +118,7 @@ function dashboardSign() {
 
             $("#ordenesActivas").html(ordActivas);
             $("#ordenesTotales").html(ordTotales);
-            $("#ventasTotales").html("$ " + ventTotales);
+            $("#ventasTotales").html("$ " + formatoPrecio(ventTotales.toString()));
         }
     });
 }//FIN FUNCTION
@@ -124,30 +147,11 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
 
                     tbody = '<tr><th scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</th><th>' + data[i].HoraOrden + '</th><td>' + data[i].Cliente + '</td>';
 
-                    //DEPENDIENDO SI EL ROL ES DIFERENTE A MESERO
-                    if (EmpleadoRole == "Bartender") {
-                        //nada
-                    } else if (EmpleadoRole == "Cocina") {
-                        //nada
-                    } else if (EmpleadoRole != "Mesero") {
+                    if (EmpleadoRole != "Mesero") {
                         theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
 
                         tbodyFin = '<td>' + data[i].Mesero + '</td>' +
-                            '<td>' +
-                            '<div class="btn-group">' +
-                            '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
-                            'Acción   <span class="caret"></span>' +
-                            '</button>' +
-                            '<ul role="menu" class="dropdown-menu">' +
-                            '<li>' +
-                            '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
-                            '</li>' +
-                            '<li>' +
-                            '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
-                            '</li>' +
-                            '</ul>' +
-                            '</div>' +
-                            '</td>' +
+                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId) + '</td>' +
                             '</tr>';
                     }
                     else {
@@ -180,8 +184,31 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
     });//FIN AJAX
 }//FIN FUNCTION
 
-function cargarLinks(EmpledoRole) {
+//CARGA LOS LINKS DE LOS BOTONES DE LOS ROLES DIFERENTE A MESEROS
+function cargarLinks(EmpleadoRole, Id) {
+    var links = "";
 
+    if (EmpleadoRole == "Bartender" || EmpleadoRole == "Cocinero") {
+        var empleado = EmpleadoRole == "Bartender" ? 1 : 2;
+        links = '<button type="button" onclick="RedirectToPrep(' + Id + ',' + empleado + ')" class="btn btn-primary btn-sm">Ver Orden</button>';
+    } else {
+        //SI ES ADMIN
+        links = '<div class="btn-group">' +
+            '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
+            'Acción   <span class="caret"></span>' +
+            '</button>' +
+            '<ul role="menu" class="dropdown-menu">' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToEdit(' + Id + ')">Ver orden</a>' +
+            '</li>' +
+            '<li>' +
+            '<a onclick="RedirectToComanda(' + Id + ')">Mostrar comanda</a>' +
+            '</li>' +
+            '</ul>' +
+            '</div>';
+    }
+
+    return links;
 }
 
 //CREA EL FORMATO DEL CODIGO
@@ -214,3 +241,52 @@ function RedirectToComanda(OrderId) {
     window.location.href = url;
 }
 
+//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
+function RedirectToPrep(OrderId, Role) {
+    var url = "/Ordenes/Preparacion?ordenId=" + OrderId + "&rol=" + Role;
+    window.location.href = url;
+}
+
+function lineChart() {
+
+    //CARGA LOS PRODUCTOS MAS VENDIDOS DEL RESTAURANTE EN GENERAL
+    $.ajax({
+        type: "GET",
+        url: "/Busquedas/ventasDiaMes/",
+        dataType: "JSON",
+        success: function (data) {
+
+            var fecha = new Array();
+            var ventas = new Array();
+
+            for (var i = 0; i < data.length; i++) {
+                var itemF = data[i].Fecha;
+                var itemV = data[i].TotalVentas;
+
+                fecha.push(itemF);
+                ventas.push(itemV);
+            }
+
+            var lineData = {
+                labels: fecha,
+                datasets: [
+                    {
+                        label: "Ventas $ ",
+                        backgroundColor: 'rgba(26,179,148,0.5)',
+                        borderColor: "rgba(26,179,148,0.7)",
+                        pointBackgroundColor: "rgba(26,179,148,1)",
+                        pointBorderColor: "#fff",
+                        data: ventas
+                    }
+                ]
+            };
+
+            var lineOptions = {
+                responsive: true
+            };
+
+            var ctx = document.getElementById("VentasChart").getContext("2d");
+            new Chart(ctx, { type: 'line', data: lineData, options: lineOptions });
+        }//FIN SUCCESS
+    });
+}

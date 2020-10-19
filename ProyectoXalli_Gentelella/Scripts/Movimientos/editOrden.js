@@ -32,18 +32,18 @@
 
             for (var i = 0; i < Object.keys(data.Details).length; i++) {
 
-                var calculo = (data.Details[i].PrecioUnitario * data.Details[i].Cantidad);
+                var calculo = data.Details[i].PrecioUnitario * data.Details[i].Cantidad;
                 precioTotal += calculo;
 
-                var estado = data.Details[i].Estado == false ? "Finalizado" : "Pendiente";
+                var estado = data.Details[i].Estado == true ? "Finalizado" : "Pendiente";
 
                 //GENERAR FILA DEL PRODUCTO A LA TABLA
                 agregar += '<tr class="even pointer">';
                 agregar += '<td class="" value ="' + data.Details[i].PlatilloId + '">' + data.Details[i].Platillo + '</td>';
-                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + data.Details[i].PrecioUnitario + '</td>';
+                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + formatoPrecio(data.Details[i].PrecioUnitario) + '</td>';
                 agregar += '<td class="" Style ="text-align: center;">' + data.Details[i].Cantidad + '</td>';
-                agregar += '<td class="" >' + "$ " + calculo + '</td>';
-                agregar += '<td class="" value ="false"><span class="label label-success pull-right">' + estado + '</span></td>';
+                agregar += '<td class="" >' + "$ " + formatoPrecio(calculo) + '</td>';
+                agregar += '<td class="" value ="true"><span class="label label-success pull-right">' + estado + '</span></td>';
                 agregar += '<td class=" last"><a disabled class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                 agregar += '<a disabled class="btn btn-danger btn-xs"> <i class="fa fa-trash"></i></a></td>';
                 agregar += '</tr>';
@@ -55,7 +55,7 @@
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
             //AGREGAR EL TOTAL TFOOT
-            $("#total").html("$ " + (total + precioTotal));
+            $("#total").html("$ " + formatoPrecio(total + precioTotal));
         }
     });
 });
@@ -112,7 +112,7 @@ function addDetails() {
 
     var filas = $("#table_body").find("tr");
     var registrado = false, i = 0;
-    var precioTotal = precio * cantidad;
+    var precioTotal = formatoPrecio(precio * cantidad);
 
     var agregar = "";
 
@@ -124,7 +124,7 @@ function addDetails() {
         var comp = $(celdas[0]).attr("value");
 
         //COMPARAMOS QUE EL PRODUCTO A INGRESAR NO SEA EL MISMO AL QUE YA ESTA AGREGADO
-        if (comp === platilloId && celdas.eq(4).attr("value") == "true") {
+        if (comp === platilloId && celdas.eq(4).attr("value") == "false") {
             registrado = true;
         } else {
             registrado = false;
@@ -141,7 +141,7 @@ function addDetails() {
         agregar += '<td class="" value = "' + nota + '">' + "$ " + precio + '</td>';
         agregar += '<td class="" Style ="text-align: center;">' + cantidad + '</td>';
         agregar += '<td class="" >' + "$ " + precioTotal + '</td>';
-        agregar += '<td class="" value = "true"><span class="label label-warning pull-right">Nuevo</span></td>';
+        agregar += '<td class="" value = "false"><span class="label label-warning pull-right">Nuevo</span></td>';
         agregar += '<td class=" last"><a class="btn btn-primary btn-xs" id="boton" onclick="editPlatillo(this);"><i class="fa fa-edit"></i></a>';
         agregar += '<a class="btn btn-danger btn-xs" onclick = "deletePlatillo(this);"> <i class="fa fa-trash"></i></a></td>';
         agregar += '</tr>';
@@ -152,12 +152,15 @@ function addDetails() {
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").prepend(agregar);
         //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + (total + precioTotal));
+        $("#total").html("$ " + formatoPrecio(total + parseFloat(precioTotal)));
 
         $("#smallModal").modal("hide");
     } else {
         Alert("Error", "El platillo seleccionado ya se encuentra en la tabla", "error");
     }
+
+    $("body").removeClass("modal-open");
+
 }//FIN FUNCTION
 
 //ALMACENA TODOS LOS NUEVOS ITEMS DE LA ORDEN
@@ -187,30 +190,30 @@ function editOrden(terminar) {
         OrdenDetails.push(item);
 
         //SI EXISTEN ELEMENTOS NUEVOS A LA ORDEN
-        if (row.find("td").eq(4).attr("value") == "true") {
+        if (row.find("td").eq(4).attr("value") == "false") {
             itemsNuevos = true;
         }
     });
 
-    if (itemsNuevos) {
-        var data = "Codigo=" + codigo + "&FechaOrden=" + date + "&EstadoOrden=" + terminar + "&detalleOrden=" + JSON.stringify(OrdenDetails);
-
-        $.ajax({
-            type: "POST",
-            url: "/Ordenes/EditOrder/",
-            data: data,
-            success: function (data) {
-                if (data.success) {
-                    AlertTimer("Completado", data.message, "success");
-                    //REDIRECCIONAR A TODAS LAS ORDENES
-                    var url = "/Ordenes/VerOrdenes/";
-                    window.location.href = url;
-                } else {
-                    Alert("Error", data.mesage, "error");
-                }
-            }
-        });
-    } else {
-        Alert("Error", "No hay elementos a almacenar", "error");
+    if (!itemsNuevos) {
+        OrdenDetails = "";
     }
+
+    var data = "Codigo=" + codigo + "&FechaOrden=" + date + "&EstadoOrden=" + terminar + "&detalleOrden=" + JSON.stringify(OrdenDetails);
+
+    $.ajax({
+        type: "POST",
+        url: "/Ordenes/EditOrder/",
+        data: data,
+        success: function (data) {
+            if (data.success) {
+                //REDIRECCIONAR A TODAS LAS ORDENES
+                //Alert("Completado", data.message, "success");
+                var url = "/Ordenes/VerOrdenes/";
+                window.location.href = url;
+            } else {
+                Alert("Error", data.mesage, "error");
+            }
+        }
+    });//FIN AJAX
 }//FIN FUNCION
