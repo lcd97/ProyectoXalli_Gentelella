@@ -9,9 +9,11 @@ using MenuAPI;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using ProyectoXalli_Gentelella.Models;
+using ProyectoXalli_Gentelella.Areas.API;
 
 namespace MenuAPI.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class DetallesDeOrdenWSController : Controller
     {
 
@@ -67,42 +69,183 @@ namespace MenuAPI.Areas.API.Controllers
 
         }
 
-
-
         // Agregar nueva orden y nuevo detalle
         [HttpPost]
         public async Task<JsonResult> OrdenesDetalle(OrdenWS ordenWS, List<DetallesDeOrdenWS> detallesWS)
         {
             ResultadoWS resultadoWS = new ResultadoWS();
-            Orden ord = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.CodigoOrden == ordenWS.codigo);
-            int idimage = db.Imagenes.Where(i => i.Ruta == "N/A").Select(x => x.Id).FirstOrDefault();
 
-            if (ordenWS.clienteid == -1)
+            using (var transact = db.Database.BeginTransaction())
             {
-                ordenWS.clienteid = await ObtenerVisitante();
-            }
-
-            if (ord == null)
-            {
-                using (var transact = db.Database.BeginTransaction())
+                try
                 {
-                    try
-                    {
-                        Orden orden = new Orden
-                        {
-                            CodigoOrden = ordenWS.codigo,
-                            FechaOrden = ordenWS.fechaorden.Date + ordenWS.tiempoorden.TimeOfDay,
-                            EstadoOrden = ordenWS.estado,
-                            MeseroId = ordenWS.meseroid,
-                            ClienteId = ordenWS.clienteid,
-                            ImagenId = idimage
-                        };
+                    //orden
+                    Orden orden = new Orden();
 
-                        db.Ordenes.Add(orden);
+                    //por default
+                    Dato datop = new Dato();
+                    Cliente clientep = new Cliente();
+
+                    //si es un cliente
+                    Cliente cliente = new Cliente();
+
+                    //Guardar la orden
+                    orden.CodigoOrden = ordenWS.codigo;
+                    orden.FechaOrden = ordenWS.fechaorden.Date + ordenWS.tiempoorden.TimeOfDay;
+                    orden.EstadoOrden = ordenWS.estado;
+                    orden.MeseroId = ordenWS.meseroid;
+
+                    //Buscar el cliente
+                    if (ordenWS.clienteid == -1)
+                    {
+                        var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
+
+                        if (buscarP == null)
+                        {
+                            datop.Cedula = "000-000000-0000X";
+                            datop.PNombre = "DEFAULT";
+                            datop.PApellido = "USER";
+
+                            db.Datos.Add(datop);
+                            db.SaveChanges();
+
+                            clientep.DatoId = datop.Id;
+                            clientep.EmailCliente = "defaultuser@xalli.com";
+                            clientep.EstadoCliente = false;
+
+                            db.Clientes.Add(clientep);
+                            db.SaveChanges();
+
+                            cliente = clientep;
+                        }
+                        else
+                        {
+                            clientep = db.Clientes.FirstOrDefault(c => c.DatoId == buscarP.Id);
+
+                        }
+
+                        orden.ClienteId = clientep.Id;
+
+                    }
+                    else
+                    {
+                        orden.ClienteId = ordenWS.clienteid;
+                    }
+
+                    //Buscar la imagen
+                    var comandap = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
+                    Imagen img = new Imagen();
+
+                    if (comandap == null)
+                    {
+                        //SE CREA EL DEFAUTL
+                        img.Ruta = "N/A";
+                        db.Imagenes.Add(img);
+                        db.SaveChanges();
+                    }
+
+                    //ALMACENAMOS UNA PLANTILLA
+                    orden.ImagenId = comandap != null ? comandap.Id : img.Id;
+
+                    //guardar la orden
+                    db.Ordenes.Add(orden);
+
+                    if (db.SaveChanges() > 0)
+                    {
+                        foreach (var DetalleActual in detallesWS)
+                        {
+                            if (await esDeBar(DetalleActual.menuid))
+                            {
+                                int existencias = await existencia(DetalleActual.menuid);
+
+                                if (existencias >= DetalleActual.cantidadorden)
+                                {
+                                    DetalleDeOrden detallesDeOrden = new DetalleDeOrden
+                                    {
+                                        CantidadOrden = DetalleActual.cantidadorden,
+                                        NotaDetalleOrden = DetalleActual.notaorden != "" ? DetalleActual.notaorden : null,
+                                        PrecioOrden = DetalleActual.preciounitario,
+                                        EstadoDetalleOrden = DetalleActual.estado,
+                                        MenuId = DetalleActual.menuid,
+                                        OrdenId = orden.Id
+                                    };
+
+                                    db.DetallesDeOrden.Add(detallesDeOrden);
+
+                                }
+                                else
+                                {
+                                    resultadoWS.Mensaje = "La existencia es menor que la cantidad especificada del producto: " + DetalleActual.nombreplatillo;
+                                    resultadoWS.Resultado = false;
+                                    throw new Exception();
+                                }
+                            }
+                            else
+                            {
+                                DetalleDeOrden detallesDeOrden = new DetalleDeOrden
+                                {
+                                    CantidadOrden = DetalleActual.cantidadorden,
+                                    NotaDetalleOrden = DetalleActual.notaorden,
+                                    PrecioOrden = DetalleActual.preciounitario,
+                                    EstadoDetalleOrden = DetalleActual.estado,
+                                    MenuId = DetalleActual.menuid,
+                                    OrdenId = orden.Id
+                                };
+
+                                db.DetallesDeOrden.Add(detallesDeOrden);
+                            }
+                        }
 
                         if (db.SaveChanges() > 0)
                         {
-                            foreach (var DetalleActual in detallesWS)
+                            resultadoWS.Mensaje = "Almecenado con exito";
+                            resultadoWS.Resultado = true;
+                            transact.Commit();
+                            //falta poner lo del websocket :v
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
+
+                    }
+                }
+                catch (Exception)
+                {
+                    if (resultadoWS.Mensaje.Length == 0)
+                    {
+                        resultadoWS.Mensaje = "Error al guardar la orden";
+                        resultadoWS.Resultado = false;
+                    }
+                    transact.Rollback();
+                }
+            }
+
+            return Json(resultadoWS);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> NuevosDetalle(DateTime fechaOrden, List<DetallesDeOrdenWS> nuevoDetallesWS)
+        {
+            ResultadoWS resultadoWS = new ResultadoWS();
+            resultadoWS.Mensaje = "";
+            resultadoWS.Resultado = false;
+
+            using (var transact = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var idorden = nuevoDetallesWS[0].ordenid;
+                    var Orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Id == idorden);
+
+                    if (Orden != null)
+                    {
+                        Orden.FechaOrden = Convert.ToDateTime(fechaOrden);//CAMBIO LA HORA DEL PEDIDO
+                        db.Entry(Orden).State = EntityState.Modified;
+
+                        if (db.SaveChanges() > 0)
+                        {
+                            foreach (var DetalleActual in nuevoDetallesWS)
                             {
                                 if (await esDeBar(DetalleActual.menuid))
                                 {
@@ -113,11 +256,11 @@ namespace MenuAPI.Areas.API.Controllers
                                         DetalleDeOrden detallesDeOrden = new DetalleDeOrden
                                         {
                                             CantidadOrden = DetalleActual.cantidadorden,
-                                            NotaDetalleOrden = DetalleActual.notaorden,
+                                            NotaDetalleOrden = DetalleActual.notaorden != "" ? DetalleActual.notaorden : null,
                                             PrecioOrden = DetalleActual.preciounitario,
                                             EstadoDetalleOrden = DetalleActual.estado,
                                             MenuId = DetalleActual.menuid,
-                                            OrdenId = orden.Id
+                                            OrdenId = DetalleActual.ordenid
                                         };
 
                                         db.DetallesDeOrden.Add(detallesDeOrden);
@@ -139,11 +282,12 @@ namespace MenuAPI.Areas.API.Controllers
                                         PrecioOrden = DetalleActual.preciounitario,
                                         EstadoDetalleOrden = DetalleActual.estado,
                                         MenuId = DetalleActual.menuid,
-                                        OrdenId = orden.Id
+                                        OrdenId = DetalleActual.ordenid
                                     };
 
                                     db.DetallesDeOrden.Add(detallesDeOrden);
                                 }
+
                             }
 
                             if (db.SaveChanges() > 0)
@@ -154,125 +298,27 @@ namespace MenuAPI.Areas.API.Controllers
                             }
                             else
                             {
-                                resultadoWS.Mensaje = "Error al guardar el detalle";
-                                resultadoWS.Resultado = false;
                                 throw new Exception();
                             }
                         }
-                        else
-                        {
-                            resultadoWS.Mensaje = "Error al guardar la orden";
-                            resultadoWS.Resultado = false;
-                            throw new Exception();
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        resultadoWS.Mensaje = ex.Message;
-                        resultadoWS.Resultado = false;
-                        transact.Rollback();
-                    }
-
-                }
-            }
-            else
-            {
-                resultadoWS.Mensaje = "Este codigo de orden ya existe";
-                resultadoWS.Resultado = false;
-            }
-
-            return Json(resultadoWS);
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> NuevosDetalle(List<DetallesDeOrdenWS> nuevoDetallesWS)
-        {
-            ResultadoWS resultadoWS = new ResultadoWS();
-
-            using (var transact = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    foreach (var DetalleActual in nuevoDetallesWS)
-                    {
-                        if (await esDeBar(DetalleActual.menuid))
-                        {
-                            int existencias = await existencia(DetalleActual.menuid);
-
-                            if (existencias >= DetalleActual.cantidadorden)
-                            {
-                                DetalleDeOrden detallesDeOrden = new DetalleDeOrden
-                                {
-                                    CantidadOrden = DetalleActual.cantidadorden,
-                                    NotaDetalleOrden = DetalleActual.notaorden,
-                                    PrecioOrden = DetalleActual.preciounitario,
-                                    EstadoDetalleOrden = DetalleActual.estado,
-                                    MenuId = DetalleActual.menuid,
-                                    OrdenId = DetalleActual.ordenid
-                                };
-
-                                db.DetallesDeOrden.Add(detallesDeOrden);
-
-                            }
-                            else
-                            {
-                                resultadoWS.Mensaje = "La existencia es menor que la cantidad especificada del producto: " + DetalleActual.nombreplatillo;
-                                resultadoWS.Resultado = false;
-                                throw new Exception();
-                            }
-                        }
-                        else
-                        {
-                            DetalleDeOrden detallesDeOrden = new DetalleDeOrden
-                            {
-                                CantidadOrden = DetalleActual.cantidadorden,
-                                NotaDetalleOrden = DetalleActual.notaorden,
-                                PrecioOrden = DetalleActual.preciounitario,
-                                EstadoDetalleOrden = DetalleActual.estado,
-                                MenuId = DetalleActual.menuid,
-                                OrdenId = DetalleActual.ordenid
-                            };
-
-                            db.DetallesDeOrden.Add(detallesDeOrden);
-                        }
-
-                    }
-
-                    if (db.SaveChanges() > 0)
-                    {
-                        resultadoWS.Mensaje = "Almecenado con exito";
-                        resultadoWS.Resultado = true;
-                        transact.Commit();
                     }
                     else
                     {
-                        resultadoWS.Mensaje = "Error al guardar el detalle";
-                        resultadoWS.Resultado = false;
                         throw new Exception();
                     }
-
-
-
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    resultadoWS.Mensaje = ex.Message;
-                    resultadoWS.Resultado = false;
+                    if (resultadoWS.Mensaje.Length == 0)
+                    {
+                        resultadoWS.Mensaje = "Error al guardar el detalle de orden";
+                        resultadoWS.Resultado = false;
+                    }
                     transact.Rollback();
                 }
             }
 
             return Json(resultadoWS);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         public async Task<int> existencia(int id)
@@ -281,24 +327,24 @@ namespace MenuAPI.Areas.API.Controllers
             int salidas;
             double entradas;
 
-                int idProd = (from m in db.Menus
+                int idProd = await (from m in db.Menus
                                    join i in db.Ingredientes on m.Id equals i.MenuId
                                    where i.MenuId == id
-                                   select i.ProductoId).DefaultIfEmpty(-1).FirstOrDefault();
+                                   select i.ProductoId).DefaultIfEmpty(-1).FirstOrDefaultAsync();
 
                 if (idProd != -1)
                 {
-                    salidas = (from m in db.Menus
+                    salidas = await (from m in db.Menus
                                     join dor in db.DetallesDeOrden on m.Id equals dor.MenuId
                                     join o in db.Ordenes on dor.OrdenId equals o.Id
                                     where m.Id == id
-                                    select dor.CantidadOrden).DefaultIfEmpty(0).Sum();
+                                    select dor.CantidadOrden).DefaultIfEmpty(0).SumAsync();
 
-                    entradas =(from p in db.Productos
+                    entradas = await (from p in db.Productos
                                      join de in db.DetallesDeEntrada on p.Id equals de.ProductoId
                                      join e in db.Entradas on de.EntradaId equals e.Id
                                      where p.Id == idProd
-                                     select de.CantidadEntrada).DefaultIfEmpty(0).Sum();
+                                     select de.CantidadEntrada).DefaultIfEmpty(0).SumAsync();
 
                     //calculando las existencias
                     existencia = (int)entradas - salidas;
@@ -329,20 +375,13 @@ namespace MenuAPI.Areas.API.Controllers
             return false;
         }
 
-        //si el user es -1 es de cliente visitante
-
-        public async Task<int> ObtenerVisitante()
+        protected override void Dispose(bool disposing)
         {
-           int idvisitante = await (from c in db.Clientes
-                 join d in db.Datos on c.DatoId equals d.Id
-                 where d.Cedula == "000-000000-0000X"
-                 select d.Id).DefaultIfEmpty().FirstOrDefaultAsync();
-
-            return idvisitante;
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
-
-
-
-
     } 
 }

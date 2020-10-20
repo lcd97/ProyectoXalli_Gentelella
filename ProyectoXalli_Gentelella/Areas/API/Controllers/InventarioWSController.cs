@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class InventarioWSController : Controller
     {
         //conexion con la db

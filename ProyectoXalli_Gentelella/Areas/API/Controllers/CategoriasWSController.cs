@@ -6,10 +6,12 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MenuAPI.Areas.API.Models;
+using ProyectoXalli_Gentelella.Areas.API;
 using ProyectoXalli_Gentelella.Models;
 
 namespace MenuAPI.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class CategoriasWSController : Controller
     {
         //conexion con la DB

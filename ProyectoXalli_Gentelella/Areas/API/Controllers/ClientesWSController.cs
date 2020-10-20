@@ -10,6 +10,7 @@ using System.Data.Entity;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class ClientesWSController : Controller
     {
         //conexion con la db

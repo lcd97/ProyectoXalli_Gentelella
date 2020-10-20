@@ -13,6 +13,7 @@ using System.Data.Entity;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class ComandaWSController : Controller
     {
         //conexion con la db
@@ -117,7 +118,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                             resultadoWS.Resultado = false;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         transact.Rollback();
                     }
@@ -138,8 +139,8 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
         {
             ResultadoWS resultadoWS = new ResultadoWS();
 
-            //string root = "http://192.168.1.52/ProyectoXalli_Gentelella";
-            string root = "http://proyectoxally.somee.com";
+            string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
+            //string root = "http://proyectoxally.somee.com";
             Orden orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Id == id);
 
             if (orden != null)
