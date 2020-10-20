@@ -273,12 +273,28 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <returns></returns>
         public ActionResult Ordenes(int empleadoId, string EmpleadoRol) {
             var orden = (dynamic)null;
-
+            //OBTENGO TODAS LAS ORDENES REALIZADAS POR EL MESERO LOGGEADO
             if (EmpleadoRol == "Mesero") {
                 orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId
+                         select new {
+                             OrdenId = obj.Id,
+                             CodigoOrden = obj.CodigoOrden,
+                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
+                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A"
+                         }).ToList();
+            } else if (EmpleadoRol == "Cocinero") {
+                //OBTENGO TODAS LAS ORDENES CON PLATILLO PENDIENTES
+                orden = (from obj in db.Ordenes.ToList()
+                         join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                         join men in db.Menus.ToList() on det.MenuId equals men.Id
+                         join cat in db.CategoriasMenu.ToList() on men.CategoriaMenuId equals cat.Id
+                         join bod in db.Bodegas.ToList() on cat.BodegaId equals bod.Id
+                         join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
+                         join d in db.Datos.ToList() on c.DatoId equals d.Id
+                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -289,7 +305,28 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                        join a in db.Datos on m.DatoId equals a.Id
                                        where obj.Id == o.Id
                                        select a.PNombre + " " + a.PApellido).FirstOrDefault()
-                         }).ToList();
+                         }).Distinct().ToList();
+            } else if (EmpleadoRol == "Bartender") {
+                //OBTENGO TODAS LAS ORDENES CON BEBIDAS PENDIENTES
+                orden = (from obj in db.Ordenes.ToList()
+                         join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                         join men in db.Menus.ToList() on det.MenuId equals men.Id
+                         join cat in db.CategoriasMenu.ToList() on men.CategoriaMenuId equals cat.Id
+                         join bod in db.Bodegas.ToList() on cat.BodegaId equals bod.Id
+                         join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
+                         join d in db.Datos.ToList() on c.DatoId equals d.Id
+                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR"
+                         select new {
+                             OrdenId = obj.Id,
+                             CodigoOrden = obj.CodigoOrden,
+                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
+                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+                             Mesero = (from o in db.Ordenes
+                                       join m in db.Meseros on o.MeseroId equals m.Id
+                                       join a in db.Datos on m.DatoId equals a.Id
+                                       where obj.Id == o.Id
+                                       select a.PNombre + " " + a.PApellido).FirstOrDefault()
+                         }).Distinct().ToList();
             } else {
                 orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
@@ -628,8 +665,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 Hora = "10 00 AM",
                 Cliente = "Felix Hdez"
             };
-
-
 
             AddNewOrder.Preppend(obj);
         }

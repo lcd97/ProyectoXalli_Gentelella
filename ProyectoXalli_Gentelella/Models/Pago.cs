@@ -19,6 +19,10 @@ namespace ProyectoXalli_Gentelella.Models {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
+        [Display(Name = "Número de factura")]
+        public int NumeroPago { get; set; }
+
+        [Required(ErrorMessage = "El campo es obligatorio")]
         [DataType(DataType.Date)]
         [Display(Name = "Fecha de entrada")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
@@ -37,6 +41,18 @@ namespace ProyectoXalli_Gentelella.Models {
         [DisplayFormat(DataFormatString = "(0:c2)")]
         [Display(Name = "Propina voluntaria")]
         public double Propina { get; set; }
+
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "(0:c2)")]
+        [Display(Name = "Cambio Córdobas")]
+        public double CambioCordoba { get; set; }
+
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "(0:c2)")]
+        [Display(Name = "Cambio Dólar")]
+        public double CambioDolar { get; set; }
 
         //FOREING KEY
         public int OrdenId { get; set; }

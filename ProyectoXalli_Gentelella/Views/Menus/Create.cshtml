@@ -178,6 +178,7 @@
 
         //INICIALIZADOR DE STEP WIZARD
         $('#wizard').smartWizard();
+        $("#finalizar").attr("onclick", "comprobar()");
 
         //CARGA LAS PRESENTACIONES DEL PRODUCTO
         $.ajax({

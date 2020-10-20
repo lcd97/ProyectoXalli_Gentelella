@@ -9,6 +9,12 @@ namespace ProyectoXalli_Gentelella.Models {
 
     [Table("Imagenes", Schema = "Menu")]
     public partial class Imagen {
+        public Imagen() {
+            this.Menus = new HashSet<Menu>();
+            this.Ordenes = new HashSet<Orden>();
+            this.Pagos = new HashSet<Pago>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -18,6 +24,8 @@ namespace ProyectoXalli_Gentelella.Models {
         public string Ruta { get; set; }
 
         //DEFINCION DE RELACIONES HIIJAS
-        public virtual ICollection<Menu> Menu { get; set; }
+        public virtual ICollection<Menu> Menus { get; set; }
+        public virtual ICollection<Orden> Ordenes { get; set; }
+        public virtual ICollection<Pago> Pagos { get; set; }
     }
 }

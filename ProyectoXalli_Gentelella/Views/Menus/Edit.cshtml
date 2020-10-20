@@ -151,7 +151,6 @@
     var elem, init;
 
     $(document).ready(function () {
-
         //INICIALIZARDOR DE MASCARA FORMATO PRECIO
         $("#precio").mask('0,000.00', { reverse: true });
 
@@ -207,6 +206,7 @@
 
         //INICIALIZADOR DE STEP WIZARD
         $('#wizard').smartWizard();
+        $("#finalizar").attr("onclick", "comprobar()");
 
         //INICIALIZAR EL CHECKBOX
         elem = document.querySelector('.js-switch');

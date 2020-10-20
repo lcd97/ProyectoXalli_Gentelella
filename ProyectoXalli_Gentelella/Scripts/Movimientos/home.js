@@ -1,6 +1,4 @@
 ﻿$(document).ready(function () {
-    var role, ColabId;
-
     //CARGANDO LOS LETREROS DEL DASHBOARD
     dashboardSign();
 
@@ -13,8 +11,8 @@
         url: "/Account/ColaboradorRole/",
         data: { empleado: loginId },
         success: function (data) {
-            ColabId = data.ColaboradorId;
-            role = data.Role;
+            var ColabId = data.ColaboradorId;
+            var role = data.Role;
 
             CrearTabla(ColabId, role);
             doughnutChart(role);
@@ -129,10 +127,10 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
     $.ajax({
         type: "GET",
         url: "/Ordenes/Ordenes/",
-        data: { EmpleadoId, EmpleadoRole },
+        data: { empleadoId: EmpleadoId, EmpleadoRol: EmpleadoRole },
         success: function (data) {
             if (data.length == 0) {
-                var agregar = '<h2 id="txt" style="text-align:center;">No hay ordenes activas</h2>';//AGREGA LETRERO
+                var agregar = '<h2 id="txt" style="text-align:center;">Ordenes vacías</h2>';//AGREGA LETRERO
                 $("#x_content").append(agregar);
             } else {
                 //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
