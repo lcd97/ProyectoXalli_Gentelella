@@ -57,4 +57,5 @@ function seleccionarCliente(row) {
     $("#ruc").val(numRuc);
 
     $("#small-modal").modal("hide");
+
 }//FIN FUNCION

@@ -1,0 +1,354 @@
+﻿
+@{
+    ViewBag.Title = "Facturación";
+}
+
+<link href="~/Content/switchery.css" rel="stylesheet" />
+<link href="~/Content/skins/all.css" rel="stylesheet" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+<style>
+    .form_wizard .stepContainer {
+        height: 100% !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Facturación</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+
+                <!-- Smart Wizard -->
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps">
+                        <li>
+                            <a href="#step-1">
+                                <span class="step_no">1</span>
+                                <span class="step_descr">
+                                    Paso 1<br />
+                                    <small>Buscar orden</small>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-2">
+                                <span class="step_no">2</span>
+                                <span class="step_descr">
+                                    Paso 2<br />
+                                    <small>Detalle de pago</small>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-3">
+                                <span class="step_no">3</span>
+                                <span class="step_descr">
+                                    Paso 3<br />
+                                    <small>Método de pago</small>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="step-1">
+                        <div class="form-horizontal form-label-left">
+
+                            <div class="form-group">
+
+                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                    <label>Identificación</label>
+                                    <input id="identificacion" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" style="text-transform:uppercase!important;">
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-xs-6" style="margin-top: 25px !important;">
+                                    <button type="button" onclick="CargarParcial('/Busquedas/BuscarCliente/')" class="btn btn-primary" data-toggle="tooltip" id="buscarCliente" title="Buscar el cliente"><i class="fa fa-search"></i></button>
+                                    <button type="button" onclick="CargarParcial('/Clientes/Create/')" class="btn btn-primary" data-toggle="tooltip" id="agregarCliente" title="Buscar el cliente"><i class="fa fa-plus"></i></button>
+                                </div>
+
+                                <div class="col-md-3 col-sm-5 col-xs-7">
+                                    <label>Cliente</label>
+                                    <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" val="0" maxlength="50" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="col-md-3 col-sm-3 col-xs-5">
+                                    <label>Número RUC</label>
+                                    <input id="rucOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="col-md-1 col-sm-6 col-xs-6" style="margin-top: 25px !important;">
+                                    <button type="button" id="btnBuscarOrd" onclick="buscarOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda la entrada">Buscar</button>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="table-responsive">
+                                <table class="table table-hover jambo_table bulk_action">
+                                    <thead>
+                                        <tr class="headings">
+                                            <th id="celdaChk" style="display:none">
+                                                <input type="checkbox" id="check-all" class="flat">
+                                            </th>
+                                            <th class="column-title">No. Orden</th>
+                                            <th class="column-title">Fecha Ordenada</th>
+                                            <th class="column-title">Cliente</th>
+                                            <th class="column-title">Mesero</th>
+                                            <th class="column-title">Sub-Total</th>
+                                            <th class="bulk-actions" colspan="6">
+                                                <a class="antoo" style="color:#fff; font-weight:500;">Ha seleccionado <span class="action-cnt"> </span> </a>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="bodyOrden"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step-2">
+                        <div class="form-horizontal form-label-left">
+                            <br />
+                            <section class="content invoice">
+                                <div class="row invoice-info">
+                                    <div class="col-sm-4 invoice-col">
+                                        Cliente
+                                        <address>
+                                            <strong id="clienteId" val="0">Visitante</strong>
+                                            <br />
+                                            <a onclick="cambiarTipo()">Persona Natural</a>
+                                            <br>RUC: N/A
+                                            <br>Telefono: N/A
+                                            <br>Correo: N/A
+                                        </address>
+                                    </div>
+
+                                    <div class="col-sm-4 invoice-col" hidden style="margin-top:15%">
+                                        <div>
+                                            <label class="btn btn-default search-file-btn">
+                                                <input id="file" name="file1" type="file" accept="image/*" style="display:None;"> <span>Examinar</span>
+                                            </label>
+                                            <span class="label label-default"> x Ninguna imagen seleccionada</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 invoice-col" hidden>
+                                        <div id="preview" class="img-preview preview-md">
+                                            <img id="img" src="~/images/Menu/Insert-image.jpg" style="width:351px;height:131.95px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                                <!-- Table row -->
+                                <div class="row">
+                                    <div class="col-xs-12 table">
+                                        <br />
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th style="width: 59%">Platillo/Bebida</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="bodyDetalle">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Call of Duty</td>
+                                                    <td>
+                                                        El snort testosterone trophy driving gloves handsome gerry Richardson helvetica tousled street art master testosterone trophy driving gloves handsome gerry Richardson
+                                                    </td>
+                                                    <td>$64.50</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Need for Speed IV</td>
+                                                    <td>Wes Anderson umami biodiesel</td>
+                                                    <td>$50.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Monsters DVD</td>
+                                                    <td>Terry Richardson helvetica tousled street art master, El snort testosterone trophy driving gloves handsome letterpress erry Richardson helvetica tousled</td>
+                                                    <td>$10.70</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Grown Ups Blue Ray</td>
+                                                    <td>Tousled lomo letterpress erry Richardson helvetica tousled street art master helvetica tousled street art master, El snort testosterone</td>
+                                                    <td>$25.99</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+
+                                <div class="row">
+                                    <div class="col-xs-6 col-xs-offset-6">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:50%">Subtotal:</th>
+                                                        <td>$250.30</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Tax (9.3%)</th>
+                                                        <td>$10.34</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Shipping:</th>
+                                                        <td>$5.80</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Total:</th>
+                                                        <td>$265.24</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </section>
+                        </div>
+                    </div>
+                    <div id="step-3">
+                        <div class="form-horizontal form-label-left">
+                            <div class="col-md-12 invoice-header">
+                                <h3>
+                                    Factura No. 4555
+                                    <small class="pull-right" style="margin-top: 5px;">Fecha: 16/08/2016</small>
+                                </h3>
+                            </div>
+                            <div class="col-md-6">
+                                <br />
+                                <div class="form-group col-md-3 col-sm-8 col-xs-8">
+                                    <label>IVA</label>
+                                    <input id="iva" class="form-control" type="text" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 col-xs-4">
+                                    <label>Descuento</label>
+                                    <input id="descuento" class="form-control" type="text" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 col-xs-4">
+                                    <label>Propina</label>
+                                    <input id="propina" class="form-control" type="text" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 col-xs-4">
+                                    <label>Total a pagar</label>
+                                    <input id="totalPagar" class="form-control" type="text" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-4 col-xs-4">
+                                    <label>Cambio Córdobas</label>
+                                    <input id="totalPagar" class="form-control" type="text" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-4 col-xs-4">
+                                    <label>Cambio Dólar</label>
+                                    <input id="totalPagar" class="form-control" type="text" autocomplete="off" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <br />
+                                <div class="col-md-12">
+                                    <div class="row">
+
+                                        <div class="col-md-3"> <label>Forma de pago</label></div>
+                                        <div class="col-md-3"> <label>Moneda</label></div>
+                                        <div class="col-md-3"> <label>Monto recibido</label></div>
+                                        <div class="col-md-3"> <label>Monto a pagar</label></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <select class="js-example-basic-single form-control" id="metPago" style="width:100%!important;">
+                                                <option>Tarjeta</option>
+                                                <option>Efectivo</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="js-example-basic-single form-control" id="metPago" style="width:100%!important;">
+                                                <option>Dólares</option>
+                                                <option>Córdobas</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input id="iva" class="form-control" type="text" autocomplete="off">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <input id="descuento" class="form-control" type="text" autocomplete="off">
+                                        </div>
+                                        <div class="col-md-1">
+                                            <a class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <br />
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Forma de Pago</th>
+                                                <th>Moneda</th>
+                                                <th>Monto a pagar</th>
+                                                <th>Monto Recibido</th>
+                                                <th>Monto Entregado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tarjeta</td>
+                                                <td>Cordobas</td>
+                                                <td>150</td>
+                                                <td>150</td>
+                                                <td>50</td>
+                                                <td>$64.50</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Efectivo</td>
+                                                <td>Cordobas</td>
+                                                <td>30</td>
+                                                <td>150</td>
+                                                <td>50</td>
+                                                <td>$64.50</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End SmartWizard Content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-ui-dist.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/jquery.smartWizard.js"></script>
+    <script src="~/Scripts/switchery.js"></script>
+    <script src="~/Scripts/icheck.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/Movimientos/facturaciones.js"></script>
+}

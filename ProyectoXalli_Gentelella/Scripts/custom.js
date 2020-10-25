@@ -212,18 +212,18 @@ $(document).ready(function() {
 // /Switchery
 
 
-// iCheck
-$(document).ready(function() {
-    if ($("input.flat")[0]) {
-        $(document).ready(function () {
-            $('input.flat').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-        });
-    }
-});
-// /iCheck
+//// iCheck AQUI ESTUVE YO
+//$(document).ready(function() {
+//    if ($("input.flat")[0]) {
+//        $(document).ready(function () {
+//            $('input.flat').iCheck({
+//                checkboxClass: 'icheckbox_flat-green',
+//                radioClass: 'iradio_flat-green'
+//            });
+//        });
+//    }
+//});
+//// /iCheck
 
 // Table
 $('table input').on('ifChecked', function () {
@@ -271,7 +271,7 @@ function countChecked() {
     if (checkCount) {
         $('.column-title').hide();
         $('.bulk-actions').show();
-        $('.action-cnt').html(checkCount + ' Records Selected');
+        $('.action-cnt').html(checkCount + ' orden(es)');
     } else {
         $('.column-title').show();
         $('.bulk-actions').hide();

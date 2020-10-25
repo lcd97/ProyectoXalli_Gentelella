@@ -98,10 +98,10 @@ function SmartWizard(target, options) {
         // Enable keyboard navigation
         if($this.options.keyNavigation){
             $(document).keyup(function(e){
-                if(e.which==39){ // Right Arrow
-                    $this.goForward();
-                }else if(e.which==37){ // Left Arrow
-                    $this.goBackward();
+                if(e.which==39){ // Right Arrow IR HACIA DELANTE SI SE PRESIONA LA TECLA DERECHA
+                    //$this.goForward();
+                } else if (e.which == 37) { // Left Arrow IR HACIA ATRAS SI SE PRESIONA LA TECLA IZQUIERDA
+                    //$this.goBackward();
                 }
             });
         }

@@ -219,6 +219,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\Movimientos\ActivacionesController.cs" />
     <Compile Include="Controllers\Movimientos\EntradasController.cs" />
+    <Compile Include="Controllers\Movimientos\FacturacionesController.cs" />
     <Compile Include="Controllers\Movimientos\OrdenesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -449,6 +450,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\Movimientos\activacion.js" />
     <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
+    <Content Include="Scripts\Movimientos\facturaciones.js" />
     <Content Include="Scripts\Movimientos\preparacion.js" />
     <Content Include="Scripts\Movimientos\editOrden.js" />
     <Content Include="Scripts\Movimientos\entradas.js" />
@@ -549,6 +551,7 @@
     <Content Include="Views\Activaciones\Index.cshtml" />
     <Content Include="Views\Account\UserProfile.cshtml" />
     <Content Include="Views\Ordenes\Preparacion.cshtml" />
+    <Content Include="Views\Facturaciones\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
