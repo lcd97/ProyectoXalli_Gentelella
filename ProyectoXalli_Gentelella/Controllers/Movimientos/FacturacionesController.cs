@@ -17,14 +17,22 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return View();
         }
 
+        /// <summary>
+        /// CARGA LAS ORDENDES DEL CLIENTE
+        /// </summary>
+        /// <param name="ClienteId">CLIENTE ID</param>
+        /// <returns></returns>
         public ActionResult CargarOrdenes(int ClienteId) {
-
             int cliente = 0;
+
+            //SI EL ID DEL CLIENTE ES 0 - CARGAR LAS ORDENES DE LOS VISITANTES
             if (ClienteId == 0) {
                 cliente = db.Clientes.Where(c => c.EmailCliente.Trim() == "defaultuser@xalli.com").Select(c => c.Id).FirstOrDefault();
             } else
+                //SI ES DIF A 0 CARGAR LOS HUESPEDES
                 cliente = ClienteId;
 
+            //RECUPERO TODAS LAS ORDENES DE DET ID
             var orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
@@ -47,11 +55,81 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { orden, ClienteId }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CargarSeleccionadas(string OrdenesId) {
-            var ordenesId = JsonConvert.DeserializeObject<List<DetalleDeOrden>>(OrdenesId);
-            
+        /// <summary>
+        /// OBTIENE EL DETALLE DE LAS ORDENES SELECCIONADAS DEL HUESPED
+        /// </summary>
+        /// <param name="ordenIds">RECUPERA TODAS LAS ORDENES SELECCIONADAS DEL CLIENTE</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult CargarSeleccionadas(List<int> ordenIds, int clienteId = 0) {
+            //CREO LAS INSTANCIA DONDE SE ALMACENARA LAS/LA ORDEN(ES)
+            List<detalleCliente> ordenesCliente = new List<detalleCliente>();
 
-            return Json(0, JsonRequestBehavior.AllowGet);
+            ordenIds.Sort();//ORDENO LA LISTA OBTENIDA
+
+            //RECORRO LA LISTA DE IDS PARA OBTENER SU DETALLE
+            foreach (var item in ordenIds) {
+                //ALMACENO EL DETALLE EN EL OBJETO
+                ordenesCliente.Add(IteracionObjeto(item));
+            }//FIN FOREACH
+
+            //RECORRO LA LISTA DEL CLIENTE Y AGRUPO ELEMENTOS DE DIFERENTES ORDENES
+            var detalleFinal = (from obj in ordenesCliente
+                                group new { obj } by new { obj.Id, obj.Cantidad, obj.Precio, obj.Platillo } into grouped
+                                select new detalleCliente {
+                                    Id = grouped.Key.Id,
+                                    Cantidad = grouped.Sum(s => s.obj.Cantidad),
+                                    Platillo = grouped.Key.Platillo,
+                                    Precio = grouped.Key.Precio
+                                }).ToList();
+
+            Cliente cliente = new Cliente();
+            var img = (dynamic)null;            
+
+            if (clienteId != 0) {
+                cliente = db.Clientes.Where(c => c.Id == clienteId).Select(c => c).FirstOrDefault();
+                img = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Id == cliente.ImagenId).Ruta;
+            }
+
+            bool diplomatico = img == "N/A" || img == null ? false : true;
+
+            return Json(new { detalleFinal, img, diplomatico }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// OBTENGO LA CONSULTA DEL DETALLE DE ORDEN DEL CLIENTE (1X1)
+        /// </summary>
+        /// <param name="OrdenId">ID ACTUAL</param>
+        /// <returns></returns>
+        public detalleCliente IteracionObjeto(int OrdenId) {
+            //OBTENGO EL DETALLE DE DETERMINADA ORDEN
+            detalleCliente ordCliente = (from obj in db.Ordenes.ToList()
+                                         join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                                         join menu in db.Menus.ToList() on det.MenuId equals menu.Id
+                                         where det.OrdenId == OrdenId
+                                         group new { det, menu } by new { menu.DescripcionMenu, det.NotaDetalleOrden, det.PrecioOrden, det.MenuId } into grouped
+                                         select new detalleCliente {
+                                             Id = grouped.Key.MenuId,
+                                             Cantidad = grouped.Sum(s => s.det.CantidadOrden),//SUMO LA CANTIDAD SOLICITADA EN CASO DE QUE SEA EL MISMO PRODUCTO
+                                             Platillo = grouped.Key.DescripcionMenu,
+                                             Precio = grouped.Key.PrecioOrden
+                                         }).DefaultIfEmpty(null).FirstOrDefault();
+
+            return ordCliente;
+        }
+
+        public ActionResult ClienteDiplomatico() {
+            return View();
+        }
+
+        /// <summary>
+        /// CLASE INTERNA DONDE SE ALMACENA EL DETALLE DE LA ORDEN DE CLIENTES
+        /// </summary>
+        public class detalleCliente {
+            public int Id { get; set; }
+            public int Cantidad { get; set; }
+            public string Platillo { get; set; }
+            public double Precio { get; set; }
         }
     }
 }

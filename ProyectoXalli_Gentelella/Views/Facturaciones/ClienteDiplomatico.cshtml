@@ -11,7 +11,7 @@
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Tipo de documento", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                    <select class="js-example-basic-single select2_group form-control" id="documento" style="width:100%">
+                    <select class="js-example-basic-single select2_group form-control" id="documentoD" style="width:100%">
                         <option value="-1">Seleccione</option>
                         <option value="1">Cedula</option>
                         <option value="2">Otro</option>
@@ -20,19 +20,19 @@
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Número", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="numero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" disabled style="text-transform:uppercase">
+                    <input id="numeroD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" disabled style="text-transform:uppercase">
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="nombreD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="apellidoD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
                 </div>
             </div>
 
@@ -40,17 +40,17 @@
             <div class="form-group">
                 <div class="col-md-4 col-sm-4 col-xs-12">
                     @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase">
+                    <input id="rucD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase">
                 </div>
 
                 <div class="col-md-5 col-sm-5 col-xs-12">
                     @Html.Label("Correo Electrónico", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                    <input id="email" class="form-control col-md-2 col-sm-2 col-xs-2" type="email" maxlength="50" autocomplete="off" required>
+                    <input id="emailD" class="form-control col-md-2 col-sm-2 col-xs-2" type="email" maxlength="50" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     @Html.Label("Teléfono", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="telefono" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required>
+                    <input id="telefonoD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required>
                 </div>
             </div>
 
@@ -59,7 +59,7 @@
 
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                     <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
-                    <button type="button" onclick="saveCustomer()" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-success">Guardar</button>
                 </div>
             </div>
         </div>
@@ -71,27 +71,24 @@
     $('.js-example-basic-single').select2({
         //MODIFICAR LAS FRASES DEFAULT DE SELECT2
         language: {
-
             noResults: function () {
-
                 return "No hay resultado";
             },
             searching: function () {
-
                 return "Buscando...";
             }
         }
     });
 
     //MASCARA DE NUMERO TELEFONICO
-    $("#telefono").mask("A000-0000", {
+    $("#telefonoD").mask("A000-0000", {
         translation: {
             'A': { pattern: /[5-7-8]/ }
         }
     });
 
     //MASCARA PARA EL NUMERO RUC
-    $("#ruc").mask("A000000000000B", {
+    $("#rucD").mask("A000000000000B", {
         translation: {
             'A': { pattern: /[0-6-EeJjNnRr]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
             'B': { pattern: /[0-9-A-Z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
@@ -107,18 +104,18 @@
     });
 
     //MANIPULAR EL CAMBIO DE TIPO DE DOCUMENTO
-    $("#documento").on("change", function () {
-        var selector = $("#numero");
+    $("#documentoD").on("change", function () {
+        var selector = $("#numeroD");
         selector.val("");//SE LIMPIA EL INPUT
 
         //SI EL SELECT TIENE UN CAMPO DE ID
-        if ($("#documento").val() != "-1") {
+        if ($("#documentoD").val() != "-1") {
             selector.removeAttr("disabled");//HABILITAMOS EL INPUT
 
             //SI SE SELECCIONO COMO DOCUMENTO CEDULA
-            if ($("#documento").val() == "1") {
-                $("#numero").attr("maxlength", 16);
-                $("#numero").mask("A00-000000-0000B", {
+            if ($("#documentoD").val() == "1") {
+                $("#numeroD").attr("maxlength", 16);
+                $("#numeroD").mask("A00-000000-0000B", {
                     translation: {
                         'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
                         'B': { pattern: /[A-Za-z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
@@ -126,8 +123,8 @@
                 });
             } else {
                 //CAMBIAR FORMATO SI ES PASAPORTE
-                $("#numero").attr("maxlength", 10);
-                $("#numero").mask("0000000000", {
+                $("#numeroD").attr("maxlength", 10);
+                $("#numeroD").mask("0000000000", {
                     translation: {
                         '0': { pattern: /[A-Za-z0-9]/ }//ACEPTAR VALORES ALFANUMERICOS
                     }
@@ -139,29 +136,33 @@
         }
     });
 
-    ////BUSQUEDA DE CLIENTE EN CASO DE QUE ESTE REGISTRADO
-    //$("#numero").blur(function () {
-    //    //AGARRAR EL VALOR DE CEDULA
-    //    var cedula = $(this).val().toUpperCase();
+    //BUSQUEDA DE CLIENTE EN CASO DE QUE ESTE REGISTRADO
+    $("#numeroD").blur(function () {
+        //AGARRAR EL VALOR DE CEDULA
+        var cedula = $(this).val().toUpperCase();
 
-    //    //SI ES DIFERENTE A VACIO
-    //    if (cedula != "") {
-    //        $.ajax({
-    //            type: "GET",
-    //            dataType: "JSON",
-    //            url: "/Clientes/BuscarDato/",
-    //            data: { cedula },
-    //            succes: function (data) {
-    //                if (data != null) {
-    //                    alert("dashdyahj");
-    //                    alert(data.Nombre + " " + data.Apellido);
+        //SI ES DIFERENTE A VACIO
+        if (cedula != "") {
+            $.ajax({
+                type: "GET",               
+                url: "/Clientes/BuscarDato/",
+                data: { cedula },
+                succes: function (data) {
+                    alert(data);
+                        if (data != null) {
+                            alert("danrra");
 
-    //                    $("#nombre").val(data.Nombre);
-    //                    $("#apellido").val(data.Apellido);
-    //                    $("#ruc").val(data.RUC);
-    //                }
-    //            }
-    //        });
-    //    }
-    //});
+                            //$("#nombreD").val(data.Nombre);
+                            //$("#apellidoD").val(data.Apellido);
+                            //$("#rucD").val(data.RUC);
+                        } else {
+                            alert("error vacio");
+                        }
+                    },
+                    error: function () {
+                        alert("error func");
+                }
+            });
+        }
+    });
 </script>

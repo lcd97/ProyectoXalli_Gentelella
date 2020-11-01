@@ -245,6 +245,7 @@ function RedirectToPrep(OrderId, Role) {
     window.location.href = url;
 }
 
+//FUNCION PARA CREAR EL GRAFICO DE LINEA
 function lineChart() {
 
     //CARGA LOS PRODUCTOS MAS VENDIDOS DEL RESTAURANTE EN GENERAL

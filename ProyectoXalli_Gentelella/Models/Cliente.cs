@@ -33,8 +33,10 @@ namespace ProyectoXalli_Gentelella.Models {
 
         //FOREIGN KEY
         public int DatoId { get; set; }
+        public int ImagenId { get; set; }
 
         //DECLARACION DE RELACION PADRE
         public virtual Dato Dato { get; set; }
+        public virtual Imagen Imagen { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public Imagen() {
             this.Menus = new HashSet<Menu>();
             this.Ordenes = new HashSet<Orden>();
-            this.Pagos = new HashSet<Pago>();
+            this.Clientes = new HashSet<Cliente>();
         }
 
         [Key]
@@ -26,6 +26,6 @@ namespace ProyectoXalli_Gentelella.Models {
         //DEFINCION DE RELACIONES HIIJAS
         public virtual ICollection<Menu> Menus { get; set; }
         public virtual ICollection<Orden> Ordenes { get; set; }
-        public virtual ICollection<Pago> Pagos { get; set; }
+        public virtual ICollection<Cliente> Clientes { get; set; }
     }
 }

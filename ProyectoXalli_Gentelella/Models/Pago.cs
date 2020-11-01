@@ -48,19 +48,11 @@ namespace ProyectoXalli_Gentelella.Models {
         [Display(Name = "Cambio Córdobas")]
         public double CambioCordoba { get; set; }
 
-        [Required(ErrorMessage = "El campo es obligatorio")]
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "(0:c2)")]
-        [Display(Name = "Cambio Dólar")]
-        public double CambioDolar { get; set; }
-
         //FOREING KEY
         public int OrdenId { get; set; }
-        public int ImagenId { get; set; }
 
         //DECLARACION DE RELACIONES PADRES
         public virtual Orden Orden { get; set; }
-        public virtual Imagen Imagen { get; set; }
 
         //DECLARACION DE RELACIONES HIJAS
         public virtual ICollection<OrdenPago> OrdenesPago { get; set; }

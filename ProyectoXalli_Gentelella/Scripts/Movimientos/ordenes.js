@@ -79,6 +79,7 @@ function limpiarInicio() {
 //CONFIRMACION DE ACTIVAR/DESACTIVAR
 function Check() {
     var elem = document.querySelector('.js-switch');
+    $("#btnGuardarOrden").removeAttr("disabled");//ACTIVANDO EL BOTON
 
     //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
     if (elem.checked == true) {
@@ -286,7 +287,7 @@ function guardarOrden() {
 
                     AlertTimer("Completado", data.message, "success");
                 } else {
-                    Alert("Error", data.mesage, "error");
+                    Alert("Error", data.message, "error");
                 }
             }
         });
@@ -368,6 +369,7 @@ function validandoCliente() {
 }//FIN FUNCTION
 
 $("#identificacion").keyup(function () {
+    $("#btnGuardarOrden").removeAttr("disabled");//ACTIVANDO EL BOTON
     var iden = $(this).val();
 
     if (iden.length == 1) {

@@ -208,8 +208,6 @@ function SubmitForm(form) {
 function TableAdd() {
     //ALMACENAR LAS VARIABLES
     var producto = $("#producto").find("option:selected").val(), precio = $("#precio").val(), cantidad = $("#cantidad").val();
-    //var dec = Math.pow(10, 2);
-    //var precioTotal = parseInt((precio * cantidad) * dec, 10) / dec;
 
     //QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
     var precSb = precio.replace(/,/g, "");

@@ -211,7 +211,7 @@ function agregarItem(id) {
                 '</div>' +
                 '<div class="caption" id="data">' +
                 '<p>' +
-                '<strong>' + data.menu.Platillo + '</strong>' +
+                '<strong id="platilloDesc">' + data.menu.Platillo + '</strong>' +
                 '</p>' +
                 '<p> $ ' + formatoPrecio(data.menu.Precio) + '</p>' +
                 '</div>' +

@@ -102,8 +102,20 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
-                    if (dato == null && cliente == null) {
+                    //BUSCAR LA EVIDENCIA DEFAULT DE CARNET DIPLOMATICO
+                    Imagen buscarCarnet = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
+                    Imagen carnet = new Imagen();
 
+                    //EN CASO QUE NO EXISTA EL REGISTRO DEFAULT DEL CARNET
+                    if (buscarCarnet == null) {
+                        //SE CREA EL DEFAUTL
+                        carnet.Ruta = "N/A";
+                        db.Imagenes.Add(carnet);
+                        db.SaveChanges();
+                    }
+
+                    //SI NO EXISTE REGISTRO DE CLIENTE NI EN DATO
+                    if (dato == null && cliente == null) {
                         //SI NO SE ENCUENTRAN COINCIDENCIAS
                         Dato data = new Dato();
 
@@ -128,6 +140,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             customer.TelefonoCliente = Telefono != "" ? Telefono : null;
                             customer.EstadoCliente = true;
                             customer.DatoId = data.Id;
+                            /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
+                             * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
+                             * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
+                            customer.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
                             db.Clientes.Add(customer);
 
@@ -156,6 +172,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                         client.TelefonoCliente = Telefono != "" ? Telefono : null;
                         client.EstadoCliente = true;
                         client.DatoId = dato.Id;
+                        /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
+                        * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
+                        * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
+                        client.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
                         db.Clientes.Add(client);
                         completado = db.SaveChanges() > 0 ? true : false;
@@ -291,16 +311,22 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return View(Cliente);
         }
 
+        [HttpGet]
         public ActionResult BuscarDato(string Cedula) {
             var dato = (from obj in db.Datos
-                        where obj.Cedula.Trim() == Cedula.Trim()
+                        join c in db.Clientes on obj.Id equals c.DatoId
+                        where obj.Cedula.Trim() == Cedula.Trim() || c.PasaporteCliente.Trim() == Cedula.Trim()
                         select new {
                             Nombre = obj.PNombre,
                             Apellido = obj.PApellido,
                             RUC = obj.RUC
                         }).FirstOrDefault();
 
-            return Json(dato, JsonRequestBehavior.AllowGet);
+            if (dato != null) {
+                completado = true;
+            }
+
+            return Json(new { data = dato, success = completado }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Proveedor/Delete/5

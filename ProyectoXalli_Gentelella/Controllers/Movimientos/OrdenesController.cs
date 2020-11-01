@@ -134,8 +134,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     Orden orden = new Orden();
 
                     //SE CREAN OBJETOS PARA ALMACENAR A CLIENTE POR DEFAULT EN CASO DE QUE NO EXISTA EN LA BD
-                    Dato plantilla1 = new Dato();
-                    Cliente plantilla2 = new Cliente();
+                    Dato datoDefault = new Dato();
+                    Cliente clienteDefault = new Cliente();
 
                     //SE CREA OBJETO PARA ALMACENAR EL CLIENTE
                     Cliente clientePlantilla = new Cliente();
@@ -152,22 +152,38 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
                         //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
                         if (buscarP == null) {
-                            plantilla1.Cedula = "000-000000-0000X";
-                            plantilla1.PNombre = "Default";
-                            plantilla1.PApellido = "User";
+                            //BUSCAR LA EVIDENCIA DEFAULT DE CARNET DIPLOMATICO
+                            Imagen buscarCarnet = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
+                            Imagen carnet = new Imagen();
 
-                            db.Datos.Add(plantilla1);
+                            //EN CASO QUE NO EXISTA EL REGISTRO DEFAULT DEL CARNET
+                            if (buscarCarnet == null) {
+                                //SE CREA EL DEFAULT
+                                carnet.Ruta = "N/A";
+                                db.Imagenes.Add(carnet);
+                                db.SaveChanges();
+                            }
+
+                            datoDefault.Cedula = "000-000000-0000X";
+                            datoDefault.PNombre = "Default";
+                            datoDefault.PApellido = "User";
+
+                            db.Datos.Add(datoDefault);
                             db.SaveChanges();
 
-                            plantilla2.DatoId = plantilla1.Id;
-                            plantilla2.EmailCliente = "defaultuser@xalli.com";
-                            plantilla2.EstadoCliente = false;
+                            clienteDefault.DatoId = datoDefault.Id;
+                            clienteDefault.EmailCliente = "defaultuser@xalli.com";
+                            clienteDefault.EstadoCliente = false;
+                            /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
+                             * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
+                             * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
+                            clienteDefault.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
-                            db.Clientes.Add(plantilla2);
+                            db.Clientes.Add(clienteDefault);
                             db.SaveChanges();
 
                             //ASIGNAR EL ID DE LA PLANTILLA RECIEN CREADA
-                            clientePlantilla = plantilla2;
+                            clientePlantilla = clienteDefault;
                         } else {//YA EXISTE EL REGISTRO DE CLIENTE PLANTILLA
                             //SE MANDA A BUSCAR PARA OBTENER EL ID DE LA PLANTILLA
                             clientePlantilla = db.Clientes.FirstOrDefault(c => c.DatoId == buscarP.Id);
