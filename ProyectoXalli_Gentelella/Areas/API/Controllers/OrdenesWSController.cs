@@ -22,7 +22,7 @@ namespace MenuAPI.Areas.API.Controllers
        [HttpGet]
         public JsonResult Ordenes()
         {
-            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1 || x.EstadoOrden == 2)
+            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1)
                            join m in db.Meseros on o.MeseroId equals m.Id
                            join c in db.Clientes on o.ClienteId equals c.Id
                            join d in db.Datos on c.DatoId equals d.Id
