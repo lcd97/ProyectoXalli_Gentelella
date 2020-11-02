@@ -173,15 +173,23 @@
 
                                 <div class="form-group col-md-3 col-sm-4 col-xs-4">
                                     <label>Descuento</label>
-                                    <input id="descuentoPago" class="form-control" type="text" autocomplete="off">
+                                    <input id="descuentoPago" class="form-control" type="text" maxlength="3" placeholder="10%" autocomplete="off">
                                 </div>
 
-                                <div class="form-group col-md-3 col-sm-4 col-xs-4">
+                                <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                                    <label>Moneda</label>
+                                    <select class="js-example-basic-single form-control" id="moneda" style="width:100%!important;">
+                                        <option value="1">Dólares</option>
+                                        <option value="2">Córdobas</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-2 col-sm-4 col-xs-4">
                                     <label>Propina</label>
-                                    <input id="propinaPago" class="form-control" type="text" autocomplete="off">
+                                    <input id="propinaPago" class="form-control" type="text" maxlength="3" autocomplete="off">
                                 </div>
 
-                                <div class="form-group col-md-3 col-sm-4 col-xs-4" style="margin-top: 25px !important;">
+                                <div class="form-group col-md-1 col-sm-4 col-xs-4" style="margin-top: 25px !important;">
                                     <a class="btn btn-primary" onclick="agregarVal()"><i class="fa fa-plus"></i></a>
                                 </div>
 
@@ -199,7 +207,7 @@
                                                 <tr>
                                                     <th style="width:50%">Subtotal:</th>
                                                     <td id="subDol"></td>
-                                                    <td id="subCor"></td>
+                                                    <td id="subCord"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>IVA (15%)</th>
@@ -207,7 +215,7 @@
                                                     <td id="ivaCord"></td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Descuento:</th>
+                                                    <th id="txtDesc">Descuento:</th>
                                                     <td id="descDol"></td>
                                                     <td id="descCord"></td>
                                                 </tr>
@@ -245,19 +253,19 @@
                                 <div class="form-group col-md-2 col-sm-3 col-xs-3">
                                     <label>Moneda</label>
                                     <select class="js-example-basic-single form-control" id="moneda" style="width:100%!important;">
-                                        <option>Dólares</option>
-                                        <option>Córdobas</option>
+                                        <option value="1">Dólares</option>
+                                        <option value="2">Córdobas</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-2 col-sm-3 col-xs-3">
                                     <label>Monto Pagar</label>
-                                    <input id="pagar" class="form-control" type="text" autocomplete="off">
+                                    <input id="pagar" class="form-control" type="text" maxlength="5" autocomplete="off">
                                 </div>
 
                                 <div class="form-group col-md-3 col-sm-3 col-xs-3">
                                     <label>Monto Recibido</label>
-                                    <input id="rec" class="form-control" type="text" autocomplete="off">
+                                    <input id="rec" class="form-control" type="text" maxlength="5" autocomplete="off">
                                 </div>
 
                                 <div class="form-group col-md-2 col-sm-4 col-xs-4" style="margin-top: 25px !important;">

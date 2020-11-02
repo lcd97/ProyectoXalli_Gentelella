@@ -5,7 +5,30 @@
     $(".buttonNext").addClass("buttonDisabled");//DESACTIVAR EL BOTON SIGUIENTE
 
     $(".buttonNext").attr("onclick", "nextStepVal()");//DESACTIVAR EL BOTON SIGUIENTE
+    obtenerCambio();
+
+    $("#descuentoPago").mask('###00%', { reverse: true });
 });
+
+//SI SOLO SE ENCUENTRA UN CARACTER DE % ELIMINARLO
+$("#descuentoPago").keyup(function () {
+    var desc = $(this).val();
+
+    if (desc === "%" || desc === "0%" || desc === "00%") {
+        $(this).val("");
+    }
+});
+
+//OBTENGO EL TIPO DE CAMBIO DEL DIA SEGUN EL BCN
+function obtenerCambio() {
+    $.ajax({
+        type: "GET",
+        url: "/Facturaciones/CalcularCambioHoy/",
+        success: function (data) {
+            $("#cambio").val(data);
+        }
+    });
+}
 
 //INICIALIZAR EL SELECT2
 $('.js-example-basic-single').select2({
@@ -168,6 +191,16 @@ function nextStepVal() {
 
     //SI ESTA EN EL PASO 1 - CARGAR DATOS DE PASO 2
     if (step == 1) {
+
+        //LIMPIAMOS DETALLE PAGO ORDEN EN CASO QUE HAYA ALGO
+        $("#carnetSection").attr("hidden");
+        $("#bodyDetalle").empty();
+        $("#subTotalOrden").html("$ 0");
+        $("#ivaOrden").html("$ 0");
+        $("#totalOrden").html("$ 0");
+        $("#tipoPersona").html("Persona Natural");
+        $("#rucCliente").html("N/A");
+
         var ordenes = new Array();//ARREGLO DONDE ALMACENO EL ID DE ORDENES
         var clase = $("#seleccion").attr("type");//OBTENGO SI ES CHECKBOX O RADIOBUTTOM
 
@@ -268,14 +301,7 @@ function nextStepVal() {
                     $("#ivaOrden").html(IVA == 0 ? "N/A" : "$ " + IVA);
                     $("#totalOrden").html("$ " + Total);
 
-                    //PONER TOTALES AL OTRO LADO DEL PAGO
-                    $("#subDol").html("$ " + subtotalOrd);
-                    $("#ivaDol").html("$ " + IVA);
-                    $("#descDol").html("$ " + 0);
-                    $("#propDol").html("$ " + 0);
-                    $("#totalDol").html("$ " + Total);
-
-                    CalcularCambios();
+                    CalcularCambios(subtotalOrd, IVA, Total);
                 }
             });
         }
@@ -293,37 +319,86 @@ function cambiarTipo() {
     //MOSTRAR LOS CAMPOS OCULTOS
 }
 
-function CalcularCambios() {
+//CALCULO Y AGREGO LOS TOTALES EN CORDOBAS Y DOLARES
+function CalcularCambios(subtotalOrd, IVA, Total) {
+    var dolares = $("#cambio").val();
 
+    //PONER TOTALES AL OTRO LADO DEL PAGO
+    $("#subDol").html("$ " + subtotalOrd);
+    $("#ivaDol").html("$ " + IVA);
+    $("#descDol").html("$ 0");
+    $("#propDol").html("$ 0");
+    $("#totalDol").html("$ " + Total);
+
+    var subCord = subtotalOrd * dolares;
+    var ivaCord = IVA * dolares;
+    var totalCord = Total * dolares;
+
+    $("#subCord").html("C$ " + subCord);
+    $("#ivaCord").html("C$ " + ivaCord);
+    $("#descCord").html("C$ 0");
+    $("#propCord").html("C$ 0");
+    $("#totalCord").html("C$ " + totalCord);
 }
 
 //REALIZA LOS CALCULOS DE DESCUENTO PROPINA Y TOTAL
 function agregarVal() {
-    var descuento = $("#descuentoPago").val();
+    var dolares = $("#cambio").val();
+
+    var valDescuento = $("#descuentoPago").val();
+    var descuento = valDescuento != "" ? (valDescuento.split("%")[0] / 100) : 0;
+
+    var subtotal = parseFloat($("#subDol").html().split("$ ")[1]);
+    var iva = parseFloat($("#ivaDol").html().split("$ ")[1]);
+
+    var descDol = (subtotal + iva) * descuento;
     var propina = $("#propinaPago").val();
 
     if (descuento != "") {
-        $("#descDol").html("$ " + descuento);
+        $("#descDol").html("$ " + descDol);
+        $("#txtDesc").html("Descuento (" + valDescuento + "):");
     } else {
         $("#descDol").html("$ 0");
+        $("#txtDesc").html("Descuento:");
         descuento = 0;
     }
 
+    var propinaDol = 0;
+
     if (propina != "") {
-        $("#propDol").html("$ " + propina);
+        //DOLARES
+        if ($("#moneda").val() == "1") {
+            $("#propDol").html("$ " + propina);
+            propinaDol = propina;
+        } else {
+            propinaDol = dolares * propina;
+
+            $("#propCord").html("C$ " + propina);
+        }
     } else {
         $("#propDol").html("$ 0");
         propina = 0;
     }
 
-    var subtotal = parseFloat($("#subDol").html().split("$ ")[1]);
-    var iva = parseFloat($("#ivaDol").html().split("$ ")[1]);
-    var desc = parseFloat(descuento);
-    var prop = parseFloat(propina);
+    var desc = parseFloat(descDol);
+    var prop = parseFloat(propinaDol);
 
-    var total = (subtotal + iva) - desc + prop;
+    var total = ((subtotal + iva) - desc) + prop;
 
+    convertirPagos(desc);
     $("#totalDol").html("$ " + total);
+}
+
+
+function convertirPagos(descuento) {
+    var dolares = $("#cambio").val();
+    var descuentoDol = 0;
+
+    if (descuento != 0) {
+        descuentoDol = descuento * dolares;
+    }
+
+    $("#descCord").html("C$ " + descuentoDol);
 }
 
 function agregarPago() {
@@ -338,7 +413,6 @@ function agregarPago() {
     } else if (pagar == "" || recibido == "") {
         Alert("Error", "Campos vacíos. Por favor verificar", "error");
     } else {
-
         agregar = '<tr class="even pointer">' +
             '<td class="">' + metPago + '</td>' +
             '<td class="" >' + moneda + '</td>' +
@@ -354,7 +428,6 @@ function agregarPago() {
         //LIMPIAR MONTOS Y SELECT
         $("#rec").val("");
         $("#pagar").val("");
-
     }
 }
 

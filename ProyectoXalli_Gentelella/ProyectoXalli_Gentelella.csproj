@@ -57,7 +57,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -202,6 +204,11 @@
     <Compile Include="Areas\API\Models\MenuWS.cs" />
     <Compile Include="Areas\API\Models\OrdenWS.cs" />
     <Compile Include="Areas\API\Models\ResultadoWS.cs" />
+    <Compile Include="Connected Services\tipoCambioBCN\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Busquedas\BusquedasController.cs" />
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
@@ -261,6 +268,16 @@
     <Compile Include="Web_Sockets\RowAdd.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Connected Services\tipoCambioBCN\ProyectoXalli_Gentelella.tipoCambioBCN.RecuperaTC_MesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Connected Services\tipoCambioBCN\ServicioTC.disco" />
+    <None Include="Connected Services\tipoCambioBCN\configuration91.svcinfo" />
+    <None Include="Connected Services\tipoCambioBCN\configuration.svcinfo" />
+    <None Include="Connected Services\tipoCambioBCN\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Content\animate.css" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -414,6 +431,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Connected Services\tipoCambioBCN\ServicioTC.wsdl" />
+    <Content Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Busquedas\clientesB.js" />
@@ -580,6 +599,12 @@
     <EmbeddedResource Include="Migrations\202008271724172_DeleteTurnoId.resx">
       <DependentUpon>202008271724172_DeleteTurnoId.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\tipoCambioBCN\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

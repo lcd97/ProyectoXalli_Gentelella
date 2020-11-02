@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://servicios.bcn.gob.ni/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://servicios.bcn.gob.ni/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Tipo de Cambio - Banco Central de Nicaragua</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://servicios.bcn.gob.ni/">
+      <s:element name="RecuperaTC_Dia">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Ano" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Mes" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Dia" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RecuperaTC_DiaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="RecuperaTC_DiaResult" type="s:double" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RecuperaTC_Mes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Ano" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="Mes" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RecuperaTC_MesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RecuperaTC_MesResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="RecuperaTC_DiaSoapIn">
+    <wsdl:part name="parameters" element="tns:RecuperaTC_Dia" />
+  </wsdl:message>
+  <wsdl:message name="RecuperaTC_DiaSoapOut">
+    <wsdl:part name="parameters" element="tns:RecuperaTC_DiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="RecuperaTC_MesSoapIn">
+    <wsdl:part name="parameters" element="tns:RecuperaTC_Mes" />
+  </wsdl:message>
+  <wsdl:message name="RecuperaTC_MesSoapOut">
+    <wsdl:part name="parameters" element="tns:RecuperaTC_MesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Tipo_Cambio_BCNSoap">
+    <wsdl:operation name="RecuperaTC_Dia">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Recupera el tipo de cambio del día solicitado.
+Parametros: (Año, Mes, Día)</wsdl:documentation>
+      <wsdl:input message="tns:RecuperaTC_DiaSoapIn" />
+      <wsdl:output message="tns:RecuperaTC_DiaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RecuperaTC_Mes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Recupera el detalle completo de la base de tipos de cambio para el mes solicitado.
+Parametros: (Año, Mes)</wsdl:documentation>
+      <wsdl:input message="tns:RecuperaTC_MesSoapIn" />
+      <wsdl:output message="tns:RecuperaTC_MesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Tipo_Cambio_BCNSoap" type="tns:Tipo_Cambio_BCNSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="RecuperaTC_Dia">
+      <soap:operation soapAction="http://servicios.bcn.gob.ni/RecuperaTC_Dia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RecuperaTC_Mes">
+      <soap:operation soapAction="http://servicios.bcn.gob.ni/RecuperaTC_Mes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Tipo_Cambio_BCNSoap12" type="tns:Tipo_Cambio_BCNSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="RecuperaTC_Dia">
+      <soap12:operation soapAction="http://servicios.bcn.gob.ni/RecuperaTC_Dia" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RecuperaTC_Mes">
+      <soap12:operation soapAction="http://servicios.bcn.gob.ni/RecuperaTC_Mes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Tipo_Cambio_BCN">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Tipo de Cambio - Banco Central de Nicaragua</wsdl:documentation>
+    <wsdl:port name="Tipo_Cambio_BCNSoap" binding="tns:Tipo_Cambio_BCNSoap">
+      <soap:address location="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Tipo_Cambio_BCNSoap12" binding="tns:Tipo_Cambio_BCNSoap12">
+      <soap12:address location="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

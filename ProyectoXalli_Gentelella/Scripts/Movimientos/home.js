@@ -281,7 +281,15 @@ function lineChart() {
             };
 
             var lineOptions = {
-                responsive: true
+                responsive: true,
+                //LAS ESCALAS INICIARAN EN CERO, EN CASO QUE NO HAYA VALORES
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
             };
 
             var ctx = document.getElementById("VentasChart").getContext("2d");

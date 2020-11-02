@@ -5,12 +5,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ProyectoXalli_Gentelella.tipoCambioBCN;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
     public class FacturacionesController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
+
+        //INSTANCIA DE SERVICIO WEB
+        Tipo_Cambio_BCNSoapClient tipoCambio = new Tipo_Cambio_BCNSoapClient();
+
+        public ActionResult CalcularCambioHoy() {
+            int dia = DateTime.Now.Day;
+            int mes = DateTime.Now.Month;
+            int anio = DateTime.Now.Year;
+
+            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+
+            return Json(cambio, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: Facturaciones
         public ActionResult Index() {

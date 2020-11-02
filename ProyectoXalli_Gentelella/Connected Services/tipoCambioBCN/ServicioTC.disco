@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx?wsdl" docRef="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx" xmlns:q1="http://servicios.bcn.gob.ni/" binding="q1:Tipo_Cambio_BCNSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://servicios.bcn.gob.ni/Tc_Servicio/ServicioTC.asmx" xmlns:q2="http://servicios.bcn.gob.ni/" binding="q2:Tipo_Cambio_BCNSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
