@@ -39,6 +39,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public virtual DbSet<DetalleDePago> DetallesDePago { get; set; }
         public virtual DbSet<OrdenPago> OrdenesPago { get; set; }
         public virtual DbSet<TipoDePago> TiposDePago { get; set; }
+        public virtual DbSet<Moneda> Monedas { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);

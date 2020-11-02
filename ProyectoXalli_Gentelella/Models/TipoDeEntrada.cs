@@ -8,9 +8,8 @@ using System.Web;
 namespace ProyectoXalli_Gentelella.Models {
 
     [Table("TiposDeEntrada", Schema = "Inv")]
-    public partial class TipoDeEntrada {
-        
-        //CONSTRUCTOR
+    public partial class TipoDeEntrada {        
+        //CONSTRUCTOR DE CLASE HIJA
         public TipoDeEntrada() {
             this.Entradas = new HashSet<Entrada>();
         }

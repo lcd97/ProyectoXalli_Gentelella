@@ -9,7 +9,7 @@ namespace ProyectoXalli_Gentelella.Models {
 
     [Table("Productos", Schema = "Inv")]
     public partial class Producto {
-        //CONSTRUCTOR
+        //CONSTRUCTOR DE CLASES HIJAS
         public Producto() {
             this.DetallesDeEntrada = new HashSet<DetalleDeEntrada>();
             this.Ingredientes = new HashSet<Ingrediente>();

@@ -9,7 +9,7 @@ namespace ProyectoXalli_Gentelella.Models {
 
     [Table("Entradas", Schema = "Inv")]
     public partial class Entrada {
-        //CONSTRUCTOR
+        //CONSTRUCTOR DE CLASE HIJA
         public Entrada() {
             this.DetallesDeEntrada = new HashSet<DetalleDeEntrada>();
         }
@@ -43,5 +43,6 @@ namespace ProyectoXalli_Gentelella.Models {
         //DEFINICION DE RELACIONES PADRES
         public virtual Bodega Bodega { get; set; }
         public virtual Proveedor Proveedor { get; set; }
+        public virtual TipoDeEntrada TipoDeEntrada { get; set; }
     }
 }

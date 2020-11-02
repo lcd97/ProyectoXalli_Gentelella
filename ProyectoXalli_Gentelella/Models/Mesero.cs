@@ -9,6 +9,7 @@ namespace ProyectoXalli_Gentelella.Models {
 
     [Table("Meseros", Schema = "Ord")]
     public partial class Mesero {
+        //CONSTRUCTOR DE CLASE HIJA
         public Mesero() {
             this.Ordenes = new HashSet<Orden>();
         }

@@ -38,7 +38,7 @@ namespace ProyectoXalli_Gentelella.Models {
 
         //CAMPO MAPEABLE
         [NotMapped]
-        public string unidadMedida { get { return DescripcionUnidadMedida.Trim() + " " + Id; } }
+        public string unidadMedida { get { return DescripcionUnidadMedida.Trim() + " - " + AbreviaturaUM; } }
 
         //DEFINICION DE RELACIONES HIJOS
         public virtual ICollection<Producto> Productos { get; set; }

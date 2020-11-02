@@ -34,5 +34,12 @@ namespace ProyectoXalli_Gentelella.Models {
         //FOREING KEY
         public int TipoPagoId { get; set; }
         public int PagoId { get; set; }
+        public int MonedaId { get; set; }
+
+        //DECLARACION DE RELACIONES PADRES
+        public virtual TipoDePago TipoDePago { get; set; }
+        public virtual Pago Pago { get; set; }
+        public virtual Moneda Moneda { get; set; }
+
     }
 }

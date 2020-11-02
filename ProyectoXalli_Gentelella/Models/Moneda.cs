@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoXalli_Gentelella.Models {
 
-    [Table("TiposDePago", Schema = "Fact")]
-    public partial class TipoDePago {
-        //CONSTRUCTOR DE CLASE HIJA
-        public TipoDePago() {
+    [Table("Monedas", Schema = "Fact")]
+    public partial class Moneda {
+        public Moneda() {
+            this.Pagos = new HashSet<Pago>();
             this.DetallesDePago = new HashSet<DetalleDePago>();
         }
 
@@ -20,18 +21,19 @@ namespace ProyectoXalli_Gentelella.Models {
         [Required(ErrorMessage = "El campo es obligatorio")]
         [StringLength(3, MinimumLength = 3, ErrorMessage = "La longitud debe ser de 3 dígitos")]
         [Display(Name = "Código")]
-        public string CodigoTipoPago { get; set; }
+        public string CodigoMoneda { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
         [StringLength(50, ErrorMessage = "La longitud excede los 50 dígitos")]
-        [Display(Name = "Tipo de pago")]
-        public string DescripcionTipoPago { get; set; }
+        [Display(Name = "Moneda")]
+        public string DescripcionMoneda { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
         [Display(Name = "Activo")]
-        public bool EstadoTipoPago { get; set; }
+        public bool EstadoMoneda { get; set; }
 
         //RELACION HIJA
+        public virtual ICollection<Pago> Pagos { get; set; }
         public virtual ICollection<DetalleDePago> DetallesDePago { get; set; }
     }
 }

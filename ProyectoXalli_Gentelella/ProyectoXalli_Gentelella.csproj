@@ -235,6 +235,10 @@
     <Compile Include="Migrations\202008271724172_DeleteTurnoId.Designer.cs">
       <DependentUpon>202008271724172_DeleteTurnoId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011021713299_TablaMoneda.cs" />
+    <Compile Include="Migrations\202011021713299_TablaMoneda.Designer.cs">
+      <DependentUpon>202011021713299_TablaMoneda.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bodega.cs" />
@@ -253,6 +257,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\Mesero.cs" />
+    <Compile Include="Models\Moneda.cs" />
     <Compile Include="Models\Orden.cs" />
     <Compile Include="Models\OrdenPago.cs" />
     <Compile Include="Models\Pago.cs" />
@@ -598,6 +603,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202008271724172_DeleteTurnoId.resx">
       <DependentUpon>202008271724172_DeleteTurnoId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011021713299_TablaMoneda.resx">
+      <DependentUpon>202011021713299_TablaMoneda.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

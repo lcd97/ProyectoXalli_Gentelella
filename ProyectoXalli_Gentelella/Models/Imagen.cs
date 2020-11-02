@@ -9,6 +9,7 @@ namespace ProyectoXalli_Gentelella.Models {
 
     [Table("Imagenes", Schema = "Menu")]
     public partial class Imagen {
+        //CONSTRUCTOR DE CLASE HIJA
         public Imagen() {
             this.Menus = new HashSet<Menu>();
             this.Ordenes = new HashSet<Orden>();
