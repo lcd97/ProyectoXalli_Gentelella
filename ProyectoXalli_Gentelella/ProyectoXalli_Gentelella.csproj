@@ -217,6 +217,7 @@
     <Compile Include="Controllers\Catalogos\ClientesController.cs" />
     <Compile Include="Controllers\Catalogos\MenusController.cs" />
     <Compile Include="Controllers\Catalogos\MeserosController.cs" />
+    <Compile Include="Controllers\Catalogos\MonedasController.cs" />
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
     <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
@@ -577,6 +578,9 @@
     <Content Include="Views\Ordenes\Preparacion.cshtml" />
     <Content Include="Views\Facturaciones\Index.cshtml" />
     <Content Include="Views\Facturaciones\ClienteDiplomatico.cshtml" />
+    <Content Include="Views\Monedas\Index.cshtml" />
+    <Content Include="Views\Monedas\Create.cshtml" />
+    <Content Include="Views\Monedas\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

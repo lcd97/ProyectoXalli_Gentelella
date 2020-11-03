@@ -195,5 +195,17 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
             return Json(new { data = pagos }, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult getMonedas() {
+            var moneda = (from obj in db.Monedas.ToList()
+                         where obj.EstadoMoneda == false
+                         select new {
+                             Id = obj.Id,
+                             Descripcion = obj.DescripcionMoneda,
+                             Codigo = obj.CodigoMoneda.Trim()
+                         });
+
+            return Json(new { data = moneda }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

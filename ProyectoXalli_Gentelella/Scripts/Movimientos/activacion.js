@@ -102,6 +102,10 @@ function obtenerURL() {
         case "10":
             DataTable("/Activaciones/getTiposDePago");
             break;
+        //MONEDAS
+        case "11":
+            DataTable("/Activaciones/getMonedas");
+            break;
         default: console.log("Fin");
     }//FIN SWITCH
 }//FIN FUNCTION 
