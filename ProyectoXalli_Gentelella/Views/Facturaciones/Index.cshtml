@@ -178,10 +178,7 @@
 
                                 <div class="form-group col-md-3 col-sm-3 col-xs-3">
                                     <label>Moneda</label>
-                                    <select class="js-example-basic-single form-control" id="moneda" style="width:100%!important;">
-                                        <option value="1">Dólares</option>
-                                        <option value="2">Córdobas</option>
-                                    </select>
+                                    @Html.DropDownList("MonedaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "monedaPropina" })
                                 </div>
 
                                 <div class="form-group col-md-2 col-sm-4 col-xs-4">
@@ -244,18 +241,12 @@
 
                                 <div class="form-group col-md-3 col-sm-3 col-xs-3">
                                     <label>Forma de Pago</label>
-                                    <select class="js-example-basic-single form-control" id="metPago" style="width:100%!important;">
-                                        <option>Tarjeta</option>
-                                        <option>Efectivo</option>
-                                    </select>
+                                    @Html.DropDownList("FormaPagoId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "metPago" })
                                 </div>
 
                                 <div class="form-group col-md-2 col-sm-3 col-xs-3">
                                     <label>Moneda</label>
-                                    <select class="js-example-basic-single form-control" id="moneda" style="width:100%!important;">
-                                        <option value="1">Dólares</option>
-                                        <option value="2">Córdobas</option>
-                                    </select>
+                                    @Html.DropDownList("MonedaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "monedaPago" })
                                 </div>
 
                                 <div class="form-group col-md-2 col-sm-3 col-xs-3">
@@ -289,9 +280,9 @@
                                         <tfoot>
                                             <tr>
                                                 <td colspan="2">Total dólares</td>
-                                                <td>$ 0</td>
+                                                <td id="footDol">$ 0</td>
                                                 <td >Total córdobas</td>
-                                                <td colspan="2">C$ 0</td>
+                                                <td colspan="2" id="footCord">C$ 0</td>
                                             </tr>
                                         </tfoot>
                                     </table>

@@ -28,6 +28,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         // GET: Facturaciones
         public ActionResult Index() {
+            ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
+            ViewBag.MonedaId = new SelectList(db.Monedas, "Id", "DescripcionMoneda");
+
             return View();
         }
 
@@ -98,7 +101,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 }).ToList();
 
             Cliente cliente = new Cliente();
-            var img = (dynamic)null;            
+            var img = (dynamic)null;
 
             if (clienteId != 0) {
                 cliente = db.Clientes.Where(c => c.Id == clienteId).Select(c => c).FirstOrDefault();
@@ -132,6 +135,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return ordCliente;
         }
 
+        /// <summary>
+        /// CARGA LA VISTA PARA AGREGAR UN CLIENTE DIPLOMATICO
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ClienteDiplomatico() {
             return View();
         }

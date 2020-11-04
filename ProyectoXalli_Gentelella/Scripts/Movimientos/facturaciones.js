@@ -364,19 +364,27 @@ function agregarVal() {
     }
 
     var propinaDol = 0;
+    var propinaSelected = $("#monedaPropina").find("option:selected").text();
 
     if (propina != "") {
         //DOLARES
-        if ($("#moneda").val() == "1") {
+        if (propinaSelected.toUpperCase() === "DÓLARES") {
             $("#propDol").html("$ " + propina);
+            //CONVERTIR PROPINA EN CORDOBAS
             propinaDol = propina;
-        } else {
+            $("#propCord").html("C$ " + (propina * dolares));
+        } else {//CORDOBAS
+            $("#propCord").html("C$ " + propina);
+
+            //CONVERTIR PROPINA EN DOLARES
             propinaDol = dolares * propina;
 
-            $("#propCord").html("C$ " + propina);
+            $("#propDol").html("$ " + (propina / dolares));
         }
     } else {
         $("#propDol").html("$ 0");
+        $("#propCord").html("C$ 0");
+
         propina = 0;
     }
 
@@ -385,12 +393,15 @@ function agregarVal() {
 
     var total = ((subtotal + iva) - desc) + prop;
 
-    convertirPagos(desc);
+    convertirDesc(desc);
     $("#totalDol").html("$ " + total);
+
+    //LIMPIAR VALORES
+    $("#descuentoPago").val("");
+    $("#propinaPago").val("");
 }
 
-
-function convertirPagos(descuento) {
+function convertirDesc(descuento) {
     var dolares = $("#cambio").val();
     var descuentoDol = 0;
 
@@ -402,33 +413,81 @@ function convertirPagos(descuento) {
 }
 
 function agregarPago() {
+    var optionSelected = $("#metPago").find("option:selected").text().toUpperCase();
     var agregar = "";
     var recibido = $("#rec").val();
     var pagar = $("#pagar").val();
-    var metPago = $("#metPago").val();
-    var moneda = $("#moneda").val();
+    var metPago = $("#metPago").find("option:selected").text();
+    var moneda = $("#monedaPago").find("option:selected").text();
+    var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";
 
     if (parseFloat(pagar) > parseFloat(recibido)) {
         Alert("Error", "El monto a pagar no puede ser mayor que el monto recibido", "error");
-    } else if (pagar == "" || recibido == "") {
-        Alert("Error", "Campos vacíos. Por favor verificar", "error");
     } else {
-        agregar = '<tr class="even pointer">' +
-            '<td class="">' + metPago + '</td>' +
-            '<td class="" >' + moneda + '</td>' +
-            '<td class="" >$ ' + pagar + '</td>' +
-            '<td class="" >$ ' + recibido + '</td>' +
-            '<td class="" >$ ' + (recibido - pagar) + '</td>' +
-            '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
-            '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
-            '</tr>';
+        if (optionSelected == "EFECTIVO") {
+            if (pagar == "" || recibido == "") {
+                Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
+            } else {
+                agregar = '<tr class="even pointer">' +
+                    '<td class="">' + metPago + '</td>' +
+                    '<td class="" >' + moneda + '</td>' +
+                    '<td class="" >' + digitoMoneda + pagar + '</td>' +
+                    '<td class="" >' + digitoMoneda + recibido + '</td>' +
+                    '<td class="" >' + digitoMoneda + (recibido - pagar) + '</td>' +
+                    '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
+                    '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
+                    '</tr>';
+            }
+        } else if (optionSelected == "TARJETA") {
+            if (pagar == "") {
+                Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
+            } else {
+                recibido = pagar;
 
+                agregar = '<tr class="even pointer">' +
+                    '<td class="">' + metPago + '</td>' +
+                    '<td class="" >' + moneda + '</td>' +
+                    '<td class="" >' + digitoMoneda + pagar + '</td>' +
+                    '<td class="" >' + digitoMoneda + recibido + '</td>' +
+                    '<td class="" >' + digitoMoneda + (recibido - pagar) + '</td>' +
+                    '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
+                    '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
+                    '</tr>';
+            }
+        }
         $("#bodyPagar").append(agregar);
-
         //LIMPIAR MONTOS Y SELECT
         $("#rec").val("");
         $("#pagar").val("");
+
+        calcularPagosFact();
     }
+}
+
+function calcularPagosFact() {
+    var totalDol = 0, totalCord = 0, res = 0;
+    var dolares = $("#cambio").val();
+
+    $("#bodyPagar tr").each(function () {
+        var row = $(this).find("td");
+
+        if (row.eq(1).html().toUpperCase() == "CÓRDOBAS") {
+            res = row.eq(2).html().split("C$ ")[1];
+            totalCord += parseFloat(res);
+            //CONVERSION A DOLARES Y SUMA
+            var sumaDol = res * dolares;
+            totalDol = sumaDol;
+        } else {
+            res = row.eq(2).html().split("$ ")[1];
+            totalDol += parseFloat(res);
+            var sumaCord = res / dolares;
+            totalCord = sumaCord;
+        }
+    });
+
+    //AGREGAR EL TOTAL EN EL FOOTER
+    $("#footDol").html("$ " + totalDol);
+    $("#footCord").html("C$ " + totalCord);
 }
 
 //FUNCION PARA ELIMINAR UNA FILA SELECCIONADA DE LA TABLA
@@ -457,3 +516,14 @@ function editPago(row) {
         deletePago(row);
     });
 }
+
+$("#metPago").on("change", function () {
+    var metodoPago = $(this).find("option:selected").text();
+
+    if (metodoPago.toUpperCase() == "EFECTIVO") {
+        $("#rec").removeAttr("disabled");
+    } else {
+        $("#rec").attr("disabled", true);
+    }
+
+});
