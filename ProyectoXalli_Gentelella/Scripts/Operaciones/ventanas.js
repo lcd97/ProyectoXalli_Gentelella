@@ -142,17 +142,21 @@ jQuery(document).on('keyup', function (evt) {
 
 //CREA FORMATO PARA LOS PRECIOS CUYO DECIMALES ES 1
 function formatoPrecio(precio) {
-    var precioFin = precio.toString();
     var precioFinal = precio;
 
-    if (precioFin.includes(".")) {
-        var decimales = precioFin.split(".");
+    //SI EL PRECIO TIENE DECIMALES
+    if (precio.includes(".")) {
+        var decimales = precio.split(".");
 
-        if (decimales[1].length == 1) {
+        if (decimales[1].length == 1) {//SI TIENE SOLAMENTE UN DECIMAL
+            //AGREGAR UN CERO
             precioFinal = parseInt(decimales[0]) + "." + decimales[1] + "0";
-        } else {
+        } else {//SI TIENE MAS DECIMALES
+            //CORTAR A DOS DECIMALES
             precioFinal = parseInt(decimales[0]) + "." + decimales[1].substring(0, 2);
         }
+    } else {//SI NO TIENE DECIMALES AGREGARLE CEROS
+        precioFinal = precio + ".00";
     }
 
     return precioFinal;

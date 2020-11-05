@@ -8,9 +8,13 @@
     obtenerCambio();
 
     $("#descuentoPago").mask('###00%', { reverse: true });
+
+    $("#propinaPago").mask("0,000.00", { reverse: true });
+    $("#pagar").mask("0,000.00", { reverse: true });
+    $("#rec").mask("0,000.00", { reverse: true });
 });
 
-//SI SOLO SE ENCUENTRA UN CARACTER DE % ELIMINARLO
+//SI SOLO SE ENCUENTRA UN CARACTER % O 0ELIMINARLO 
 $("#descuentoPago").keyup(function () {
     var desc = $(this).val();
 
@@ -25,7 +29,7 @@ function obtenerCambio() {
         type: "GET",
         url: "/Facturaciones/CalcularCambioHoy/",
         success: function (data) {
-            $("#cambio").val(data);
+            $("#cambio").val(formatoPrecio(data.toString()));
         }
     });
 }
@@ -151,7 +155,7 @@ function buscarOrden() {
                         '<td class=" ">' + data.orden[i].FechaOrden + '</td>' +
                         '<td class=" ">' + data.orden[i].Cliente + '</td>' +
                         '<td class=" ">' + data.orden[i].Mesero + '</td>' +
-                        '<td class="a-right a-right ">$ ' + formatoPrecio(data.orden[i].SubTotal) + '</td>' +
+                        '<td class="a-right a-right ">$ ' + formatoPrecio((data.orden[i].SubTotal).toString()) + '</td>' +
                         '</tr>';
                 }
             }
@@ -264,19 +268,22 @@ function nextStepVal() {
 
                     $("#headMaster").html(encabezado);
 
-                    var subtotalOrd = "";
+                    var subtotalOrd = 0;
 
                     //CARGAR EL DETALLE DE LAS ORDENES
                     for (var i = 0; i < data.detalleFinal.length; i++) {
-                        var subtotalProd = data.detalleFinal[i].Cantidad * data.detalleFinal[i].Precio;
-                        subtotalOrd += subtotalProd;
+                        var cantidad = data.detalleFinal[i].Cantidad;//CANTIDAD PRODUCTO
+                        var precioUnitario = formatoPrecio((data.detalleFinal[i].Precio).toString());//P/U PRODUCTO
+                        var subtotalProd = cantidad * precioUnitario;//SUBTOTAL PRODUCTO
+
+                        subtotalOrd += subtotalProd;//SUBTOTAL ORDENADO
 
                         //AGREGAR EL DETALLE DE LA ORDEN
                         agregarDetail += '<tr>' +
-                            '<td>' + data.detalleFinal[i].Cantidad + '</td>' +
-                            '<td> $' + data.detalleFinal[i].Precio + '</td>' +
+                            '<td>' + cantidad + '</td>' +
+                            '<td> $ ' + precioUnitario + '</td>' +
                             '<td>' + data.detalleFinal[i].Platillo + '</td>' +
-                            '<td> $' + subtotalProd + '</td>' +
+                            '<td> $ ' + formatoPrecio(subtotalProd.toString()) + '</td>' +
                             '</tr>';
                     }
 
@@ -293,15 +300,15 @@ function nextStepVal() {
 
                     //CALCULO LOS TOTALES
                     //SI EL CLIENTE ES DIPLOMATICO NO COBRAR IVA
-                    var IVA = diplomatico ? 0 : subtotalOrd * 0.15;
-                    var Total = parseFloat(subtotalOrd) + parseFloat(IVA);
+                    var IVA = diplomatico ? 0 : subtotalOrd * 0.15;//CALCULO DEL IVA A COBRAR
+                    var Total = subtotalOrd + IVA;//TOTAL A PAGAR
 
                     //AGREGO LOS TOTALES A LA TABLA
-                    $("#subTotalOrden").html("$ " + subtotalOrd);
-                    $("#ivaOrden").html(IVA == 0 ? "N/A" : "$ " + IVA);
-                    $("#totalOrden").html("$ " + Total);
+                    $("#subTotalOrden").html("$ " + formatoPrecio(subtotalOrd.toString()));
+                    $("#ivaOrden").html(IVA == 0 ? "N/A" : "$ " + formatoPrecio(IVA.toString()));
+                    $("#totalOrden").html("$ " + formatoPrecio(Total.toString()));
 
-                    CalcularCambios(subtotalOrd, IVA, Total);
+                    CalcularCambios(formatoPrecio(subtotalOrd.toString()), formatoPrecio(IVA.toString()), formatoPrecio(Total.toString()));
                 }
             });
         }
@@ -313,7 +320,7 @@ function cambiarTipo() {
     var tipoCliente = $("#clienteId").attr("val");
 
     //CREAR AL CLIENTE
-    //CargarParcial("/Facturaciones/ClienteDiplomatico/");
+    CargarParcial("/Facturaciones/ClienteDiplomatico/");
     //CAMBIAR DATOS DONDE VA CLIENTE
     //BUSCAR SI EXISTE CARNET DIPLOMATICO PARA LA FACTURA
     //MOSTRAR LOS CAMPOS OCULTOS
@@ -334,30 +341,31 @@ function CalcularCambios(subtotalOrd, IVA, Total) {
     var ivaCord = IVA * dolares;
     var totalCord = Total * dolares;
 
-    $("#subCord").html("C$ " + subCord);
-    $("#ivaCord").html("C$ " + ivaCord);
+    $("#subCord").html("C$ " + formatoPrecio(subCord.toString()));
+    $("#ivaCord").html("C$ " + formatoPrecio(ivaCord.toString()));
     $("#descCord").html("C$ 0");
     $("#propCord").html("C$ 0");
-    $("#totalCord").html("C$ " + totalCord);
+    $("#totalCord").html("C$ " + formatoPrecio(totalCord.toString()));
 }
 
 //REALIZA LOS CALCULOS DE DESCUENTO PROPINA Y TOTAL
 function agregarVal() {
-    var dolares = $("#cambio").val();
+    var dolares = $("#cambio").val();//TIPO DE CAMBIO DOLAR
 
-    var valDescuento = $("#descuentoPago").val();
-    var descuento = valDescuento != "" ? (valDescuento.split("%")[0] / 100) : 0;
+    var percentageDescount = $("#descuentoPago").val();//OBTENGO EL % DE DESCUENTO
+    var descuento = percentageDescount != "" ? (percentageDescount.split("%")[0] / 100) : 0;//DESCUENTO EN DECIMALES
 
-    var subtotal = parseFloat($("#subDol").html().split("$ ")[1]);
-    var iva = parseFloat($("#ivaDol").html().split("$ ")[1]);
+    var subtotal = parseFloat($("#subDol").html().split("$ ")[1]);//OBTENGO EL SUBTOTAL DEL PAGO
+    var iva = parseFloat($("#ivaDol").html().split("$ ")[1]);//OBTENGO EL PORCENTAJE DE IVA
 
-    var descDol = (subtotal + iva) * descuento;
-    var propina = $("#propinaPago").val();
+    var descDol = (subtotal + iva) * descuento;//CALCULO EL DESCUENTO EN DOLARES
+    var propina = $("#propinaPago").val();//OBTENGO LA PROPINA
 
+    //SI HAY DESCUENTO
     if (descuento != "") {
-        $("#descDol").html("$ " + descDol);
-        $("#txtDesc").html("Descuento (" + valDescuento + "):");
-    } else {
+        $("#descDol").html("$ " + formatoPrecio(descDol.toString()));//PONGO EL DESCUENTO
+        $("#txtDesc").html("Descuento (" + percentageDescount + "):");//PONGO EL PORCENTAJE A DESCONTAR
+    } else {//SI NO HAY DESCUENTO PONER 0 (VACIO)
         $("#descDol").html("$ 0");
         $("#txtDesc").html("Descuento:");
         descuento = 0;
@@ -369,17 +377,17 @@ function agregarVal() {
     if (propina != "") {
         //DOLARES
         if (propinaSelected.toUpperCase() === "DÓLARES") {
-            $("#propDol").html("$ " + propina);
+            $("#propDol").html("$ " + formatoPrecio(propina.toString()));
             //CONVERTIR PROPINA EN CORDOBAS
             propinaDol = propina;
-            $("#propCord").html("C$ " + (propina * dolares));
+            var convCord = propina * dolares;
+            $("#propCord").html("C$ " + formatoPrecio(convCord.toString()));
         } else {//CORDOBAS
-            $("#propCord").html("C$ " + propina);
-
+            $("#propCord").html("C$ " + formatoPrecio(propina.toString()));
             //CONVERTIR PROPINA EN DOLARES
             propinaDol = dolares * propina;
-
-            $("#propDol").html("$ " + (propina / dolares));
+            var convDol = propina / dolares;
+            $("#propDol").html("$ " + formatoPrecio(convDol.toString()));
         }
     } else {
         $("#propDol").html("$ 0");
@@ -391,14 +399,31 @@ function agregarVal() {
     var desc = parseFloat(descDol);
     var prop = parseFloat(propinaDol);
 
-    var total = ((subtotal + iva) - desc) + prop;
+    //var total = ((subtotal + iva) - desc) + prop;
 
     convertirDesc(desc);
-    $("#totalDol").html("$ " + total);
+    calcularPagos();
 
     //LIMPIAR VALORES
     $("#descuentoPago").val("");
     $("#propinaPago").val("");
+}
+
+function calcularPagos() {
+    var stCord = parseFloat($("#subCord").html().split("C$ ")[1]);
+    var stDol = parseFloat($("#subDol").html().split("$ ")[1]);
+    var ivaDol = parseFloat($("#ivaDol").html().split("$ ")[1]);
+    var ivaCord = parseFloat($("#ivaCord").html().split("C$ ")[1]);
+    var propCord = parseFloat($("#propCord").html().split("$ ")[1]);
+    var propDol = parseFloat($("#propDol").html().split("$ ")[1]);
+    var descCord = parseFloat($("#descCord").html().split("$ ")[1]);
+    var descDol = parseFloat($("#descDol").html().split("$ ")[1]);
+
+    var totalCord = ((stCord + ivaCord) - descCord) + propCord;
+    var totalDol = ((stDol + ivaDol) - descDol) + propDol;
+
+    $("#totalCord").html("C$ " + formatoPrecio(totalCord.toString()));
+    $("#totalDol").html("$ " + formatoPrecio(totalDol.toString()));
 }
 
 function convertirDesc(descuento) {
@@ -409,18 +434,61 @@ function convertirDesc(descuento) {
         descuentoDol = descuento * dolares;
     }
 
-    $("#descCord").html("C$ " + descuentoDol);
+    $("#descCord").html("C$ " + formatoPrecio(descuentoDol.toString()));
 }
 
+//AGREGA LA FORMA DE PAGO
 function agregarPago() {
+    //OBTENGO LA MONEDA DEL PAGO
+    var moneda = $("#monedaPago").find("option:selected").text();
+    var pagar = $("#pagar").val().replace(/,/g, "");//OBTENGO EL MONTO A PAGAR
+
+    var totalPagDol = parseFloat($("#footDol").html().split("$ ")[1]);
+    var totalPagCord = parseFloat($("#footCord").html().split("C$ ")[1]);
+
+    if (moneda.toUpperCase() == "CÓRDOBAS") {
+        var totalCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
+
+        if (totalCord == totalPagCord) {
+            Alert("Error", "El pago total esta completo", "error");
+        } else if (pagar > totalCord) {
+            Alert("Error", "El monto a pagar no debe ser mayor que el total", "error");
+        } else {
+            validado();
+        }
+    } else {
+        var totalDol = parseFloat($("#totalDol").html().split("$ ")[1]);
+
+        if (totalDol == totalPagCord) {
+            Alert("Error", "El pago total esta completo", "error");
+        } else if (pagar > totalDol) {
+            Alert("Error", "El monto a pagar no debe ser mayor que el total", "error");
+        } else {
+            validado();
+        }
+    }
+}
+
+function validado() {
+    //OBTENGO EL METODO DE PAGO(EFECTIVO-TARJETA)
     var optionSelected = $("#metPago").find("option:selected").text().toUpperCase();
     var agregar = "";
-    var recibido = $("#rec").val();
-    var pagar = $("#pagar").val();
-    var metPago = $("#metPago").find("option:selected").text();
-    var moneda = $("#monedaPago").find("option:selected").text();
-    var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";
+    var recibido = $("#rec").val();//OBTENGO EL MONTO RECIBIDO
+    var pagar = $("#pagar").val();//OBTENGO EL MONTO A PAGAR
 
+    //QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
+    var replacePagar = parseFloat(pagar.replace(/,/g, ""));
+    var replaceRecibido = parseFloat(recibido.replace(/,/g, ""));
+
+    var entregar = replaceRecibido - replacePagar;
+
+    //OBTENGO EL METODO DE PAGO SELECCIONADO
+    var metPago = $("#metPago").find("option:selected").text();
+    //OBTENGO LA MONEDA DEL PAGO
+    var moneda = $("#monedaPago").find("option:selected").text();
+    var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";//PARA AGREGAR EL DIGITO DE PAGO   
+
+    //SI EL MONTO A PAGAR ES MAYOR AL RECIBIDO MANDAR ERROR
     if (parseFloat(pagar) > parseFloat(recibido)) {
         Alert("Error", "El monto a pagar no puede ser mayor que el monto recibido", "error");
     } else {
@@ -433,7 +501,7 @@ function agregarPago() {
                     '<td class="" >' + moneda + '</td>' +
                     '<td class="" >' + digitoMoneda + pagar + '</td>' +
                     '<td class="" >' + digitoMoneda + recibido + '</td>' +
-                    '<td class="" >' + digitoMoneda + (recibido - pagar) + '</td>' +
+                    '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
                     '</tr>';
@@ -447,9 +515,9 @@ function agregarPago() {
                 agregar = '<tr class="even pointer">' +
                     '<td class="">' + metPago + '</td>' +
                     '<td class="" >' + moneda + '</td>' +
-                    '<td class="" >' + digitoMoneda + pagar + '</td>' +
-                    '<td class="" >' + digitoMoneda + recibido + '</td>' +
-                    '<td class="" >' + digitoMoneda + (recibido - pagar) + '</td>' +
+                    '<td class="" >' + digitoMoneda + pagar.toString() + '</td>' +
+                    '<td class="" >' + digitoMoneda + recibido.toString() + '</td>' +
+                    '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
                     '</tr>';
@@ -464,36 +532,50 @@ function agregarPago() {
     }
 }
 
+//CALCULO LOS TOTALES DE PAGO
 function calcularPagosFact() {
     var totalDol = 0, totalCord = 0, res = 0;
-    var dolares = $("#cambio").val();
+    var dolares = $("#cambio").val();//OBTENGO TIPO DE CAMBIO
 
+    //RECORRO CADA UNA DE LAS FILAS
     $("#bodyPagar tr").each(function () {
-        var row = $(this).find("td");
+        var row = $(this).find("td");//AGARRO LA FILA ACTUAL
 
+        //SI EL PAGO FUE EN CORDOBAS
         if (row.eq(1).html().toUpperCase() == "CÓRDOBAS") {
-            res = row.eq(2).html().split("C$ ")[1];
-            totalCord += parseFloat(res);
-            //CONVERSION A DOLARES Y SUMA
-            var sumaDol = res * dolares;
-            totalDol = sumaDol;
-        } else {
-            res = row.eq(2).html().split("$ ")[1];
-            totalDol += parseFloat(res);
-            var sumaCord = res / dolares;
-            totalCord = sumaCord;
+            //OBTENER EL VALOR EN CORDOBAS
+            res = (row.eq(2).html().split("C$ ")[1]).replace(/,/g, "");//QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
+
+            totalCord += parseFloat(res);//SUMAR LOS CORDOBAS     
+
+            //CONVERSION DE CORDOBAS A DOLARES
+            var convDol = res / dolares;
+            //SUMARLE EL TOTAL CONVERTIDO AL OTRO LADO
+            totalDol += convDol;
+
+        } else {//SI EL PAGO ES EN DOLARES
+            //OBTENER EL VALOR EN DOLARES
+            res = row.eq(2).html().split("$ ")[1].replace(/,/g, "");
+            totalDol += parseFloat(res);//SUMAR LOS DOLARES
+
+            //CONVERSION DE DOLARES A CORDOBAS
+            var convCord = res * dolares;
+            //SUMARLE EL TOTAL CONVERTIDO AL OTRO LADO
+            totalCord += convCord;
         }
     });
 
     //AGREGAR EL TOTAL EN EL FOOTER
-    $("#footDol").html("$ " + totalDol);
-    $("#footCord").html("C$ " + totalCord);
+    $("#footDol").html("$ " + formatoPrecio(totalDol.toString()));
+    $("#footCord").html("C$ " + formatoPrecio(totalCord.toString()));
 }
 
 //FUNCION PARA ELIMINAR UNA FILA SELECCIONADA DE LA TABLA
 function deletePago(row) {
     //SE BUSCA LA POSICION DE LA FILA SELECCIONADA PARA ELIMINARLA
     row.closest("tr").remove();
+
+    calcularPagosFact();
 }//FIN FUNCTION
 
 function editPago(row) {

@@ -150,7 +150,7 @@ function addDetails() {
 
     var filas = $("#table_body").find("tr");
     var registrado = false, i = 0;
-    var precioTotal = formatoPrecio(precio * cantidad);
+    var precioTotal = (precio * cantidad);
 
     var agregar = "";
 
@@ -189,7 +189,7 @@ function addDetails() {
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").append(agregar);
         //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + formatoPrecio(total + precioTotal));
+        $("#total").html("$ " + (total + precioTotal));
 
         $("#smallModal").modal("hide");
     } else {

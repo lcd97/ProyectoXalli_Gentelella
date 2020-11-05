@@ -47,7 +47,7 @@ $("#categoria").change(function () {
                             '<p>' +
                             '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].Platillo + '">' + data[i].Platillo + '</strong>' +
                             '</p>' +
-                            '<p> $ ' + formatoPrecio(data[i].Precio) + '</p>' +
+                            '<p> $ ' + data[i].Precio + '</p>' +
                             '</div>' +
                             '</div >' +
                             '</div >';
@@ -99,7 +99,7 @@ function cargarDetalle(id){
         type: "GET", //TIPO DE ACCION
         url: "/Menus/getMenuItem/" + id, //URL DEL METODO A USAR
         success: function (data) {
-            $("#precioOrden").val("$ " + formatoPrecio(data.menu.Precio));
+            $("#precioOrden").val("$ " + data.menu.Precio);
             $("#platillo").val(data.menu.Platillo);
             $("#platillo").attr("name", data.menu.PlatilloId);
         }//FIN SUCCESS
@@ -159,7 +159,7 @@ function editPlatillo(indice) {
         var prodPrecio = totalF.split("$ ");//QUITARLE EL SIGNO DE DOLAR
         var resta = parseFloat(prodPrecio[1] - (prec[1] * cantidad));
 
-        $("#total").html("$ " + formatoPrecio(resta));
+        $("#total").html("$ " + resta);
 
         indice.closest("tr").remove();//ELIMINAR LA FILA
 
@@ -176,6 +176,6 @@ function deletePlatillo(row) {
     var resta = parseFloat(CalcularTotal());
 
     alert(resta);
-    $("#total").html("$ " + formatoPrecio(resta));
+    $("#total").html("$ " + (resta));
 
 }//FIN FUNCTION

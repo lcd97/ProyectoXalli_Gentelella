@@ -40,9 +40,9 @@
                 //GENERAR FILA DEL PRODUCTO A LA TABLA
                 agregar += '<tr class="even pointer">';
                 agregar += '<td class="" value ="' + data.Details[i].PlatilloId + '">' + data.Details[i].Platillo + '</td>';
-                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + formatoPrecio(data.Details[i].PrecioUnitario) + '</td>';
+                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + (data.Details[i].PrecioUnitario) + '</td>';
                 agregar += '<td class="" Style ="text-align: center;">' + data.Details[i].Cantidad + '</td>';
-                agregar += '<td class="" >' + "$ " + formatoPrecio(calculo) + '</td>';
+                agregar += '<td class="" >' + "$ " + (calculo) + '</td>';
                 agregar += '<td class="" value ="true"><span class="label label-success pull-right">' + estado + '</span></td>';
                 agregar += '<td class=" last"><a disabled class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                 agregar += '<a disabled class="btn btn-danger btn-xs"> <i class="fa fa-trash"></i></a></td>';
@@ -55,7 +55,7 @@
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
             //AGREGAR EL TOTAL TFOOT
-            $("#total").html("$ " + formatoPrecio(total + precioTotal));
+            $("#total").html("$ " + (total + precioTotal));
         }
     });
 });
@@ -112,7 +112,7 @@ function addDetails() {
 
     var filas = $("#table_body").find("tr");
     var registrado = false, i = 0;
-    var precioTotal = formatoPrecio(precio * cantidad);
+    var precioTotal = (precio * cantidad);
 
     var agregar = "";
 
@@ -152,7 +152,7 @@ function addDetails() {
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").prepend(agregar);
         //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + formatoPrecio(total + parseFloat(precioTotal)));
+        $("#total").html("$ " + (total + parseFloat(precioTotal)));
 
         $("#smallModal").modal("hide");
     } else {

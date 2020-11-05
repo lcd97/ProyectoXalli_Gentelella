@@ -87,7 +87,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             //RECORRO LA LISTA DE IDS PARA OBTENER SU DETALLE
             foreach (var item in ordenIds) {
                 //ALMACENO EL DETALLE EN EL OBJETO
-                ordenesCliente.Add(IteracionObjeto(item));
+                ordenesCliente.AddRange(IteracionObjeto(item));
             }//FIN FOREACH
 
             //RECORRO LA LISTA DEL CLIENTE Y AGRUPO ELEMENTOS DE DIFERENTES ORDENES
@@ -103,6 +103,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             Cliente cliente = new Cliente();
             var img = (dynamic)null;
 
+            //VERIFICO EL TIPO DE CLIENTE
             if (clienteId != 0) {
                 cliente = db.Clientes.Where(c => c.Id == clienteId).Select(c => c).FirstOrDefault();
                 img = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Id == cliente.ImagenId).Ruta;
@@ -118,9 +119,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// </summary>
         /// <param name="OrdenId">ID ACTUAL</param>
         /// <returns></returns>
-        public detalleCliente IteracionObjeto(int OrdenId) {
+        public List<detalleCliente> IteracionObjeto(int OrdenId) {
             //OBTENGO EL DETALLE DE DETERMINADA ORDEN
-            detalleCliente ordCliente = (from obj in db.Ordenes.ToList()
+            List<detalleCliente> ordCliente = (from obj in db.Ordenes.ToList()
                                          join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
                                          join menu in db.Menus.ToList() on det.MenuId equals menu.Id
                                          where det.OrdenId == OrdenId
@@ -130,7 +131,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                              Cantidad = grouped.Sum(s => s.det.CantidadOrden),//SUMO LA CANTIDAD SOLICITADA EN CASO DE QUE SEA EL MISMO PRODUCTO
                                              Platillo = grouped.Key.DescripcionMenu,
                                              Precio = grouped.Key.PrecioOrden
-                                         }).DefaultIfEmpty(null).FirstOrDefault();
+                                         }).ToList();
 
             return ordCliente;
         }
