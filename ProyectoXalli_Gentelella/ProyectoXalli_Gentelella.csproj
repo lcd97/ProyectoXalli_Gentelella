@@ -240,6 +240,10 @@
     <Compile Include="Migrations\202011021713299_TablaMoneda.Designer.cs">
       <DependentUpon>202011021713299_TablaMoneda.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011051943396_ComponiendoCampos.cs" />
+    <Compile Include="Migrations\202011051943396_ComponiendoCampos.Designer.cs">
+      <DependentUpon>202011051943396_ComponiendoCampos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bodega.cs" />
@@ -610,6 +614,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011021713299_TablaMoneda.resx">
       <DependentUpon>202011021713299_TablaMoneda.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011051943396_ComponiendoCampos.resx">
+      <DependentUpon>202011051943396_ComponiendoCampos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

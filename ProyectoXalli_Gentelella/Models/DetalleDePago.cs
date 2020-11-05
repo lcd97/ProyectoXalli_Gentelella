@@ -37,7 +37,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public int MonedaId { get; set; }
 
         //DECLARACION DE RELACIONES PADRES
-        public virtual TipoDePago TipoDePago { get; set; }
+        public virtual TipoDePago TipoPago { get; set; }
         public virtual Pago Pago { get; set; }
         public virtual Moneda Moneda { get; set; }
 

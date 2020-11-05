@@ -143,7 +143,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
                              * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
                              * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
-                            customer.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
+                            //customer.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
                             db.Clientes.Add(customer);
 
@@ -175,7 +175,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                         /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
                         * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
                         * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
-                        client.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
+                        //client.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
                         db.Clientes.Add(client);
                         completado = db.SaveChanges() > 0 ? true : false;

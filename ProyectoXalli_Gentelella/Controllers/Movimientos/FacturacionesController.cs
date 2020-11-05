@@ -104,14 +104,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             var img = (dynamic)null;
 
             //VERIFICO EL TIPO DE CLIENTE
-            if (clienteId != 0) {
-                cliente = db.Clientes.Where(c => c.Id == clienteId).Select(c => c).FirstOrDefault();
-                img = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Id == cliente.ImagenId).Ruta;
-            }
+            //if (clienteId != 0) {
+            //    cliente = db.Clientes.Where(c => c.Id == clienteId).Select(c => c).FirstOrDefault();
+            //    img = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Id == cliente.ImagenId).Ruta;
+            //}
 
-            bool diplomatico = img == "N/A" || img == null ? false : true;
+            //bool diplomatico = img == "N/A" || img == null ? false : true;
 
-            return Json(new { detalleFinal, img, diplomatico }, JsonRequestBehavior.AllowGet);
+            return Json(new { detalleFinal, img }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

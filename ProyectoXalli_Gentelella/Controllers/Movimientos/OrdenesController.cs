@@ -177,7 +177,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
                              * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
                              * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
-                            clienteDefault.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
+                            //clienteDefault.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
 
                             db.Clientes.Add(clienteDefault);
                             db.SaveChanges();

@@ -50,9 +50,11 @@ namespace ProyectoXalli_Gentelella.Models {
 
         //FOREING KEY
         public int MonedaId { get; set; }
+        public int ImagenId { get; set; }
 
         //DECLARACION DE RELACIONES PADRES
         public virtual Moneda Moneda { get; set; }
+        public virtual Imagen Imagen { get; set; }
 
         //DECLARACION DE RELACIONES HIJAS
         public virtual ICollection<OrdenPago> OrdenesPago { get; set; }

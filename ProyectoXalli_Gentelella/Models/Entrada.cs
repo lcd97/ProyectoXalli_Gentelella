@@ -43,6 +43,6 @@ namespace ProyectoXalli_Gentelella.Models {
         //DEFINICION DE RELACIONES PADRES
         public virtual Bodega Bodega { get; set; }
         public virtual Proveedor Proveedor { get; set; }
-        public virtual TipoDeEntrada TipoDeEntrada { get; set; }
+        public virtual TipoDeEntrada TipoEntrada { get; set; }
     }
 }
