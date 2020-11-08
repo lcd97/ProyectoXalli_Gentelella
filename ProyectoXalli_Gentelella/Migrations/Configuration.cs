@@ -1,22 +1,18 @@
-namespace ProyectoXalli_Gentelella.Migrations
-{
+namespace ProyectoXalli_Gentelella.Migrations {
     using ProyectoXalli_Gentelella.Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ProyectoXalli_Gentelella.Models.DBControl>
-    {
-        public Configuration()
-        {
+    internal sealed class Configuration : DbMigrationsConfiguration<ProyectoXalli_Gentelella.Models.DBControl> {
+        public Configuration() {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
             ContextKey = "ProyectoXalli_Gentelella.Models.DBControl";
         }
 
-        protected override void Seed(ProyectoXalli_Gentelella.Models.DBControl context)
-        {
+        protected override void Seed(ProyectoXalli_Gentelella.Models.DBControl context) {
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
@@ -56,10 +52,23 @@ namespace ProyectoXalli_Gentelella.Migrations
             context.SaveChanges();
 
             context.TiposDePago.AddOrUpdate(u => u.CodigoTipoPago,
-                new TipoDePago { CodigoTipoPago = "001", DescripcionTipoPago = "Efectivo", EstadoTipoPago = true },
-                new TipoDePago { CodigoTipoPago = "002", DescripcionTipoPago = "Tarjeta", EstadoTipoPago = true },
-                new TipoDePago { CodigoTipoPago = "002", DescripcionTipoPago = "Otros", EstadoTipoPago = true });
+               new TipoDePago { CodigoTipoPago = "001", DescripcionTipoPago = "Efectivo", EstadoTipoPago = true },
+               new TipoDePago { CodigoTipoPago = "002", DescripcionTipoPago = "Tarjeta", EstadoTipoPago = true });
             context.SaveChanges();
+
+            context.Monedas.AddOrUpdate(m => m.CodigoMoneda,
+                new Moneda { CodigoMoneda = "001", DescripcionMoneda = "Córdobas", EstadoMoneda = true },
+                new Moneda { CodigoMoneda = "002", DescripcionMoneda = "Dólares", EstadoMoneda = true });
+            context.SaveChanges();
+
+            context.CategoriasMenu.AddOrUpdate(c => c.CodigoCategoriaMenu,
+                new CategoriaMenu { CodigoCategoriaMenu = "001", DescripcionCategoriaMenu = "Bar & Snacks", EstadoCategoriaMenu = true, BodegaId = 1 },
+                new CategoriaMenu { CodigoCategoriaMenu = "002", DescripcionCategoriaMenu = "Platos Fuertes", EstadoCategoriaMenu = true, BodegaId = 2 },
+                new CategoriaMenu { CodigoCategoriaMenu = "003", DescripcionCategoriaMenu = "Platos Vegetarianos", EstadoCategoriaMenu = true, BodegaId = 2 },
+                new CategoriaMenu { CodigoCategoriaMenu = "004", DescripcionCategoriaMenu = "Desayunos", EstadoCategoriaMenu = true, BodegaId = 2 },
+                new CategoriaMenu { CodigoCategoriaMenu = "005", DescripcionCategoriaMenu = "Pastas", EstadoCategoriaMenu = true, BodegaId = 2 },
+                new CategoriaMenu { CodigoCategoriaMenu = "006", DescripcionCategoriaMenu = "Bebidas", EstadoCategoriaMenu = true, BodegaId = 1 });
+            context.SaveChanges();           
         }
     }
 }

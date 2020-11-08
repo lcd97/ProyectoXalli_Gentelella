@@ -59,7 +59,7 @@
 
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                     <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
-                    <button type="button" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-success" onclick="guardarDiplomatico()">Guardar</button>
                 </div>
             </div>
         </div>
@@ -144,25 +144,76 @@
         //SI ES DIFERENTE A VACIO
         if (cedula != "") {
             $.ajax({
-                type: "GET",               
+                type: "GET",
                 url: "/Clientes/BuscarDato/",
-                data: { cedula },
-                succes: function (data) {
-                    alert(data);
-                        if (data != null) {
-                            alert("danrra");
+                data: {
+                    Cedula: cedula
+                },
+                success: function (data) {
+                    if (data != null) {
+                        var ruc = data.RUC != null ? data.RUC : "";
+                        var telefono = data.Telefono != null ? data.Telefono : "";
 
-                            //$("#nombreD").val(data.Nombre);
-                            //$("#apellidoD").val(data.Apellido);
-                            //$("#rucD").val(data.RUC);
-                        } else {
-                            alert("error vacio");
-                        }
-                    },
-                    error: function () {
-                        alert("error func");
+                        $("#nombreD").val(data.Nombre);
+                        $("#apellidoD").val(data.Apellido);
+                        $("#rucD").val(ruc);
+                        $("#emailD").val(data.Email);
+                        $("#telefonoD").val(telefono);
+                    }
                 }
             });
         }
     });
+
+    function guardarDiplomatico() {
+        var nombre, apellido, documento, ruc, email, telefono, tipo;
+
+        nombre = $("#nombreD").val();
+        apellido = $("#apellidoD").val();
+        documento = $("#numeroD").val().toUpperCase();
+        ruc = $("#rucD").val().toUpperCase();
+        email = $("#emailD").val();
+        telefono = $("#telefonoD").val();
+        tipo = $("#documentoD").val();
+
+        if (validado() == true) {
+            //FUNCION AJAX
+            $.ajax({
+                type: "POST",
+                url: "/Facturaciones/saveDiplomatico",
+                dataType: "JSON",
+                data: {
+                    Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
+                    Email: email, Telefono: telefono, Tipo: tipo
+                },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
+                success: function (data) {
+                    if (data.success) {
+                        var r = data.cliente.RUC != null ? data.cliente.RUC : "N/A";
+
+                        //ACTUALIZAR CAMPOS
+                        $("#nombCliente").attr("val", data.cliente.Id);
+                        $("#nombCliente").html(data.cliente.Nombre);
+                        $("#rucCliente").html("RUC: " + r);
+
+                        $("#small-modal").modal("hide"); //CERRAR MODAL
+                        AlertTimer("Completado", data.message, "success");
+                    } else
+                        Alert("Error al almacenar", data.message, "error");//MENSAJE DE ERROR
+                },
+                error: function () {
+                    Alert("Error al almacenar", "Intentelo de nuevo", "error");
+                }
+            });//FIN AJAX
+        } else {
+            Alert("Error", "Campos vacios", "error");
+        }
+    }
+
+    //FUNCION PARA VALIDAR CAMPOS VACIOS
+    function validado() {
+        if ($("#nombreD").val() != "" && $("#apellidoD").val() != "" && $("#numeroD").val() != "" && $("#emailD").val() != "") {
+            return true;
+        } else
+            return false;
+    }//FIN FUNCTION
 </script>

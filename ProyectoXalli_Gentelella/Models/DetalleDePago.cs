@@ -25,11 +25,11 @@ namespace ProyectoXalli_Gentelella.Models {
         [Display(Name = "Propina voluntaria")]
         public double MontoRecibido { get; set; }
 
-        [Required(ErrorMessage = "El campo es obligatorio")]
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "(0:c2)")]
-        [Display(Name = "Propina voluntaria")]
-        public double MontoEntregado { get; set; }
+        //[Required(ErrorMessage = "El campo es obligatorio")]
+        //[DataType(DataType.Currency)]
+        //[DisplayFormat(DataFormatString = "(0:c2)")]
+        //[Display(Name = "Propina voluntaria")]
+        //public double MontoEntregado { get; set; }
 
         //FOREING KEY
         public int TipoPagoId { get; set; }

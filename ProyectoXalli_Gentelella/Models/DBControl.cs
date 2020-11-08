@@ -9,6 +9,7 @@ using System.Web;
 namespace ProyectoXalli_Gentelella.Models {
     public class DBControl : DbContext {
         public DBControl() : base("HotelDB") {
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         //MODULO CONTROL DE INSUMOS

@@ -151,19 +151,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                         var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
 
                         //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
-                        if (buscarP == null) {
-                            //BUSCAR LA EVIDENCIA DEFAULT DE CARNET DIPLOMATICO
-                            Imagen buscarCarnet = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
-                            Imagen carnet = new Imagen();
-
-                            //EN CASO QUE NO EXISTA EL REGISTRO DEFAULT DEL CARNET
-                            if (buscarCarnet == null) {
-                                //SE CREA EL DEFAULT
-                                carnet.Ruta = "N/A";
-                                db.Imagenes.Add(carnet);
-                                db.SaveChanges();
-                            }
-
+                        if (buscarP == null) {                           
                             datoDefault.Cedula = "000-000000-0000X";
                             datoDefault.PNombre = "Default";
                             datoDefault.PApellido = "User";
@@ -174,11 +162,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             clienteDefault.DatoId = datoDefault.Id;
                             clienteDefault.EmailCliente = "defaultuser@xalli.com";
                             clienteDefault.EstadoCliente = false;
-                            /*ALMACENAR EL REGISTRO DE CARNET POR DEFAULT 
-                             * SI LA BUSQUEDA DE CARNET CONTIENE ALGO ALMACENAR EL ID DEL OBJETO, 
-                             * SINO ALMACENAR EL DE CARNET ID RECIEN CREADO*/
-                            //clienteDefault.ImagenId = buscarCarnet != null ? buscarCarnet.Id : carnet.Id;
-
+                          
                             db.Clientes.Add(clienteDefault);
                             db.SaveChanges();
 

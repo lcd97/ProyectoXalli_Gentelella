@@ -5,6 +5,7 @@
     $(".buttonNext").addClass("buttonDisabled");//DESACTIVAR EL BOTON SIGUIENTE
 
     $(".buttonNext").attr("onclick", "nextStepVal()");//DESACTIVAR EL BOTON SIGUIENTE
+    $("#finalizar").attr("onclick", "guardarPago()");//ALMACENAR EL PAGO
     obtenerCambio();
 
     $("#descuentoPago").mask('###00%', { reverse: true });
@@ -12,7 +13,128 @@
     $("#propinaPago").mask("0,000.00", { reverse: true });
     $("#pagar").mask("0,000.00", { reverse: true });
     $("#rec").mask("0,000.00", { reverse: true });
+
+    cargarNo();
+
+    var metodoPago = $("#metPago").find("option:selected").text();
+
+
+    if (metodoPago.toUpperCase() == "EFECTIVO") {
+        $("#rec").removeAttr("disabled");
+    } else {
+        $("#rec").attr("disabled", true);
+    }
 });
+
+//FUNCION PARA ALMACENAR EL PAGO DE LA/LAS ORDEN(ES)
+function guardarPago() {
+    /*List<int> OrdenesIds, int ClienteId, int NoFactura, double FechaPago, bool Diplomatico, int DescuentoPago,
+    double Propina, double Cambio, int MonedaPropina, int EvidenciaId, string DetallePago*/
+
+    //OBTENER LOS PARAMETROS
+    var ordenesIds = $("#dataId").attr("val");//LISTA DE ORDENES IDS
+    var clienteId = $("#nombCliente").attr("val");//CLIENTE ID
+    var noFactura = ($("#factNo").html()).substr(12);//NUMERO DE FACTURA
+    var fechaPago = moment().locale('es').format('L');
+    var diplomatico = $("#tipoPersona").html() == "true" ? true : false;//ES DIPLOMATICO
+    var descuento = ($("#txtDesc").attr("val")) != undefined ? ($("#txtDesc").attr("val")) : 0;//PORCENTAJE DE DESCUENTO
+    var propina = 0;//AGARRAR PROPINA
+
+    var seleccionar = $("#propina").attr("name");//SI LA PROPINA FUE EN DOL O CORD
+
+    //SI LA PROPINA LA INGRESARON EN DOLARES
+    if (seleccionar == "propDol") {
+        propina = $("#propDol").html().split("$ ")[1];//AGARRAR LA PROPINA EN DOLARES
+    } else {//SI LA PROPINA LA INGRESARON EN DOLARES
+        propina = $("#propCord").html().split("C$ ")[1];//AGARRAR LA PROPINA EN CORDOBAS
+    }
+
+    var tipoCambio = $("#cambio").val();//TIPO DE CAMBIO
+    var monedaPropina = $("#monedaPropina").val();//TIPO DE MONEDA DE LA PROPINA
+    var imagen = $("#carnet").attr("val");//AGARRA EL ID DE LA EVIDENCIA
+
+    //RECORRER LA TABLA DE PAGO
+    var detallePago = new Array();
+
+    $("#bodyPagar tr").each(function () {
+
+        var row = $(this);
+        var item = {};
+
+        item["Id"] = 0;
+
+        var moneda = row.find("td").eq(1).html();
+        var pagar = row.find("td").eq(2).html();
+        var recibido = row.find("td").eq(3).html();
+
+        if (moneda == "CÓRDOBAS") {
+            item["CantidadPagar"] = pagar.split("C$ ")[1];
+            item["MontoRecibido"] = recibido.split("C$ ")[1];
+        } else {
+            item["CantidadPagar"] = pagar.split("$ ")[1];
+            item["MontoRecibido"] = recibido.split("$ ")[1];
+        }
+
+        item["TipoPagoId"] = row.find("td").eq(0).attr("val");
+        item["PagoId"] = 0;
+        item["MonedaId"] = row.find("td").eq(1).attr("val");
+
+        detallePago.push(item);
+    });
+
+    //alert("ordenes id: " + ordenesIds + " clienteId " + clienteId + " NoFact " + noFactura + " fechaPago " + fechaPago + " diplomatico " + diplomatico + " descuento " + descuento + " propina " + propina);
+    //alert("tipo cambio " + tipoCambio + " monedapropina " + monedaPropina + " imagen " + imagen);
+    //alert(JSON.stringify(detallePago));
+
+    $.ajax({
+        type: "POST",
+        url: "/Facturaciones/Create/",
+        data: {
+            OrdenesIds: ordenesIds, ClienteId: clienteId, NoFactura: noFactura, FechaPago: fechaPago, Diplomatico: diplomatico, DescuentoPago: descuento,
+            Propina: propina, Cambio: tipoCambio, MonedaPropina: monedaPropina, EvidenciaId: imagen, DetallePago: JSON.stringify(detallePago)
+        },
+        success: function (data) {
+            if (data.success) {
+                AlertTimer("Completado", data.message, "success");
+
+                //window.location.reload();
+            } else {
+                Alert("Error", data.message, "error");
+            }
+        }
+    });
+
+
+}
+
+//FUNCION PARA AGREGAR LA FECHA Y NUMERO DE FACTURA
+function cargarNo() {
+    $.ajax({
+        type: "GET",
+        url: "/Facturaciones/NumeroFactura/",
+        success: function (data) {
+            var num = data;//OBTENGO EL NUMERO DE LA FACTURA
+
+            //FORMATEANDO EL CODIGO
+            if (data < 10) {
+                num = data;
+            } else if (data >= 10 || data < 100) {
+                num = data;
+            } else if (data >= 100 || data < 1000) {
+                num = data;
+            } else {
+                num = data;
+            }
+
+            var today = moment().locale('es').format('L');//FECHA FACTURA
+
+            $("#factNo").html("Factura No. " + cargarCodigo(num));
+
+            var agregar = '<small class="pull-right" style="margin-top: 5px;">Fecha: ' + today + '</small>';
+            $("#fechaFact").append(agregar);
+        }
+    });
+}
 
 //SI SOLO SE ENCUENTRA UN CARACTER % O 0ELIMINARLO 
 $("#descuentoPago").keyup(function () {
@@ -230,36 +352,24 @@ function nextStepVal() {
                 data: { ordenIds: ordenes, clienteId: clienteId },
                 success: function (data) {
                     var diplomatico = data.diplomatico;
-
-                    ////LLENAR ENCABEZADO DE CLIENTE Y CARNET DIPLOMATICO
-                    //if (data.img !== "N/A" || data.img !== null) {
-                    //    diplomatico = true;
-                    //}
-
                     var tipoPersona = diplomatico ? "Persona Diplomático" : "Persona Natural";
                     var agregarDetail = "";
-                    var carnet = diplomatico ? data.img : "";
-
-                    ////SI LA PERSONA ES DIPLOMATICA CARGA DATOS
-                    //if (diplomatico) {
-                    //    tipoPersona = "Persona Diplomático";
-                    //    carnet = data.img;
-                    //}
+                    var carnet = diplomatico ? data.img.Ruta : "";
 
                     //CREO EL ENCABEZADO DEL PAGO
                     var encabezado = '<div class="col-sm-4 invoice-col">' +
                         'Cliente' +
                         '<address>' +
-                        '<strong id="nombCliente">' + nombre + '</strong>' +
-                        '<br> <a id="tipoPersona">' + tipoPersona + '</a>' +
-                        '<br id="rucCliente"> RUC: ' + ruc +
+                        '<strong id="nombCliente" val="' + clienteId + '">' + nombre + '</strong>' +
+                        '<br> <a id="tipoPersona" val="' + diplomatico + '">' + tipoPersona + '</a>' +
+                        '<br><p id="rucCliente"> RUC: ' + ruc + '</p>' +
                         '</address>' +
                         '</div>' +
                         '<div id="carnetSection" class="col-sm-4 invoice-col pull-right" hidden>' +
                         '<div class="col-md-8 col-sm-2 col-xs-12">' +
                         '<div class="image-upload">' +
                         '<label for="file-input">' +
-                        '<img src="' + carnet + '" style="width:250px;height:90px;" />' +
+                        '<img id="carnet" val="' + data.img.Id + '" src="' + carnet + '" style="width:250px;height:90px;" />' +
                         '</label>' +
                         '</div>' +
                         '<p style="text-align:center!important; width:250px;">Carnet Diplomático</p>' +
@@ -267,6 +377,7 @@ function nextStepVal() {
                         '</div>';
 
                     $("#headMaster").html(encabezado);
+                    $("#dataId").attr("val", ordenes);//AGREGO LOS IDS DE LAS ORDENES A PAGAR
 
                     var subtotalOrd = 0;
 
@@ -293,7 +404,6 @@ function nextStepVal() {
                     if (diplomatico) {
                         //VERIFICO QUE EL CLIENTE ES DIPLOMATICO PARA MOSTRAR LA SECCION DEL CARNET
                         $("#carnetSection").removeAttr("hidden");
-                    } else {
                         $("#tipoPersona").attr("href", "#");
                         $("#tipoPersona").attr("onclick", "cambiarTipo()");
                     }
@@ -317,13 +427,11 @@ function nextStepVal() {
 
 //CAMBIAR TIPO DE PERSONA A PAGAR
 function cambiarTipo() {
-    var tipoCliente = $("#clienteId").attr("val");
+    //PONER NOMBRE A LA MODAL
+    $("#modal-title").html("Cliente Diplomático");
 
     //CREAR AL CLIENTE
     CargarParcial("/Facturaciones/ClienteDiplomatico/");
-    //CAMBIAR DATOS DONDE VA CLIENTE
-    //BUSCAR SI EXISTE CARNET DIPLOMATICO PARA LA FACTURA
-    //MOSTRAR LOS CAMPOS OCULTOS
 }
 
 //CALCULO Y AGREGO LOS TOTALES EN CORDOBAS Y DOLARES
@@ -365,6 +473,7 @@ function agregarVal() {
     if (descuento != "") {
         $("#descDol").html("$ " + formatoPrecio(descDol.toString()));//PONGO EL DESCUENTO
         $("#txtDesc").html("Descuento (" + percentageDescount + "):");//PONGO EL PORCENTAJE A DESCONTAR
+        $("#txtDesc").attr("val", percentageDescount.split("%")[0]);//EL PORCENTAJE A DESCONTAR
     } else {//SI NO HAY DESCUENTO PONER 0 (VACIO)
         $("#descDol").html("$ 0");
         $("#txtDesc").html("Descuento:");
@@ -378,12 +487,14 @@ function agregarVal() {
         //DOLARES
         if (propinaSelected.toUpperCase() === "DÓLARES") {
             $("#propDol").html("$ " + formatoPrecio(propina.toString()));
+            $("#propina").attr("name", "propDol");
             //CONVERTIR PROPINA EN CORDOBAS
             propinaDol = propina;
             var convCord = propina * dolares;
             $("#propCord").html("C$ " + formatoPrecio(convCord.toString()));
         } else {//CORDOBAS
             $("#propCord").html("C$ " + formatoPrecio(propina.toString()));
+            $("#propCord").attr("name", "propCord");
             //CONVERTIR PROPINA EN DOLARES
             propinaDol = dolares * propina;
             var convDol = propina / dolares;
@@ -409,6 +520,7 @@ function agregarVal() {
     $("#propinaPago").val("");
 }
 
+//FUNCION PARA CALCULAR EL TOTAL DE PAGOS (FOOTER)
 function calcularPagos() {
     var stCord = parseFloat($("#subCord").html().split("C$ ")[1]);
     var stDol = parseFloat($("#subDol").html().split("$ ")[1]);
@@ -426,6 +538,7 @@ function calcularPagos() {
     $("#totalDol").html("$ " + formatoPrecio(totalDol.toString()));
 }
 
+//FUNCION PARA CONVERTIR DE DESCUENTO
 function convertirDesc(descuento) {
     var dolares = $("#cambio").val();
     var descuentoDol = 0;
@@ -469,9 +582,10 @@ function agregarPago() {
     }
 }
 
+//FUNCION PARA AGREGAR LA FORMA DE PAGO
 function validado() {
     //OBTENGO EL METODO DE PAGO(EFECTIVO-TARJETA)
-    var optionSelected = $("#metPago").find("option:selected").text().toUpperCase();
+    var optionSelected = $("#metPago").find("option:selected").val();
     var agregar = "";
     var recibido = $("#rec").val();//OBTENGO EL MONTO RECIBIDO
     var pagar = $("#pagar").val();//OBTENGO EL MONTO A PAGAR
@@ -486,19 +600,20 @@ function validado() {
     var metPago = $("#metPago").find("option:selected").text();
     //OBTENGO LA MONEDA DEL PAGO
     var moneda = $("#monedaPago").find("option:selected").text();
+    var monedaOption = $("#monedaPago").find("option:selected").val();
     var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";//PARA AGREGAR EL DIGITO DE PAGO   
 
     //SI EL MONTO A PAGAR ES MAYOR AL RECIBIDO MANDAR ERROR
     if (parseFloat(pagar) > parseFloat(recibido)) {
         Alert("Error", "El monto a pagar no puede ser mayor que el monto recibido", "error");
     } else {
-        if (optionSelected == "EFECTIVO") {
+        if (metPago.toUpperCase() == "EFECTIVO") {
             if (pagar == "" || recibido == "") {
                 Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
             } else {
                 agregar = '<tr class="even pointer">' +
-                    '<td class="">' + metPago + '</td>' +
-                    '<td class="" >' + moneda + '</td>' +
+                    '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
+                    '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
                     '<td class="" >' + digitoMoneda + pagar + '</td>' +
                     '<td class="" >' + digitoMoneda + recibido + '</td>' +
                     '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
@@ -506,15 +621,15 @@ function validado() {
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
                     '</tr>';
             }
-        } else if (optionSelected == "TARJETA") {
+        } else if (metPago.toUpperCase() == "TARJETA") {
             if (pagar == "") {
                 Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
             } else {
                 recibido = pagar;
 
                 agregar = '<tr class="even pointer">' +
-                    '<td class="">' + metPago + '</td>' +
-                    '<td class="" >' + moneda + '</td>' +
+                    '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
+                    '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
                     '<td class="" >' + digitoMoneda + pagar.toString() + '</td>' +
                     '<td class="" >' + digitoMoneda + recibido.toString() + '</td>' +
                     '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
@@ -578,6 +693,7 @@ function deletePago(row) {
     calcularPagosFact();
 }//FIN FUNCTION
 
+//FUNCION PARA EDITAR PAGO
 function editPago(row) {
     //EVENTO ONCLICK DEL BOTON EDITAR
     $("#tablePagos").on("click", "#boton", function () {
@@ -599,6 +715,7 @@ function editPago(row) {
     });
 }
 
+//FUNCION ON CHANGE DEL METODO DE PAGO
 $("#metPago").on("change", function () {
     var metodoPago = $(this).find("option:selected").text();
 
