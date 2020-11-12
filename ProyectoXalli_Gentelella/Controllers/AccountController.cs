@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -16,6 +17,10 @@ namespace ProyectoXalli_Gentelella.Controllers {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext context = new ApplicationDbContext();
+
+        private DBControl db = new DBControl();
+        private bool completado = false;
+        private string mensaje = "";
 
         public AccountController() {
         }
@@ -48,6 +53,77 @@ namespace ProyectoXalli_Gentelella.Controllers {
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// RECUPERA LA INFORMACION DEL COLABORADOR LOGGEADO
+        /// </summary>
+        /// <param name="empleado"></param>
+        /// <returns></returns>
+        public ActionResult userProfileData(string empleado) {
+            var colaborador = (from tb1 in context.Users//NETUSER
+                               from tb2 in tb1.Roles//NETROLES
+                               join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                               where tb1.Id == empleado
+                               orderby tb1.UserName, tb3.Name
+                               select new {
+                                   UserId = tb1.Id,
+                                   Role = tb3.Name,
+                                   ColaboradorId = tb1.PeopleId,
+                                   Correo = tb1.Email,
+                                   UserName = tb1.UserName
+                               }).FirstOrDefault();
+
+            var dataProfile = (from obj in db.Datos.ToList()
+                               join col in db.Meseros.ToList() on obj.Id equals col.DatoId
+                               where col.Id == colaborador.ColaboradorId
+                               select new {
+                                   ColaboradorId = col.Id,
+                                   Nombre = obj.PNombre,
+                                   Apellido = obj.PApellido,
+                                   Cedula = obj.Cedula,
+                                   INSS = col.INSS,
+                                   RUC = obj.RUC,
+                                   Entrada = col.HoraEntrada,
+                                   Salida = col.HoraSalida
+                               }).FirstOrDefault();
+
+            return Json(new { colaborador, dataProfile }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(int colaboradorId, string userId, string nombreCol, string apellidoCol, string correo, string ruc) {
+
+            //BUSCAMOS EL OBJETO DEL COLABORADOR
+            IdentityResult result = new IdentityResult();
+            Mesero mesero = db.Meseros.DefaultIfEmpty(null).FirstOrDefault(m => m.Id == colaboradorId);
+            string nombre = "";
+
+            //SI ENCUENTRA EL MESERO EDITAR DATOS
+            if (mesero != null) {
+                Dato dato = db.Datos.DefaultIfEmpty(null).FirstOrDefault(d => d.Id == mesero.DatoId);
+
+                dato.PNombre = nombreCol;
+                dato.PApellido = apellidoCol;
+                dato.RUC = ruc != "" ? ruc : null;
+
+                nombre = dato.PNombre + " " + dato.PApellido;
+
+                db.Entry(dato).State = EntityState.Modified;
+                if (db.SaveChanges() > 0) {
+                    //BUSCAMOS EL USUARIO EN SEGURIDAD
+                    var usuario = UserManager.FindById(userId);
+
+                    if (usuario != null) {
+                        usuario.Email = correo != "" ? correo : null;
+
+                        result = UserManager.Update(usuario);
+                        mensaje = result.Succeeded ? "Editado correctamente" : "Error al editar";
+                    }
+                }
+            }
+
+            return Json(new { success = result.Succeeded, message = mensaje, Nombre = nombre }, JsonRequestBehavior.AllowGet);
+        }
+
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -75,6 +151,10 @@ namespace ProyectoXalli_Gentelella.Controllers {
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl) {
+
+            if (TempData["completado"] != null)
+                ViewBag.mensaje = TempData["completado"].ToString();
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

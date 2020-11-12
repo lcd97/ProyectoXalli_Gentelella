@@ -15,6 +15,8 @@
                 $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
 
                 for (var i = 0; i < data.length; i++) {
+                    var precio = data[i].Precio.toString();
+
 
                     agregarPlatillo += '<div class="col-md-55 items" id="' + data[i].Id + '">' +
                         '<div class="thumbnail">' +
@@ -32,7 +34,7 @@
                         '<p>' +
                         '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].DescripcionPlatillo + '">' + data[i].DescripcionPlatillo + '</strong>' +
                         '</p>' +
-                        '<p> $ ' + formatoPrecio(data[i].Precio) + '</p>' +
+                        '<p> $ ' + formatoPrecio(precio) + '</p>' +
                         '</div>' +
                         '</div >' +
                         '</div >';
@@ -66,66 +68,15 @@ function validar(nuevo) {
     var img = $("#file")[0].files[0];
     var code = $("#codigoMenu").val();
     var precio = $("#precio").val();
-    var time = $("#tiempo").val();
     var ingredients = $("#ingredientes").val();
 
-    //SI ES VERDADERO
-    if (nuevo == true) {
-        //VALIDACIONES SHAMPOO
-        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
-            if (img != null) {
-                saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
-            } else {
-                Alert("Error", "Adjunte una imagen", "error");
-            }//FIN VALIDACION IMAGEN
-        } else {
-            Alert("Error", "Campos vacios", "error");
-        }//FIN IF-ELSE VALIDACIONES
+    //VALIDACIONES SHAMPOO
+    if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+        editMenuItem();//METODO PARA EDITAR UN ELEMENTO
     } else {
-        //VALIDACIONES SHAMPOO
-        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
-            editMenuItem();//METODO PARA EDITAR UN ELEMENTO
-        } else {
-            Alert("Error", "Campos vacios", "error");
-        }//FIN VALIDACIONES IF-ELSE
-    }//FIN IF-ELSE NUEVO
+        Alert("Error", "Campos vacios", "error");
+    }//FIN VALIDACIONES IF-ELSE
 }//FIN FUNCTION
-
-//FUNCION PARA ALMACENAR PLATILLO DEL MENU
-function saveMenuItem() {
-    $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
-
-    //SE CREA UN OBJETO DE LA CLASE FORMDATA
-    var formData = new FormData();
-    var a = $("#platillo").val();
-
-    //USANDO EL METODO APPEND(CLAVE, VALOR) SE AGREGAN LOS PARAMETROS A ENVIAR
-    formData.append("urlImage", $("#file")[0].files[0]);
-    formData.append("codigoMenu", $("#codigoMenu").val());
-    //ASIGNAR DESCRIPCION DE MENU CON LA PRIMERA LETRA EN MAYUSCULA
-    formData.append("descripcionMenu", a.charAt(0).toUpperCase() + a.slice(1).toLowerCase());
-    formData.append("precio", $("#precio").val());
-    formData.append("categoriaId", $("#categoria").val());
-    formData.append("tiempo", $("#tiempo").val());
-    formData.append("ingredientes", $("#ingredientes").val());
-
-    $.ajax({
-        type: "POST",
-        url: "/Menus/Create/",
-        data: formData, //SE ENVIA TODO EL OBJETO FORMDATA CON LOS PARAMETROS EN EL APPEND ,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.success === true) {
-                $("#small-modal").modal("hide"); //CERRAR MODAL
-                AlertTimer("Completado", data.message, "success");
-                agregarItem(data.Id);//AGREGAR EL ELEMENTO CREADO
-            } else {
-                Alert("Error", data.message, "error");//ALMACENADO CORRECTAMENTE
-            }
-        }
-    });
-}
 
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU
 function editMenuItem() {

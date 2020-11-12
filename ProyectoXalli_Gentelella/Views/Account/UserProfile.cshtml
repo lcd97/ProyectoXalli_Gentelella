@@ -4,103 +4,147 @@
 }
 
 <div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="col-md-3">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Perfil de usuario</h2>
-               
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                    </li>
+                </ul>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
-                    <div class="profile_img">
-                        <div id="crop-avatar">
-                            <!-- Current avatar -->
-                            <img class="img-responsive avatar-view img-rounded" src="~/images/user.png" alt="Avatar" title="Change the avatar">
+                <div class="col-md-12">
+                    <div class="panel-body">
+                        <div class="col-md-9 col-xs-6">
+                            <img src="~/images/user.png" alt="" class="col-md-offset-2 img-circle img-responsive">
+                        </div>
+                        <div class="col-md-12">
+                            <br />
+                            <div class="project_detail" id="generalData">
+
+                            </div>
+                            <br>
+                            <div class="text-center mtop20 pull-left">
+                                <a onclick="CargarSmallParcial('/Manage/ChangePassword/')" class="btn btn-sm btn-primary">Cambiar contraseña</a>
+                            </div>
                         </div>
                     </div>
-                    <h3></h3>
-                  
-                    <br />
-
                 </div>
-                <div class="col-md-9 col-sm-9 col-xs-12">
+            </div>
+        </div>
+    </div>
 
-                   
+    <div class="col-md-9">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Configuración de perfil</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-12">
+                    <div class="panel-body">
+                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab1" class="nav nav-tabs bar_tabs right" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#tab_content11" id="home-tabb" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Información personal</a>
+                                </li>
+                                <li role="presentation" class="">
+                                    <a href="#tab_content22" role="tab" id="profile-tabb" data-toggle="tab" aria-controls="profile" aria-expanded="false">Otros</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent2" class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade active in" id="tab_content11" aria-labelledby="home-tab">
+                                    <div data-parsley-validate class="form-horizontal form-label-left">
 
-                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Datos personales</a>
-                            </li>
-                            <li role="presentation" class="">
-                                <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Credenciales</a>
-                            </li>
-                            @*<li role="presentation" class="">
-                                <a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Profile</a>
-                            </li>*@
-                        </ul>
-                        <div id="myTabContent" class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
-                                <div class="message_wrapper">
-                                    <h4 class="heading">Nombre:</h4>
-                                    <blockquote class="message">Daniela Cordero Leiva</blockquote>                                    
+                                        <div class="form-group">
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>Cédula</label>
+                                                <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly style="text-transform:uppercase;">
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>INSS</label>
+                                                <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>RUC</label>
+                                                <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>Nombre</label>
+                                                <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>Apellido</label>
+                                                <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <label>Correo</label>
+                                                <input id="correo" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <hr />
+
+                                            <div class="col-md-7 col-sm-6 col-xs-6">
+                                                <h4 style="text-align:center !important;"><strong>Horario Laboral</strong></h4>
+
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <label>Hora entrada</label>
+                                                    <div class="input-group date" id="hentrada">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-clock-o"></span>
+                                                        </span>
+                                                        <input type='text' class="form-control" id="entrada" readonly />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <label>Hora salida</label>
+                                                    <div class="input-group date" id="hsalida">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-clock-o"></span>
+                                                        </span>
+                                                        <input type='text' class="form-control" id="salida" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 col-sm-6 col-xs-6">
+                                                <h4 style="text-align:center !important;"><strong>Seguridad</strong></h4>
+
+                                                <div class="col-md-12 col-sm-6 col-xs-6">
+                                                    <label>Nombre de usuario</label>
+                                                    <input id="userName" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="ln_solid"></div>
+
+                                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6">
+                                                <button type="button" onclick="editProfile()" class="btn btn-success">Actualizar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content22" aria-labelledby="profile-tab">
 
-                                <!-- start user projects -->
-                                <table class="data table table-striped no-margin">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Project Name</th>
-                                            <th>Client Company</th>
-                                            <th class="hidden-phone">Hours Spent</th>
-                                            <th>Contribution</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>New Company Takeover Review</td>
-                                            <td>Deveint Inc</td>
-                                            <td class="hidden-phone">18</td>
-                                            <td class="vertical-align-mid">
-                                               
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>New Partner Contracts Consultanci</td>
-                                            <td>Deveint Inc</td>
-                                            <td class="hidden-phone">13</td>
-                                            <td class="vertical-align-mid">
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Partners and Inverstors report</td>
-                                            <td>Deveint Inc</td>
-                                            <td class="hidden-phone">30</td>
-                                            <td class="vertical-align-mid">
-                                               
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>New Company Takeover Review</td>
-                                            <td>Deveint Inc</td>
-                                            <td class="hidden-phone">28</td>
-                                            <td class="vertical-align-mid">
-                                                
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <!-- end user projects -->
-
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -110,6 +154,12 @@
     </div>
 </div>
 
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Seguridad/editPerfil.js"></script>
+    <script src="~/Scripts/Catalogos/modelo.js"></script>
 }

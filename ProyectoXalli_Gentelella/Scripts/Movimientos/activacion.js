@@ -281,3 +281,147 @@ function estadoMenu(estado, id) {
         $("#menuAdd").html(agregarPlatillo);
     }
 }//FIN FUNCTION
+
+//TIPO DE METODO A UTILIZAR
+function comprobar() {
+    //AGARRAR EL CODIGO DE LA VISTA
+    var codigoMenu = $("#codigoMenu").val();
+
+    $.ajax({
+        type: "GET",
+        url: "/Menus/Comprobar/",
+        data: { Codigo: codigoMenu },
+        success: function (data) {
+            validar(data);
+        }
+    });
+}//FIN FUNCTION
+
+//FUNCION VALIDA QUE NO EXISTAN CAMPOS VACIOS
+function validar(nuevo) {
+    var a = $("#platillo").val();
+    var img = $("#file")[0].files[0];
+    var code = $("#codigoMenu").val();
+    var precio = $("#precio").val();
+    var ingredients = $("#ingredientes").val();
+
+    //SI ES VERDADERO
+    if (nuevo == true) {
+        //VALIDACIONES SHAMPOO
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+            if (img != null) {
+                saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+            } else {
+                Alert("Error", "Adjunte una imagen", "error");
+            }//FIN VALIDACION IMAGEN
+        } else {
+            Alert("Error", "Campos vacios", "error");
+        }//FIN IF-ELSE VALIDACIONES
+    } else {
+        //VALIDACIONES SHAMPOO
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+            editMenuItem();//METODO PARA EDITAR UN ELEMENTO
+        } else {
+            Alert("Error", "Campos vacios", "error");
+        }//FIN VALIDACIONES IF-ELSE
+    }//FIN IF-ELSE NUEVO
+}//FIN FUNCTION
+
+//FUNCION PARA ALMACENAR PLATILLO DEL MENU
+function saveMenuItem() {
+    $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
+
+    //SE CREA UN OBJETO DE LA CLASE FORMDATA
+    var formData = new FormData();
+    var a = $("#platillo").val();
+
+    //USANDO EL METODO APPEND(CLAVE, VALOR) SE AGREGAN LOS PARAMETROS A ENVIAR
+    formData.append("urlImage", $("#file")[0].files[0]);
+    formData.append("codigoMenu", $("#codigoMenu").val());
+    //ASIGNAR DESCRIPCION DE MENU CON LA PRIMERA LETRA EN MAYUSCULA
+    formData.append("descripcionMenu", a.charAt(0).toUpperCase() + a.slice(1).toLowerCase());
+    formData.append("precio", $("#precio").val());
+    formData.append("categoriaId", $("#categoria").val());
+    formData.append("tiempo", $("#tiempo").val());
+    formData.append("ingredientes", $("#ingredientes").val());
+
+    $.ajax({
+        type: "POST",
+        url: "/Menus/Create/",
+        data: formData, //SE ENVIA TODO EL OBJETO FORMDATA CON LOS PARAMETROS EN EL APPEND ,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.success === true) {
+                $("#small-modal").modal("hide"); //CERRAR MODAL
+                AlertTimer("Completado", data.message, "success");
+                agregarItem(data.Id);//AGREGAR EL ELEMENTO CREADO
+            } else {
+                Alert("Error", data.message, "error");//ALMACENADO CORRECTAMENTE
+            }
+        }
+    });
+}
+
+
+//FUNCION PARA ALMACENAR PLATILLO DEL MENU
+function editMenuItem() {
+
+    //SE CREA UN OBJETO DE LA CLASE FORMDATA
+    var formData = new FormData();
+    var a = $("#platillo").val();
+
+    //USANDO EL METODO APPEND(CLAVE, VALOR) SE AGREGAN LOS PARAMETROS A ENVIAR
+    formData.append("urlImage", $("#file")[0].files[0]);
+    formData.append("codigoMenu", $("#codigoMenu").val());
+    //ASIGNAR DESCRIPCION DE MENU CON LA PRIMERA LETRA EN MAYUSCULA
+    formData.append("descripcionMenu", a.charAt(0).toUpperCase() + a.slice(1).toLowerCase());
+    formData.append("precio", $("#precio").val());
+    formData.append("categoriaId", $("#categoria").val());
+    formData.append("tiempo", $("#tiempo").val());
+    formData.append("ingredientes", $("#ingredientes").val());
+    //TOMAR EL VALOR DEL SWITCHERY
+    formData.append("estado", $("#activo").is(":checked"));
+
+    //FUNCION AJAX
+    $.ajax({
+        type: "POST",
+        url: "/Menus/Edit",
+        data: formData,//SE ENVIA TODO EL OBJETO FORMDATA CON LOS PARAMETROS EN EL APPEND 
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.success) {
+                $("#small-modal").modal("hide"); //CERRAR MODAL                
+
+                modificarItem(data.Id);//MODIFICAR EL REGISTRO EN LA VISTA INDEX
+
+                estadoMenu(data.estado, data.Id);
+
+                AlertTimer("Completado", data.message, "success");
+            } else
+                Alert("Error", data.message, "error");//MENSAJE DE ERROR
+        },
+        error: function () {
+            Alert("Error al modificar", "Intentelo de nuevo", "error");
+        }
+    });//FIN AJAX
+}//FIN FUNCTION
+
+//MODIFICAR EL DIV DEL ELEMENTO DEL MENU
+function modificarItem(id) {
+    $.ajax({
+        type: "GET",
+        url: "/Menus/getMenuItem/" + id,
+        success: function (data) {
+            //ASIGNAR NUEVOS VALORES EN LA VISTA
+            $("#" + id).find("strong").text(data.menu.Platillo);
+            $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
+            $("#" + id).find("img").attr("src", "");
+            $("#" + id).find("img").attr("src", data.menu.Ruta);
+        },
+        error: function () {
+            Alert("Error al modificar", "Recargue la página", "error");
+        }
+    });//FIN AJAX      
+}//FIN FUNCTION

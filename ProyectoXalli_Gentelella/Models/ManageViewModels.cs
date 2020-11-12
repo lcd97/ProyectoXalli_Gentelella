@@ -52,6 +52,7 @@ namespace ProyectoXalli_Gentelella.Models
         [Display(Name = "Contraseña nueva")]
         public string NewPassword { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirme la contraseña nueva")]
         [Compare("NewPassword", ErrorMessage = "La contraseña nueva y la contraseña de confirmación no coinciden.")]

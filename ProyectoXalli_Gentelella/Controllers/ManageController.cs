@@ -226,19 +226,33 @@ namespace ProyectoXalli_Gentelella.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            //SI EL MODELO ES INVALIDO SE RETORNA LA VISTA
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+
+            //CAMBIAMOS LAS CREDENCIALES DEL USUARIO
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+
+            //SI SE CAMBIO CORRECTAMENTE
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                TempData["completado"] = "Cambio de contraseña exitoso. Vuelva a ingresar";
+
+                ////BUSCAMOS EL USUARIO
+                //var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+
+                ////SI ENCUENTRA UN USUARIO
+                //if (user != null)
+                //{
+                //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                //}
+                //CERRAMOS LA SESION PARA QUE VUELVA A INGRESAR
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                return RedirectToAction("Login", "Account");
+
+                //return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
             return View(model);
