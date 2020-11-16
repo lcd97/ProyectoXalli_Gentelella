@@ -85,6 +85,47 @@ namespace MenuAPI.Areas.API.Controllers
             return Json(ordenes, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CerrarOrden(int id)
+        {
+            ResultadoWS resultadoWS = new ResultadoWS();
+            resultadoWS.Mensaje = "";
+            resultadoWS.Resultado = false;
+
+            var Orden = await db.Ordenes.Where(o => o.Id == id).DefaultIfEmpty(null).FirstOrDefaultAsync();
+
+            using (var transact = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (Orden != null)
+                    {
+                        Orden.EstadoOrden = 2;
+                        db.Entry(Orden).State = EntityState.Modified;
+
+                        if (db.SaveChanges() > 0)
+                        {
+                            resultadoWS.Mensaje = "Orden Cerrada con exito";
+                            resultadoWS.Resultado = true;
+                            transact.Commit();
+                        }
+                        else
+                        {
+                            throw new Exception();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    resultadoWS.Mensaje = "Error al cerrar la orden";
+                    resultadoWS.Resultado = false;
+                    transact.Rollback();  
+                }
+            }
+
+            return Json(resultadoWS, JsonRequestBehavior.AllowGet);
+        }
+
         //cerrando la db
         protected override void Dispose(bool disposing)
         {
