@@ -9,6 +9,7 @@
             $("#fechaComanda").html("Fecha: " + data.Principal.Fecha);
             agregarInfo = '<b>Información</b><br><br><b>Código de orden:</b> ' + cargarCodigo(data.Principal.Codigo) + '<br><b>Xalli Ometepe Beach Hotel</b><br><b>Restaurant & Lounge Bar</b>';
             $("#info").append(agregarInfo);
+            $("#info").attr("val", data.Principal.Id);
             $("#Mesero").html(data.Principal.Mesero);
 
             var cliente = "Visitante", ruc = "N/A", correo = "N/A", telefono = "N/A";
@@ -21,10 +22,10 @@
             }
 
             agregarCustomer = 'Cliente <address>' +
-                '<strong id="Cliente">' + cliente + '</strong>' +
+                '<strong id="Cliente" val="' + data.Principal.ClienteId + '">' + cliente + '</strong>' +
                 '<br id="RUC">RUC:  ' + ruc +
                 '<br id="Telefono">Teléfono: ' + telefono +
-                '<br id="Correo">Correo: ' + correo +
+                '<br id="Correo" val="' + correo + '">Correo: ' + correo +
                 '</address>';
 
             $("#Customer").append(agregarCustomer);
@@ -84,4 +85,59 @@ function cargarCodigo(data) {
     }
 
     return code;
+}
+
+function facturar() {
+    swal({
+        title: "¿Desea cerrar la orden para facturar?",
+        icon: "warning",
+        buttons: {
+            activar: {
+                text: "No",
+                value: "NO" //VALOR PARA UTILIZARLO EN EL SWITCH
+            },
+            desactivar: {
+                text: "Sí",
+                value: "YES" //VALOR PARA UTILIZARLO EN EL SWITCH
+            }
+        }//FIN DE BUTTONS
+    })//FIN DEL SWAL
+
+        .then((value) => {
+            switch (value) {
+
+                case "NO":
+                    swal.close();
+                    break;
+
+                case "YES":
+                    cerrarOrden();
+                    break;
+
+                default:
+                    {
+                        swal.close();
+                    }
+            }//FIN SWITCH
+        });//FIN THEN
+}
+
+//FUNCION PARA CERRAR LA ORDEN DE LA COMANDA
+function cerrarOrden() {
+    var orden = $("#info").attr("val");
+
+    $.ajax({
+        type: "POST",
+        url: "/Ordenes/CerrarComanda/",
+        data: { ordenId: orden },
+        success: function (data) {
+            if (data.success) {
+                //REDIRECCIONA A LA VISTA FACTURAR
+                var url = "/Facturaciones/Index/";
+                window.location.href = url;
+            } else {
+                Alert("Error", data.message, "error");
+            }
+        }
+    });
 }

@@ -151,7 +151,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                         var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
 
                         //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
-                        if (buscarP == null) {                           
+                        if (buscarP == null) {
                             datoDefault.Cedula = "000-000000-0000X";
                             datoDefault.PNombre = "Default";
                             datoDefault.PApellido = "User";
@@ -162,7 +162,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             clienteDefault.DatoId = datoDefault.Id;
                             clienteDefault.EmailCliente = "defaultuser@xalli.com";
                             clienteDefault.EstadoCliente = false;
-                          
+
                             db.Clientes.Add(clienteDefault);
                             db.SaveChanges();
 
@@ -416,17 +416,47 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="Cliente"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult SendEmail(string Email, string Cliente) {
+        public ActionResult SendEmail(string Email, int orderId) {
+            if (Email == "") {
+                mensaje = "Ingrese el correo del cliente";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
             string emailHotel = "proyectoshotel2020@gmail.com";
-            string passwordHotel = "2020canelaazul";
-            string error = "ENVIADO";
+            string passwordHotel = "bxqalmibjgxzjqux";
+            //string passwordHotel = "Calabazas#sin.Nombre2020";
+
+            var orden = db.Ordenes.FirstOrDefault(w => w.Id == orderId);
+            var cliente = db.Clientes.FirstOrDefault(w => w.Id == orden.ClienteId && w.EmailCliente != "defaultuser@xalli.com");
+            var dato = cliente != null ? db.Datos.DefaultIfEmpty(null).FirstOrDefault(w => w.Id == cliente.DatoId) : null;
+            var nombreCliente = dato != null ? dato.PNombre + " " + dato.PApellido : "";
+
+            var encabezado = "Estimado cliente: " + nombreCliente + "<br/> " +
+                "Le enviamos el registro de los productos consumidos en el bar y restaurante del hotel Xalli:<br/><br/>";
+
+            var footer = "<table style='font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#666666;line-height:18px;padding-bottom:10px'>" +
+                         "<tbody>" +
+                         "<tr>" +
+                         "<td>Este correo electrónico no puede recibir respuestas. Para obtener más información, accede sitio " +
+                         "<a href='https://www.xallihotel.com/' style='text-decoration:none;color:#4d90fe' target='_blank'data-saferedirectreason='2' data-saferedirecturl='https://www.xallihotel.com/'>" +
+                         "XALLI, OMETEPE BEACH HOTEL" +
+                         "</a>." +
+                         "<br> Copyright - 2020.All Rights Reserved." +
+                         "</td>" +
+                         "</tr>" +
+                         "</tbody>" +
+                         "</table>";
+
+            string bodyMessage = "", code = "";
+
+            encabezadoEmail(ref code, ref bodyMessage, orderId);
 
             try {
                 MailMessage correo = new MailMessage();
                 correo.From = new MailAddress(emailHotel);
-                correo.To.Add("danycordero9@gmail.com");
-                correo.Subject = "Pruebas de campo";
-                correo.Body = "Este mensaje es de prueba";
+                correo.To.Add(Email);
+                correo.Subject = "Comanda de la orden: " + code;
+                correo.Body = encabezado + bodyMessage + footer;
                 correo.IsBodyHtml = true;
                 correo.Priority = MailPriority.Normal;
 
@@ -438,12 +468,73 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
                 smtp.Send(correo);
 
-            } catch (Exception ex) {
+                completado = true;
+                mensaje = "Correo enviado correctamente";
 
-                error = ex.Message;
+            } catch (Exception ex) {
+                mensaje = ex.Message;
             }
 
-            return Json(error, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="orderId"></param>
+        /// <param name="meseroName"></param>
+        /// <param name="fechaOrden"></param>
+        /// <param name="bodyMessage"></param>
+        public void encabezadoEmail(ref string code, ref string bodyMessage, int orderId) {
+            var orden = db.Ordenes.Join(db.Meseros, o => o.MeseroId, m => m.Id, (o, m) => new { o, m })
+                                .Join(db.Datos, mes => mes.m.DatoId, d => d.Id, (mes, d) => new { mes, d })
+                                .Where(w => w.mes.o.Id == orderId).FirstOrDefault();
+
+            if (orden.mes.o.CodigoOrden < 10) {
+                code = "000" + orden.mes.o.CodigoOrden;
+            } else if (orden.mes.o.CodigoOrden >= 10 || orden.mes.o.CodigoOrden < 100) {
+                code = "00" + orden.mes.o.CodigoOrden;
+            } else if (orden.mes.o.CodigoOrden >= 100 || orden.mes.o.CodigoOrden < 1000) {
+                code = "0" + orden.mes.o.CodigoOrden;
+            } else {
+                code = (orden.mes.o.CodigoOrden).ToString();
+            }
+
+            var fechaOrden = orden.mes.o.FechaOrden.ToShortDateString();
+            var meseroName = orden.d.PNombre + " " + orden.d.PApellido;
+
+            var detalleOrden = db.DetallesDeOrden.Join(db.Menus, d => d.MenuId, m => m.Id, (d, m) => new { d, m })
+                .Where(w => w.d.OrdenId == orderId).ToList();
+
+            bodyMessage += "<table style='color: #73879C;border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>" +
+                                "<thead>" +
+                                "<th style='color:#73879C; padding: 8px 8px 8px 8px;'>No. orden " + code + " </th>" +
+                                "<th style='color:#73879C padding: 8px 8px 8px 8px;'>Fecha: " + fechaOrden + "</th>" +
+                                "<th style='color:#73879C padding: 8px 8px 8px 8px;'>Mesero: " + meseroName + "</th>" +
+                                "</tr>" +
+                                "<tr>" +
+                                "<th style='color: #73879C;border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>Cantidad</th>" +
+                                "<th style='color: #73879C;border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>Precio Unitario</th>" +
+                                "<th style='width: 65%; text-align: center;color: #73879C;border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>Platillo/Bebida</th>" +
+                                "<th style='color: #73879C;border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>Subtotal</th>" +
+                                "</tr>" +
+                                "</thead>" +
+                                "<tbody>";
+
+            foreach (var item in detalleOrden) {
+                var subtotal = item.d.CantidadOrden * item.d.PrecioOrden;
+
+                //AGREGAR EL DETALLE DE LA ORDEN
+                bodyMessage += "<tr>" +
+                    "<td style='color: #73879C; border: 1px solid #ddd; padding: 8px 8px 8px 8px;'>" + item.d.CantidadOrden + "</td>" +
+                    "<td style='color: #73879C; border: 1px solid #ddd; padding: 8px 8px 8px 8px;'> $" + item.d.PrecioOrden + "</td>" +
+                    "<td style='width: 150px; text-align: center; color: #73879C;border: 1px solid #ddd;padding: 8px 8px 8px 8px;'>" + item.m.DescripcionMenu + "</td>" +
+                    "<td style='color: #73879C; border: 1px solid #ddd; padding: 8px 8px 8px 8px;'> $" + subtotal + "</td>" +
+                    "</tr>";
+            }
+
+            bodyMessage += "</tbody></table>";
         }
 
         /// <summary>
@@ -649,6 +740,32 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 (Minuto < 10 ? "0" + Minuto.ToString() : Minuto.ToString()) + " " + Meridiano;
 
             return horaEnviar;
+        }
+
+        /// <summary>
+        /// METODO PARA CERRA LA ORDEN DESDE LA COMANDA
+        /// </summary>
+        /// <param name="ordenId"></param>
+        /// <returns></returns>
+        public ActionResult CerrarComanda(int ordenId) {
+            //BSUCA LA ORDEN
+            var cerrar = db.Ordenes.FirstOrDefault(w => w.Id == ordenId);
+
+            using (var transact = db.Database.BeginTransaction()) {
+                try {
+                    cerrar.EstadoOrden = 2;//TERMINAR LA ORDEN
+                    db.Entry(cerrar).State = EntityState.Modified;
+
+                    completado = db.SaveChanges() > 0 ? true : false;
+                    mensaje = completado ? "Cerrado correctamente" : "Error al cerrar";
+
+                    transact.Commit();
+                } catch (Exception) {
+                    mensaje = "Error al cerrar";
+                    transact.Rollback();
+                }
+            }
+            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         public void RetornarAlgoFelix() {

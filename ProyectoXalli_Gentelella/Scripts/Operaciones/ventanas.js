@@ -115,23 +115,77 @@ function deleteAlert(uri, id) {
         });//FIN THEN
 }//FIN FUCTION DELETE
 
-//function myfunction() {
-//    swal({
-//        title: "",
-//        text: "Ingrese el correo del cliente:",
-//        type: "input",
-//        showCancelButton: true,
-//        closeOnConfirm: false,
-//        inputPlaceholder: "example@hotmail.com"
-//    }, function (inputValue) {
-//        if (inputValue === false) return false;
-//        if (inputValue === "") {
-//            swal.showInputError("You need to write something!");
-//            return false;
-//        }
-//        swal("Nice!", "You wrote: " + inputValue, "success");
-//    });
-////}
+function enviar() {
+    var correo = $("#Correo").attr("val");
+
+    if (correo == "N/A") {
+        enviarCorreo();
+    } else {
+        swal({
+            title: "¿Desea enviar la comanda a otro correo?",
+            icon: "warning",
+            buttons: {
+                activar: {
+                    text: "No",
+                    value: "NO" //VALOR PARA UTILIZARLO EN EL SWITCH
+                },
+                desactivar: {
+                    text: "Sí",
+                    value: "YES" //VALOR PARA UTILIZARLO EN EL SWITCH
+                }
+            }//FIN DE BUTTONS
+        })//FIN DEL SWAL
+
+            .then((value) => {
+                switch (value) {
+
+                    case "NO":
+                        //MANDAR CORREO DE UN SOLO
+                        ajaxCorreo(correo);
+                        break;
+
+                    case "YES":
+                        enviarCorreo();
+                        break;
+
+                    default:
+                        {
+                            swal.close();
+                        }
+                }//FIN SWITCH
+            });//FIN THEN
+    }
+}
+
+function enviarCorreo() {
+    swal("Ingrese el correo electrónico del cliente", {
+        content: "input"
+    })
+        .then((value) => {
+            if (value == "") {
+                Alert("Error", "No ingresó ningún correo a enviar", "error");
+            } else {
+                ajaxCorreo(value);
+            }
+        });
+}
+
+function ajaxCorreo(value) {
+    var orden = $("#info").attr("val");
+
+    $.ajax({
+        type: "POST",
+        url: "/Ordenes/SendEmail/",
+        data: { Email: value, orderId: orden },
+        success: function (data) {
+            if (data.success) {
+                AlertTimer("Completado", data.message, "success");
+            } else {
+                Alert("Error", data.message, "error");
+            }
+        }
+    });
+}
 
 //CAPTURAR LA TECLA SCAPE
 jQuery(document).on('keyup', function (evt) {

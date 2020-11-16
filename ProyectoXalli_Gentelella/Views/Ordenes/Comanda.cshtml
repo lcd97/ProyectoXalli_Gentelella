@@ -67,18 +67,9 @@
                     </div>
                     <!-- /.row -->
 
-                    <div class="row">
-                        <!-- accepted payments column -->
-                        <div class="col-xs-6">
-                            <p class="lead">Nota:</p>
-
-                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                            </p>
-                        </div>
+                    <div class="row">                       
                         <!-- /.col -->
-                        <div class="col-xs-6">
-                            <p class="lead"></p>
+                        <div class="col-xs-6 col-xs-offset-6">
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
@@ -105,7 +96,7 @@
                     <div class="row no-print">
                         <div class="col-xs-12">
                             <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Imprimir</button>
-                            <button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Facturar</button>
+                            <button class="btn btn-success pull-right" onclick="facturar()"><i class="fa fa-credit-card"></i> Facturar</button>
                             <button class="btn btn-primary pull-right" onclick="enviar()" style="margin-right: 5px;"><i class="fa fa-download"></i> Enviar a Email</button>
                         </div>
                     </div>
@@ -129,18 +120,5 @@
         $("#small-modal").draggable({
             handle: ".modal-header"
         });
-
-
-        function enviar() {
-            myfunction();
-
-            //$.ajax({
-            //    type: "POST",
-            //    url: "/Ordenes/SendEmail/",
-            //    success: function () {
-
-            //    }
-            //});
-        }
     </script>
 }

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Perfil";
 }
+<link href="~/Content/custom.min.css" rel="stylesheet" />
 
 <div class="row">
     <div class="col-md-3">
@@ -55,7 +56,7 @@
                                     <a href="#tab_content11" id="home-tabb" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Información personal</a>
                                 </li>
                                 <li role="presentation" class="">
-                                    <a href="#tab_content22" role="tab" id="profile-tabb" data-toggle="tab" aria-controls="profile" aria-expanded="false">Otros</a>
+                                    <a href="#tab_content22" role="tab" id="profile-tabb" data-toggle="tab" aria-controls="profile" aria-expanded="false">Estadísticas</a>
                                 </li>
                             </ul>
                             <div id="myTabContent2" class="tab-content">
@@ -143,7 +144,30 @@
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" id="tab_content22" aria-labelledby="profile-tab">
+                                    <div data-parsley-validate class="form-horizontal form-label-left">
+                                        <div class="col-md-8 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                                <div class="x_content">
+                                                    <canvas id="barChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row tile_count">
+                                                <div class="col-md-12 col-sm-4 col-xs-6 tile_stats_count">
+                                                    <span class="count_top"><i class="fa fa-fire"></i> Ordenes atendidas del mes</span>
+                                                    <div class="count" id="ordMes"></div>
+                                                    <span class="count_bottom" id="cbOrd"></span>
+                                                </div>
 
+                                                <div class="col-md-12 col-sm-4 col-xs-6 tile_stats_count">
+                                                    <span class="count_top"><i class="fa fa-usd"></i> Ventas totales del mes</span>
+                                                    <div class="count" id="ventaMes"></div>
+                                                    <span class="count_bottom" id="cbVenta"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,5 +185,5 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/Operaciones/ventanas.js"></script>
     <script src="~/Scripts/Seguridad/editPerfil.js"></script>
-    <script src="~/Scripts/Catalogos/modelo.js"></script>
+    <script src="~/Scripts/Chart.min.js"></script>
 }

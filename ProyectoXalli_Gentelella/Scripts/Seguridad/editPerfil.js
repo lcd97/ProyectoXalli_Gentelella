@@ -29,10 +29,127 @@
                     '<p style="margin-top:-5px !important;text-align: center;" id="roleId" val="' + data.colaborador.UserId + '"><i class="fa fa-circle green"></i>&nbsp; ' + data.colaborador.Role + '</p>';
 
                 $("#generalData").append(general);
+
+
+                barChart(data.colaborador.Role, data.dataProfile.ColaboradorId);
             }
         }
+    });//FIN AJAX
+});//FIN DOCUMENT READY
+
+function barChart(role, mesero) {
+    //OBTENER LAS ESTADISTICAS DEL COLABORADOR
+    $.ajax({
+        type: "GET",
+        url: "/Busquedas/StatticsRole/",
+        data: { Role: role, MeseroId: mesero },
+        success: function (data) {
+            var lineData = "";
+            var agPorcOrd = "", agPorcVent = "";
+
+            //SI EL PROCENTAJE ES DE CRECIMIENTO
+            if (data.porcOrdenes > 0) {
+                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcOrdenes + '%</i> más que el mes pasado';
+                $("#cbOrd").html(agPorcOrd);
+            } else {
+                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcOrdenes + '%</i> menos que el mes pasado';
+                $("#cbOrd").html(agPorcOrd);
+            }
+
+            //SI EL PROCENTAJE ES DE CRECIMIENTO
+            if (data.porcVentas > 0) {
+                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcVentas + '%</i> más que el mes pasado';
+                $("#cbVenta").html(agPorcVent);
+            } else {
+                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcVentas + '%</i> menos que el mes pasado';
+                $("#cbVenta").html(agPorcVent);
+            }
+
+            $("#ordMes").html(data.recOrd);
+            $("#ventaMes").html(data.recVenta);
+
+            if (data.bodegas) {//SI LA CONSULTA ES POR BODEGAS
+                //CREO LOS ARREGLOS PARA ALMACENAR LOS REGISTROS
+                var fecha = new Array();
+                var cocina = new Array();
+                var bar = new Array();
+
+                //RECORRO
+                for (var i = 0; i < data.ordenes.length; i++) {
+                    var itemFecha = data.ordenes[i].Fecha;
+                    var itemVentaCocina = data.ordenes[i].TVCocina;
+                    var itemVentaBar = data.ordenes[i].TVBar;
+
+                    fecha.push(itemFecha);
+                    cocina.push(itemVentaCocina);
+                    bar.push(itemVentaBar);
+                }
+
+                lineData = {
+                    labels: fecha,
+                    datasets: [
+                        {
+                            label: "Cocina ",
+                            backgroundColor: 'rgba(26,179,148,0.5)',
+                            borderColor: "rgba(26,179,148,0.7)",
+                            pointBackgroundColor: "rgba(26,179,148,1)",
+                            pointBorderColor: "#fff",
+                            data: cocina
+                        },
+                        {
+                            label: "Bar ",
+                            backgroundColor: 'rgba(26,179,148,0.5)',
+                            borderColor: "rgba(26,179,148,0.7)",
+                            pointBackgroundColor: "rgba(26,179,148,1)",
+                            pointBorderColor: "#fff",
+                            data: bar
+                        }
+                    ]
+                };
+            } else {
+                var fechaVenta = new Array();
+                var ventas = new Array();
+
+                for (var j = 0; j < data.ordenes.length; j++) {
+                    var itemF = data.ordenes[j].Fecha;
+                    var itemV = data.ordenes[j].TotalVentas;
+
+                    fechaVenta.push(itemF);
+                    ventas.push(itemV);
+                }
+
+                lineData = {
+                    labels: fechaVenta,
+                    datasets: [
+                        {
+                            label: "Ventas $ ",
+                            backgroundColor: 'rgba(26,179,148,0.5)',
+                            borderColor: "rgba(26,179,148,0.7)",
+                            pointBackgroundColor: "rgba(26,179,148,1)",
+                            pointBorderColor: "#fff",
+                            data: ventas
+                        }
+                    ]
+                };
+            }
+
+            var lineOptions = {
+                responsive: true,
+                //LAS ESCALAS INICIARAN EN CERO, EN CASO QUE NO HAYA VALORES
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+
+            var ctx = document.getElementById("barChart").getContext("2d");
+            new Chart(ctx, { type: 'bar', data: lineData, options: lineOptions });
+        }//FIN SUCCESS
     });
-});
+}
 
 function editProfile() {
     var colaboradorId = $("#cedula").attr("val");
