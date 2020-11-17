@@ -22,9 +22,6 @@ function cargarCodigo() {
 $(document).ready(function () {
     cargarCodigo();
 
-    //SWITCHERY LOCO
-    $(".switchery").attr("onclick", "Check()");
-
     //LIMPIAR
     limpiarInicio();
     limpiarInputs();
@@ -45,6 +42,10 @@ $(document).ready(function () {
             $("#btnGuardarOrden").attr("disabled", true);
         }
     });
+
+    var elem = document.querySelector('.js-switch');
+    init = new Switchery(elem, { secondaryColor: '#7c8bc7' });
+    $(".switchery").attr("onclick", "Check()");
 });
 
 //LIMPIAR TODO
@@ -78,6 +79,7 @@ function limpiarInicio() {
 
 //CONFIRMACION DE ACTIVAR/DESACTIVAR
 function Check() {
+
     var elem = document.querySelector('.js-switch');
     $("#btnGuardarOrden").removeAttr("disabled");//ACTIVANDO EL BOTON
 

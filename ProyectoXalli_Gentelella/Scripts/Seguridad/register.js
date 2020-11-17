@@ -88,48 +88,91 @@ $("#ruc").mask("A000000000000B", {
 });
 
 //MASCARA PARA NUMERO DE CEDULA
-$("#cedula").mask("A00-000000-0000B", {
+$("#cedula").mask("A00-CDEF00-0000B", {
     translation: {
         'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
-        'B': { pattern: /[A-Za-z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
     }
 });
 
 //BUSQUEDA DE EMPLEADO QUE NO ESTE REGISTRADO
 $("#cedula").blur(function () {
-    var dni = $(this).val();
+    var dni = $(this).val();//OBTENEMOS LA CEDULA DEL COLABORADOR
 
+    //COMPROBAMOS QUE EXISTA UNA IDENTIFICACION DIGITADA
     if (dni != "") {
-        $.ajax({
-            type: "GET",
-            url: "/Meseros/BuscarColaborador/",
-            data: {
-                Identificacion: dni
-            },
-            success: function (data) {
-                if (data.length != 0)
-                    Alert("Error", "Ya existe el personal ingresado", "error");
-            }
-        });
+        //COMPROBAMOS QUE LA CEDULA SEA VALIDA
+        if (!$.isNumeric(dni.substr(-1))) {
+            $.ajax({
+                type: "GET",
+                url: "/Meseros/BuscarColaborador/",
+                data: {
+                    Identificacion: dni
+                },
+                success: function (data) {
+
+                    if (data.length != 0)
+                        Alert("Error", "Ya existe el personal ingresado", "error");
+                }
+            });
+        } else {
+            Alert("Error", "Formato de cédula inválida", "error");
+        }
     } else {
         limpiarPantalla();
+    }
+
+    var nombre = $("#nombre").val().substring(0, 5);
+
+    if (nombre != "") {
+        generarUserName(nombre);
     }
 });
 
 //GENERAR EL NOMBRE DE USUARIO
 $("#nombre").blur(function () {
     var valueName = ($(this).val()).substring(0, 5);//AGARRA EL NOMBRE
-    var valueId = ($("#cedula").val()).substring(4, 10);
 
-    var userName = (valueName.split(" ")[0]).toLowerCase() + valueId;
-
-    $("#username").val(userName);
-
-    if (userName != "") {
-        var pass = generatePasswordRand();
-        $("#password").val(pass);
-    }
+    generarUserName(valueName);
+    generarPass();
 });
+
+//FUNCION PARA GENERAR EL USERNAME DEL COLABORADOR
+function generarUserName(valueName) {
+    var valueId = $("#cedula").val();//OBTENGO EL ID A CONCATENAR
+
+    var userName = valueName.split(" ")[0].toLowerCase() + valueId.substring(4, 10);//CREO EL USERNAME
+
+    $.ajax({
+        type: "GET",
+        url: "/Account/comprobarUser/",
+        data: { userName: userName },
+        success: function (existe) {
+            //EXISTE UN USUARIO CON ESE USERNAME
+            if (existe) {
+                userName = valueName.split(" ")[0].toLowerCase() + 1 + valueId.substring(4, 10);//SE AGREGA NUMERO 1
+            }
+
+            $("#username").val(userName);
+
+        }
+    });
+}
+
+function generarPass() {
+    if ($("#password").val() == "") {
+        var userName = $("#username").val();
+
+        if (userName != "") {
+            var pass = generatePasswordRand();
+            $("#password").val(pass);
+        }
+    }
+}
 
 //GENERA LA CONTRASEÑA ALEATORIAMENTE
 function generatePasswordRand() {

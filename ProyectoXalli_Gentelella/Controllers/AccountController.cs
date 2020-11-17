@@ -25,6 +25,14 @@ namespace ProyectoXalli_Gentelella.Controllers {
         public AccountController() {
         }
 
+        public ActionResult comprobarUser(string userName) {
+            var checkUser = UserManager.FindByName(userName);
+
+            bool existe = checkUser != null ? true : false;
+
+            return Json(existe, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// RETORNA LA VISTA DE PERFIL DE USUARIO
         /// </summary>
