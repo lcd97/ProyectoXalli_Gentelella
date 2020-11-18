@@ -30,6 +30,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         public ActionResult getProveedor() {
             var provider = from obj in db.Proveedores.ToList()
                            join u in db.Datos.ToList() on obj.DatoId equals u.Id
+                           where obj.EstadoProveedor == true
                            select new {
                                //CONSULTA PARA ASIGNARLE A LA VARIABLE PROVEEDOR EL NOMBRE COMERCIAL O NOMBRE DE LA PERSONA NATURAL
                                Proveedor = obj.NombreComercial != null ? obj.NombreComercial : u.PNombre + " " + u.PApellido,
@@ -46,6 +47,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         public ActionResult getTipoEntrada() {
 
             var entrada = from obj in db.TiposDeEntrada.ToList()
+                          where obj.EstadoTipoEntrada == true
                           select new {
                               //CONSULTA PARA ASIGNARLE A LA VARIABLE PROVEEDOR EL NOMBRE COMERCIAL O NOMBRE DE LA PERSONA NATURAL
                               Entrada = obj.DescripcionTipoEntrada,
@@ -62,6 +64,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         public ActionResult getProductos() {
             var producto = from obj in db.Productos.ToList()
                            join um in db.UnidadesDeMedida.ToList() on obj.UnidadMedidaId equals um.Id
+                           where obj.EstadoProducto == true
                            select new {
                                //CONSULTA PARA ASIGNARLE A LA VARIABLE PROVEEDOR EL NOMBRE COMERCIAL O NOMBRE DE LA PERSONA NATURAL
                                Presentacion = obj.MarcaProducto != null && obj.PresentacionProducto != 1 ?
@@ -79,6 +82,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <returns></returns>
         public ActionResult getArea() {
             var bodegas = from obj in db.Bodegas.ToList()
+                          where obj.EstadoBodega == true
                           select new {
                               //CONSULTA PARA ASIGNARLE A LA VARIABLE PROVEEDOR EL NOMBRE COMERCIAL O NOMBRE DE LA PERSONA NATURAL
                               Bodega = obj.DescripcionBodega,

@@ -71,7 +71,17 @@
     });
 
     limpiarPantalla();
+    tablaVacio();
 });
+
+function tablaVacio() {
+    var tbody = $("#productTable #table_body");//OBTENEMOS EL CONTENIDO DE LA TABLA
+    //SI NO HAY DATA
+    if (tbody.children().length === 0) {
+        var agregar = '<tr class="even pointer" id="noProd"><td colspan="5" style="text-align: center;">SIN REGISTROS DE PRODUCTOS</td></tr>';
+        $("#table_body").append(agregar);
+    }
+}
 
 //CARGA EL CODIGO DE LA ENTRADA AUTOMATICAMENTE
 function cargarCodigo() {
@@ -206,13 +216,16 @@ function SubmitForm(form) {
 }//FIN FUNCTION
 
 function TableAdd() {
+    $("#noProd").remove();//ELIMINA LA FILA DE MENSAJE
+
     //ALMACENAR LAS VARIABLES
     var producto = $("#producto").find("option:selected").val(), precio = $("#precio").val(), cantidad = $("#cantidad").val();
 
     //QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
-    var precSb = precio.replace(/,/g, "");
-    var cantSb = cantidad.replace(/,/g, "");
-    var precioTotal = formatoPrecio(precSb * cantSb);
+    var precSb = parseFloat(precio.replace(/,/g, "")).toFixed(2);
+    var cantSb = parseFloat(cantidad.replace(/,/g, "")).toFixed(2);
+    //CALCULO EL PRECIO TOTAL DEL PRODUCTO
+    var precioTotal = parseFloat(precSb * cantSb).toFixed(2);
 
     var agregar = "";
 
@@ -246,30 +259,30 @@ function TableAdd() {
             //GENERAR FILA DEL PRODUCTO A LA TABLA
             agregar += '<tr class="even pointer">';
             agregar += '<td class="" value ="' + producto + '">' + $("#producto").find("option:selected").text() + '</td>';
-            agregar += '<td class="" >' + "C$ " + precio + '</td>';
+            agregar += '<td class="" >' + "C$ " + precSb + '</td>';
             agregar += '<td class="" >' + cantidad + '</td>';
             agregar += '<td class="" >' + "C$ " + precioTotal + '</td>';
             agregar += '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editProduct(this);"><i class="fa fa-edit"></i></a>';
             agregar += '<a class="btn btn-danger" onclick = "deleteProduct(this);"> <i class="fa fa-trash"></i></a></td>';
             agregar += '</tr>';
 
-            //CALCULAR EL TOTAL
-            var total = parseFloat(CalcularTotal());
-
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
-            //AGREGAR EL TOTAL TFOOT
-            $("#total").html("C$ " + formatoPrecio((total + precioTotal).toString()));
 
             //LIMPIAR LOS INPUTS Y SELECT
             $("#producto").val("-1");
             $('#producto').trigger('change'); // Notify any JS components that the value changed
             $("#precio").val("");
             $("#cantidad").val("");
+
+            CalcularTotal();
         } else {
             Alert("Error", "El producto seleccionado ya se encuentra en la tabla", "error");
         }
     }//FIN ELSE DE VALIDACION CAMPOS VACIOS
+
+    tablaVacio();
+
 }//FIN FUNCTION
 
 //FUNCION PARA EDITAR UN PRODUCTO DE LA TABLA
@@ -291,16 +304,18 @@ function editProduct(indice) {
 
         $("#cantidad").val(cantidad);
 
-        //RECALCULAR TOTAL TFOOT
-        var totalF = $("#total").html();
-        var prodPrecio = totalF.split("C$ ");
-        var resta = parseFloat(prodPrecio[1] - (res[1] * cantidad));
+        ////RECALCULAR TOTAL TFOOT
+        //var totalF = $("#total").html();
+        //var prodPrecio = parseFloat(totalF.split("C$ ")[1]).toFixed(2);
+        //var resta = parseFloat(parseFloat(prodPrecio).toFixed(2) - (parseFloat(res[1]).toFixed(2) * parseFloat(cantidad)).toFixed(2));
 
-        $("#total").html(resta);
+        indice.closest("tr").remove();//ELIMINAMOS LA FILA A EDITAR
 
-        indice.closest("tr").remove();
+        //var total = parseFloat(CalcularTotal());
 
-        //deleteProduct(indice);     
+        CalcularTotal();
+        //$("#total").html("C$ " + total);
+        tablaVacio();
     });
 }//FIN FUNCTION
 
@@ -310,24 +325,27 @@ function deleteProduct(row) {
     var indice = row.parentNode.parentNode.rowIndex;
     document.getElementById('productTable').deleteRow(indice);
 
-    //RECALCULAMOS EL TOTAL
-    var resta = parseFloat(CalcularTotal());
-    $("#total").html("C$ " + resta);
-
+    ////RECALCULAMOS EL TOTAL
+    //var resta = parseFloat(CalcularTotal());
+    //$("#total").html("C$ " + resta);
+    CalcularTotal();
+    tablaVacio();
 }//FIN FUNCTION
 
 //FUNCION PARA CALCULAR EL TOTAL GENERAL DE LA TABLA
 function CalcularTotal() {
+    //AGREGAR EL TOTAL TFOOT
     var total = 0;
 
     //RECORRER LA TABLA PARA SUMAR TODOS LOS TOTALES DE PRODUCTOS
     $("#table_body tr").each(function () {
-        var str = $(this).find("td").eq(3).html();
-        var res = str.split("C$ ");
-        total += parseFloat(res[1]);
+        var str = $(this).find("td").eq(3).html();//PRECIO TOTAL PRODUCTO
+        var res = str.split("C$ ")[1];
+        total += parseFloat(res);
     });
 
-    return total;
+    $("#total").html("C$ " + total.toFixed(2));
+    //return parseFloat(total).toFixed(2);
 }//FIN FUNCTION
 
 //FUNCION PARA ALMACENAR EL INVENTARIO
