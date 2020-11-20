@@ -47,7 +47,7 @@
             $("#tbComanda").append(agregarDetail);
             CalcularTotales();
         }
-    });
+    });   
 });
 
 //CALCULA EL TOTAL DE LA TABLA

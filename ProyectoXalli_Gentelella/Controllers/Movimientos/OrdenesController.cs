@@ -253,7 +253,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// RETORNA LA VISTA DE ORDENES
         /// </summary>
         /// <returns></returns>
-        public ActionResult VerOrdenes() {
+        public ActionResult VerOrdenes(string mensaje = "") {
+            ViewBag.Message = mensaje;
+
             return View();
         }
 

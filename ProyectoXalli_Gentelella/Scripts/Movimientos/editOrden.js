@@ -208,7 +208,7 @@ function editOrden(terminar) {
                 }//FIN SWITCH
             });//FIN THEN
     } else {
-        editarOrden();
+        editarOrden(1);
     }
 }
 
@@ -258,7 +258,7 @@ function editarOrden(terminar) {
             if (data.success) {
                 //REDIRECCIONAR A TODAS LAS ORDENES
                 //Alert("Completado", data.message, "success");
-                var url = "/Ordenes/VerOrdenes/";
+                var url = "/Ordenes/VerOrdenes/?mensaje=" + data.message;
                 window.location.href = url;
             } else {
                 Alert("Error", data.mesage, "error");

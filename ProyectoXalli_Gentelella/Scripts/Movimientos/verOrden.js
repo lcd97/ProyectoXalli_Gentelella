@@ -18,6 +18,11 @@
     } else {
         cargarTabla(EmpleadoId);
     }
+    var mensaje = $("#mensaje").attr("value"); 
+
+    if (mensaje != "") {
+        AlertTimer("Completado", mensaje, "success");
+    }
 });//FIN DOCUMENT READY
 
 //CREA EL FORMATO DEL CODIGO

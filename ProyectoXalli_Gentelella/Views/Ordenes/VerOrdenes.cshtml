@@ -4,10 +4,12 @@
 }
 
 @if (Context.User.IsInRole("Mesero")) {
-    <input val="true" id="rol" type="hidden"  />
+    <input val="true" id="rol" type="hidden" />
 } else {
     <input val="false" id="rol" type="hidden" />
 }
+
+<h1 value="@ViewBag.Message" id="mensaje" hidden></h1>
 
 <!--TABLA DE ORDENES-->
 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -35,4 +37,5 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/Movimientos/verOrden.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
 }
