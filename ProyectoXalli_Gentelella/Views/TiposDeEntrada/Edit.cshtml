@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
-                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12", @id = "estadoTipoE" })
                         <label>
                             @Html.CheckBoxFor(model => model.EstadoTipoEntrada, new { @class = "js-switch col-md-2 col-sm-2 col-xs-2", @onclick = "Check()" })
                             @Html.ValidationMessageFor(model => model.EstadoTipoEntrada, "", new { @class = "text-danger" })
@@ -60,6 +60,12 @@
 
         elem = document.querySelector('.js-switch');
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        if (elem.checked) {
+            $("#estadoTipoE").html("Activo");
+        } else {
+            $("#estadoTipoE").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -71,6 +77,8 @@
             swal({
                 title: "¿Desea desactivar el registro?",
                 icon: "warning",
+                closeOnClickOutside: false,
+                closeOnEsc: false,
                 buttons: {
                     activar: {
                         text: "No",
@@ -82,26 +90,26 @@
                     }
                 }//FIN DE BUTTONS
             })//FIN DEL SWAL
-
                 .then((value) => {
                     switch (value) {
 
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            $("#estadoTipoE").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            $("#estadoTipoE").html("Inactivo");
                             break;
 
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
+        } else {
+            $("#estadoTipoE").html("Activo");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 </script>

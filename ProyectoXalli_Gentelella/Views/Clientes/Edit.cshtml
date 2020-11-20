@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="col-md-2 col-sm-2 col-xs-2">
-                    @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                    @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12", @id = "estadoCliente" })
                     <label>
                         @Html.CheckBoxFor(model => model.EstadoCliente, new { @class = "js-switch col-md-6 col-sm-6 col-xs-6", @id = "estado", @onclick = "Check()" })
                         @Html.ValidationMessageFor(model => model.EstadoCliente, "", new { @class = "text-danger" })
@@ -76,6 +76,12 @@
 
         elem = document.querySelector('.js-switch');
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        if (elem.checked) {
+            $("#estadoCliente").html("Activo");
+        } else {
+            $("#estadoCliente").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -105,19 +111,20 @@
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            $("#estadoCliente").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            $("#estadoCliente").html("Inactivo");
                             break;
 
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
+        } else {
+            $("#estadoCliente").html("Activo");
         }//FIN IF CHKBOX
     }//FIN FUNCION
     //INICIALIZAR EL SELECT2
@@ -161,10 +168,14 @@
         //MASCARA PARA NUMERO TELEFONICO
         $("#telefono").mask("0000-0000");
         //MASCARA PARA EL NUMERO RUC
-        $("#ruc").mask("A000000000000B", {
+        $("#ruc").mask("A00CDEF000000B", {
             translation: {
-                'A': { pattern: /[0-6-EeJjNnRr]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
-                'B': { pattern: /[0-9-A-Z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+                'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
                 /*
                  FORMATO DE RUC - PRIMERA LETRA
                  PERSONA JURIDICA : J

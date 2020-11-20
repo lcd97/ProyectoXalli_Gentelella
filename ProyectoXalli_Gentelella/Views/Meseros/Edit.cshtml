@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4">
-                    @Html.Label("Activo", htmlAttributes: new { @class = " col-md-12 col-sm-12 col-xs-12" })
+                    @Html.Label("Activo", htmlAttributes: new { @class = " col-md-12 col-sm-12 col-xs-12", @id = "estadoCol" })
                     <label>
                         <input type="checkbox" class="js-switch activo" id="activo" onclick="Check()" />
                     </label>
@@ -136,6 +136,12 @@
                 }
             }
         });
+
+        if (elem.checked) {
+            $("#estadoCol").html("Activo");
+        } else {
+            $("#estadoCol").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -165,19 +171,20 @@
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            $("#estadoCol").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            $("#estadoCol").html("Inactivo");
                             break;
 
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
+        } else {
+            $("#estadoCol").html("Activo");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 </script>

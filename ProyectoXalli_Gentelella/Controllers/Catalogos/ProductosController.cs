@@ -220,7 +220,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 CantidadMaxProducto = obj.CantidadMaxProducto,
                                 CantidadMinProducto = obj.CantidadMinProducto,
                                 EstadoProducto = obj.EstadoProducto,
-                                UnidadMedida = u.AbreviaturaUM,
+                                UnidadMedida = obj.PresentacionProducto == 1 ? u.AbreviaturaUM : obj.PresentacionProducto + " " + u.AbreviaturaUM,
                                 Categoria = c.DescripcionCategoria
                             }).FirstOrDefault();
 
@@ -234,16 +234,37 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         /// <returns></returns>
         public ActionResult CantidadActual(int id) {
 
-            //DEVULEVE LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
-            var cantActual = (from bod in db.Bodegas
-                              join ent in db.Entradas on bod.Id equals ent.BodegaId
-                              join det in db.DetallesDeEntrada on ent.Id equals det.EntradaId
-                              join pro in db.Productos on det.ProductoId equals pro.Id
-                              where pro.Id == id && bod.DescripcionBodega.ToUpper() == "BAR"
-                              group new { bod, det } by new { bod.Id } into grouped
-                              select grouped.Sum(b => b.det.CantidadEntrada)).FirstOrDefault();
+            //OBTENGO LA CANTIDAD DE ENTRADA DEL PRODUCTO
+            var entradas = db.DetallesDeEntrada
+                            .Join(db.Entradas, de => de.EntradaId, e => e.Id, (de, e) => new { de, e })
+                            .Join(db.Bodegas, ent => ent.e.BodegaId, b => b.Id, (ent, b) => new { ent, b })
+                            .Where(w => w.b.DescripcionBodega.ToUpper() == "BAR" && w.ent.de.ProductoId == id).Select(s => (int?)s.ent.de.CantidadEntrada).Sum();
 
-            return Json(cantActual, JsonRequestBehavior.AllowGet);
+            //OBTENGO LA CANTIDAD DE SALIDA DEL PRODUCTO
+            var salidas = db.DetallesDeOrden
+                            .Join(db.Menus, d => d.MenuId, m => m.Id, (d, m) => new { d, m })
+                            .Join(db.Ingredientes, me => me.m.Id, i => i.MenuId, (me, i) => new { me, i })
+                            .Join(db.CategoriasMenu, menu => menu.me.m.CategoriaMenuId, cat => cat.Id, (menu, cat) => new { menu, cat })
+                            .Join(db.Bodegas, cate => cate.menu.me.m.CategoriaMenuId, bod => bod.Id, (cate, bod) => new { cate, bod })
+                            .Where(w => w.bod.DescripcionBodega.ToUpper() == "BAR" && w.cate.menu.i.ProductoId == id).Select(s => (int?)s.cate.menu.me.d.CantidadOrden).Sum();
+
+            var entr = entradas;
+            var sal = salidas;
+
+            if (entradas == null && salidas == null) {
+                entr = 0;
+                sal = 0;
+            } else if (entradas == null) {
+                entr = 0;
+            } else if (salidas == null) {
+                sal = 0;
+            }
+
+            var existencia = entr - sal;
+
+            //CALCULO LA EXISTENCIA
+
+            return Json(existencia, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

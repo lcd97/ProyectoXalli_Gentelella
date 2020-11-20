@@ -5,6 +5,9 @@
 
     var orderId = $("#codigoOrden").attr("name");
 
+    var elem = document.querySelector('.js-switch');
+    var init;
+
     $.ajax({
         type: "GET",
         url: "/Ordenes/getOrderAndDetails",
@@ -18,22 +21,26 @@
             //HUESPED
             if (data.Principal.TipoCliente == 1) {
                 $("#titleCliente").html("Huesped");//CAMBIAR EL TITULO DE TIPO CLIENTE
+                init = new Switchery(elem, { secondaryColor: '#7c8bc7' });
+                init.disable();
 
                 $("#identificacion").val(data.Principal.ClienteIdent);
                 $("#nombreCliente").val(data.Principal.Nombres);
                 $("#rucOrden").val(data.Principal.RUC);
             } else {
+                init = new Switchery(elem, { secondaryColor: '#64BD63' });
+                init.disable();
                 $("#identificacion").attr("name", data.Principal.ClienteIdent);
             }
 
             //LLENAR EL DETALLE
             var agregar = "";
-            var precioTotal = 0;
+            //var precioTotal = 0;
 
             for (var i = 0; i < Object.keys(data.Details).length; i++) {
 
                 var calculo = data.Details[i].PrecioUnitario * data.Details[i].Cantidad;
-                precioTotal += calculo;
+                //precioTotal += calculo;
 
                 var estado = data.Details[i].Estado == true ? "Finalizado" : "Pendiente";
 
@@ -49,13 +56,15 @@
                 agregar += '</tr>';
             }
 
-            //CALCULAR EL TOTAL
-            var total = parseFloat(CalcularTotal());
+            ////CALCULAR EL TOTAL
+            //var total = parseFloat(CalcularTotal());
 
             //AGREGAR PRODUCTO A LA TABLA
             $("#table_body").append(agregar);
-            //AGREGAR EL TOTAL TFOOT
-            $("#total").html("$ " + (total + precioTotal));
+            ////AGREGAR EL TOTAL TFOOT
+            //$("#total").html("$ " + (total + precioTotal));
+
+            CalcularTotal();
         }
     });
 });
@@ -146,15 +155,16 @@ function addDetails() {
         agregar += '<a class="btn btn-danger btn-xs" onclick = "deletePlatillo(this);"> <i class="fa fa-trash"></i></a></td>';
         agregar += '</tr>';
 
-        //CALCULAR EL TOTAL
-        var total = parseFloat(CalcularTotal());
+        ////CALCULAR EL TOTAL
+        //var total = parseFloat(CalcularTotal());
 
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").prepend(agregar);
-        //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + (total + parseFloat(precioTotal)));
+        ////AGREGAR EL TOTAL TFOOT
+        //$("#total").html("$ " + (total + parseFloat(precioTotal)));
 
         $("#smallModal").modal("hide");
+        CalcularTotal();
     } else {
         Alert("Error", "El platillo seleccionado ya se encuentra en la tabla", "error");
     }
@@ -163,8 +173,47 @@ function addDetails() {
 
 }//FIN FUNCTION
 
-//ALMACENA TODOS LOS NUEVOS ITEMS DE LA ORDEN
+//FUNCION PARA EDITAR LA ORDEN -INICIO
 function editOrden(terminar) {
+    //SI SE PRESIONO EL BOTON PARA CERRAR LA ORDEN
+    if (terminar == 2) {
+        swal({
+            title: "¿Esta seguro que quiere cerrar la orden?",
+            icon: "warning",
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+            buttons: {
+                activar: {
+                    text: "No",
+                    value: "NO" //VALOR PARA UTILIZARLO EN EL SWITCH
+                },
+                desactivar: {
+                    text: "Sí",
+                    value: "YES" //VALOR PARA UTILIZARLO EN EL SWITCH
+                }
+            }//FIN DE BUTTONS
+        })//FIN DEL SWAL
+
+            .then((value) => {
+                switch (value) {
+
+                    case "NO":
+                        swal.close();
+                        break;
+
+                    case "YES":
+                        editarOrden(2);
+                        break;
+                    default: swal.close();
+                }//FIN SWITCH
+            });//FIN THEN
+    } else {
+        editarOrden();
+    }
+}
+
+//ALMACENA TODOS LOS NUEVOS ITEMS DE LA ORDEN
+function editarOrden(terminar) {
     var codigo = $("#codigoOrden").val(), date = $("#fechaOrden").val() + " " + moment().format('h:mm:ss a');
     var OrdenDetails = new Array();
 

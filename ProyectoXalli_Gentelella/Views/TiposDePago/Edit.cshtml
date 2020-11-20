@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
-                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12", id = "estadoPago" })
                         <label>
                             @Html.CheckBoxFor(model => model.EstadoTipoPago, new { @class = "js-switch col-md-2 col-sm-2 col-xs-2", @onclick = "Check()" })
                             @Html.ValidationMessageFor(model => model.EstadoTipoPago, "", new { @class = "text-danger" })
@@ -61,6 +61,12 @@
 
         elem = document.querySelector('.js-switch');
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        if (elem.checked) {
+            $("#estadoPago").html("Activo");
+        } else {
+            $("#estadoPago").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -90,19 +96,20 @@
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            $("#estadoPago").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            $("#estadoPago").html("Inactivo");
                             break;
 
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
+        } else {
+            $("#estadoPago").html("Activo");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 </script>

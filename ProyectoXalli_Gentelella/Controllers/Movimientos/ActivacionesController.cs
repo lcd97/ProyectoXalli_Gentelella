@@ -172,7 +172,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         public JsonResult getClientes() {
             var meseros = (from obj in db.Clientes.ToList()
                            join d in db.Datos.ToList() on obj.DatoId equals d.Id
-                           where obj.EstadoCliente == false
+                           where obj.EstadoCliente == false && obj.EmailCliente != "defaultuser@xalli.com"
                            select new {
                                Id = obj.Id,
                                Descripcion = d.PNombre + " " + d.PApellido,
@@ -198,12 +198,12 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         public JsonResult getMonedas() {
             var moneda = (from obj in db.Monedas.ToList()
-                         where obj.EstadoMoneda == false
-                         select new {
-                             Id = obj.Id,
-                             Descripcion = obj.DescripcionMoneda,
-                             Codigo = obj.CodigoMoneda.Trim()
-                         });
+                          where obj.EstadoMoneda == false
+                          select new {
+                              Id = obj.Id,
+                              Descripcion = obj.DescripcionMoneda,
+                              Codigo = obj.CodigoMoneda.Trim()
+                          });
 
             return Json(new { data = moneda }, JsonRequestBehavior.AllowGet);
         }

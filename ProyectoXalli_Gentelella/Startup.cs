@@ -5,17 +5,14 @@ using Owin;
 using ProyectoXalli_Gentelella.Models;
 
 [assembly: OwinStartupAttribute(typeof(ProyectoXalli_Gentelella.Startup))]
-namespace ProyectoXalli_Gentelella
-{
-    public partial class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
+namespace ProyectoXalli_Gentelella {
+    public partial class Startup {
+        public void Configuration(IAppBuilder app) {
             //inicialización de los mapeos
             app.MapSignalR();
 
             ConfigureAuth(app);
-            CrearPermisos();            
+            CrearPermisos();
         }
 
         private void CrearPermisos() {
@@ -46,6 +43,7 @@ namespace ProyectoXalli_Gentelella
                 usuario.UserName = "daniela97";
                 usuario.Email = "danycordero9@gmail.com";
                 usuario.PeopleId = 0;
+                usuario.LockoutEnabled = true;//USUARIO NO BLOQUEADO
 
                 var resultado = AdmUsuario.Create(usuario, "Dcl030197..");
 

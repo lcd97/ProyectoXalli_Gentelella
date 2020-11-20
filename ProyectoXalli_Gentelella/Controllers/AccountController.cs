@@ -177,6 +177,14 @@ namespace ProyectoXalli_Gentelella.Controllers {
                 return View(model);
             }
 
+            //VALIDAR QUE LA CUENTA NO ESTE BLOQUEDA
+            var userLogin = UserManager.Find(model.Username, model.Password);
+
+            if (!userLogin.LockoutEnabled) {
+                ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                return View(model);
+            }
+
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
             // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);

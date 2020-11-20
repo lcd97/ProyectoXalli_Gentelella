@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="col-md-6 col-sm-6 col-xs-6">
-                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12", @id = "estadoUM" })
                         <label>
                             @Html.CheckBoxFor(model => model.EstadoUnidadMedida, new { @class = "js-switch col-md-2 col-sm-2 col-xs-2", @onclick = "Check()" })
                             @Html.ValidationMessageFor(model => model.EstadoUnidadMedida, "", new { @class = "text-danger" })
@@ -65,6 +65,12 @@
 
         elem = document.querySelector('.js-switch');
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        if (elem.checked) {
+            $("#estadoUM").html("Activo");
+        } else {
+            $("#estadoUM").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -76,6 +82,8 @@
             swal({
                 title: "¿Desea desactivar el registro?",
                 icon: "warning",
+                closeOnClickOutside: false,
+                closeOnEsc: false,
                 buttons: {
                     activar: {
                         text: "No",
@@ -94,19 +102,20 @@
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            $("#estadoUM").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            $("#estadoUM").html("Inactivo");
                             break;
 
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
+        } else {
+            $("#estadoUM").html("Activo");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 </script>

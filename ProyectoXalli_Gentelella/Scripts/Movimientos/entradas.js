@@ -399,6 +399,7 @@ function saveInventario() {
                         AlertTimer("Completado", data.message, "success");
                         cargarCodigo();
                         limpiarPantalla();
+                        tablaVacio();
                     } else {
                         Alert("Error", "Hubieron errores al guardar", "error");
                     }

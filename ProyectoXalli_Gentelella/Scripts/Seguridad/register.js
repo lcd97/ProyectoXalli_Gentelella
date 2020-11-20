@@ -72,10 +72,14 @@ $("#inss").mask("0000000-0");
 $("#telefono").mask("0000-0000");
 
 //MASCARA PARA EL NUMERO RUC
-$("#ruc").mask("A000000000000B", {
+$("#ruc").mask("A00-CDEF00-0000B", {
     translation: {
-        'A': { pattern: /[0-6-EeJjNnRr]/ },//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
-        'B': { pattern: /[0-9-A-Za-z]/ }//MODIFICAR PARA QUE ACEPTE NUMEROS Y LETRAS
+        'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
         /*
          FORMATO DE RUC - PRIMERA LETRA
          PERSONA JURIDICA : J

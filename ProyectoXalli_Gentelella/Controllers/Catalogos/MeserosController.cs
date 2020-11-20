@@ -1,4 +1,5 @@
-﻿using ProyectoXalli_Gentelella.Models;
+﻿using Microsoft.AspNet.Identity;
+using ProyectoXalli_Gentelella.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,11 +9,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ProyectoXalli_Gentelella.Controllers.Catalogos
-{
+namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
     [Authorize]
-    public class MeserosController : Controller
-    {
+    public class MeserosController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
@@ -237,13 +236,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                           }).FirstOrDefault();
 
             var rol = (from tb1 in context.Users
-                          from tb2 in tb1.Roles
-                          join tb3 in context.Roles on tb2.RoleId equals tb3.Id
-                          where tb1.PeopleId == id
-                          orderby tb1.UserName, tb3.Name
-                          select tb3.Name).FirstOrDefault();
+                       from tb2 in tb1.Roles
+                       join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                       where tb1.PeopleId == id
+                       orderby tb1.UserName, tb3.Name
+                       select tb3.Name).FirstOrDefault();
 
-            return Json(new { mesero,  rol}, JsonRequestBehavior.AllowGet);
+            return Json(new { mesero, rol }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -306,8 +305,23 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                             waiter.EstadoMesero = Estado;
 
                             db.Entry(waiter).State = EntityState.Modified;
-                            completado = db.SaveChanges() > 0 ? true : false;
-                            mensaje = completado ? "Modificado correctamente" : "Error al modificar";
+
+                            if (db.SaveChanges() > 0) {
+                                //BUSCAR EN LA BD DE SEGURIDAD
+                                var credenciales = context.Users.Where(w => w.PeopleId == waiter.Id).SingleOrDefault();
+
+                                //SI EL COLABORADOR ESTA INACTIVO. BLOQUEAR CREDENCIALES DE ACCESO
+                                if (Estado) {
+                                    //HABILITAR
+                                    credenciales.LockoutEnabled = true;
+                                } else {
+                                    //DESHABILITAR
+                                    credenciales.LockoutEnabled = false;
+                                }
+
+                                completado = context.SaveChanges() > 0;
+                                mensaje = completado ? "Modificado correctamente" : "Error al modificar";
+                            }
                         }
                     } else {//NO SE ENCONTRO EL REGISTRO COMO MESERO
                         mensaje = "La persona a modificar no se encuentra registrado";

@@ -32,7 +32,7 @@
                 <div class="col-md-2 col-sm-2 col-xs-4">
                     <div class="project_detail">
                         <p class="title" id="estado"></p>
-                        <input type="checkbox" class="flat" checked="checked" readonly>
+                        <input type="checkbox" class="flat" checked="checked">
                     </div>
                 </div>
             </div>
@@ -113,5 +113,7 @@
                 Alert("Error", "Se produjo un error al cargar la cantidad Actual", "error");
             }
         });
+
+        $(".flat").attr("disabled", true);//DESHABILITAR EL CHECK BOX DE ACTIVO
     });//FIN FUNCTION
 </script>

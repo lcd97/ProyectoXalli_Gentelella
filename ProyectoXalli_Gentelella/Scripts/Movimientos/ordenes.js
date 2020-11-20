@@ -25,6 +25,7 @@ $(document).ready(function () {
     //LIMPIAR
     limpiarInicio();
     limpiarInputs();
+    tablaVacia();
 
     var loginId = $("#session").val();
 
@@ -142,7 +143,7 @@ $('.js-example-basic-single').select2({
 //AGREGA EL PLATILLO SELECCIONADO A LA TABLA
 function addDetails() {
     //SE ELIMINA LA FILA DE INICIO
-    $("#nada").remove();
+    $("#noProd").remove();
 
     var platillo = $("#platillo").val(), platilloId = $("#platillo").attr("name"), cantidad = $("#cantidadOrden").val(),
         precio = $("#precioOrden").val(), nota = $("#notaOrden").val();
@@ -152,7 +153,7 @@ function addDetails() {
 
     var filas = $("#table_body").find("tr");
     var registrado = false, i = 0;
-    var precioTotal = (precio * cantidad);
+    var precioTotal = (parseFloat(precio).toFixed(2) * parseFloat(cantidad).toFixed(2)).toFixed(2);
 
     var agregar = "";
 
@@ -185,13 +186,10 @@ function addDetails() {
         agregar += '<a class="btn btn-danger btn-xs" onclick = "deletePlatillo(this);"> <i class="fa fa-trash"></i></a></td>';
         agregar += '</tr>';
 
-        //CALCULAR EL TOTAL
-        var total = CalcularTotal();
-
         //AGREGAR PRODUCTO A LA TABLA
         $("#table_body").append(agregar);
-        //AGREGAR EL TOTAL TFOOT
-        $("#total").html("$ " + (total + precioTotal));
+
+        CalcularTotal();
 
         $("#smallModal").modal("hide");
     } else {
@@ -250,51 +248,58 @@ function guardarOrden() {
     //ALMACEMAR ELEMENTOS DE LA TABLA
     $("#table_body tr").each(function () {
 
-        var row = $(this);
-        var item = {};
+        if ($(this).attr("id") != "noProd") {
+            var row = $(this);
+            var item = {};
 
-        var precio = row.find("td").eq(1).html();
-        var getPrice = precio.split("$ ");
+            var precio = row.find("td").eq(1).html();
+            var getPrice = precio.split("$ ");
 
-        item["Id"] = 0;
-        item["CantidadOrden"] = row.find("td").eq(2).html();
-        item["PrecioOrden"] = getPrice[1];
-        item["NotaDetalleOrden"] = row.find("td").eq(1).attr("value");
-        item["MenuId"] = row.find("td").eq(0).attr("value");
-        item["OrdenId"] = 0;
-        item["EstadoDetalleOrden"] = false;
+            item["Id"] = 0;
+            item["CantidadOrden"] = row.find("td").eq(2).html();
+            item["PrecioOrden"] = getPrice[1];
+            item["NotaDetalleOrden"] = row.find("td").eq(1).attr("value");
+            item["MenuId"] = row.find("td").eq(0).attr("value");
+            item["OrdenId"] = 0;
+            item["EstadoDetalleOrden"] = false;
 
-        OrdenDetails.push(item);
+            OrdenDetails.push(item);
+        }
     });
 
     //alert(JSON.stringify(OrdenDetails));
 
-    var data = "Codigo=" + parseInt(codigo) + "&MeseroId=" + meseroId + "&ClienteId=" + clienteId + "&FechaOrden=" + date + "&detalleOrden=" + JSON.stringify(OrdenDetails);
+    if (OrdenDetails.length > 0) {
+        var data = "Codigo=" + parseInt(codigo) + "&MeseroId=" + meseroId + "&ClienteId=" + clienteId + "&FechaOrden=" + date + "&detalleOrden=" + JSON.stringify(OrdenDetails);
 
-    //alert(data);
+        //alert(data);
 
-    if (validado()) {
-        $.ajax({
-            type: "POST",
-            url: "/Ordenes/Create/",
-            data: data,
-            success: function (data) {
-                if (data.success) {
-                    //LIMPIAR PANTALLA
-                    limpiarInputs();
-                    limpiarInicio();
+        if (validado()) {
+            $.ajax({
+                type: "POST",
+                url: "/Ordenes/Create/",
+                data: data,
+                success: function (data) {
+                    if (data.success) {
+                        //LIMPIAR PANTALLA
+                        limpiarInputs();
+                        limpiarInicio();
+                        tablaVacia();
 
-                    //VOLVER A CARGAR EL CODIGO
-                    cargarCodigo();
+                        //VOLVER A CARGAR EL CODIGO
+                        cargarCodigo();
 
-                    AlertTimer("Completado", data.message, "success");
-                } else {
-                    Alert("Error", data.message, "error");
+                        AlertTimer("Completado", data.message, "success");
+                    } else {
+                        Alert("Error", data.message, "error");
+                    }
                 }
-            }
-        });
-    }
-    else {
+            });
+        }
+        else {
+            Alert("Error", "Se encontraron campos requeridos vacios", "error");
+        }
+    } else {
         Alert("Error", "Se encontraron campos requeridos vacios", "error");
     }
 }//FIN FUNCTION

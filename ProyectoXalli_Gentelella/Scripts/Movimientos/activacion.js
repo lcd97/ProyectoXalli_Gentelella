@@ -205,7 +205,8 @@ function CargarParcialCatalog(url) {
             //DESACTIVAR TODOS LOS CAMPOS A MOSTRAR
             $('select').prop('disabled', true);
 
-            $('#catalogo').prop('readonly', false);
+            //$('#catalogo').prop('readonly', false);
+            $('#catalogo').prop('disabled', false);
             $("input").attr("readonly", true);
             $(".js-switch").attr("readonly", false);
             $(".input-sm").attr("readonly", false);

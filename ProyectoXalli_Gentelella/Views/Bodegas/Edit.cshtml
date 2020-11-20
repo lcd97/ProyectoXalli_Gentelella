@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="col-md-3 col-sm-3 col-xs-3 col-md-offset-1">
-                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                        @Html.Label("Activo", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12", @id = "estadoBodega" })
                         <label>
                             @Html.CheckBoxFor(model => model.EstadoBodega, new { @class = "js-switch col-md-6 col-sm-6 col-xs-6", @onclick = "Check()" })
                             @Html.ValidationMessageFor(model => model.EstadoBodega, "", new { @class = "text-danger" })
@@ -61,6 +61,12 @@
 
         elem = document.querySelector('.js-switch');
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
+
+        if (elem.checked) {
+            $("#estadoBodega").html("Activo");
+        } else {
+            $("#estadoBodega").html("Inactivo");
+        }
     });
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
@@ -72,6 +78,8 @@
             swal({
                 title: "¿Desea desactivar el registro?",
                 icon: "warning",
+                closeOnClickOutside: false,
+                closeOnEsc: false,
                 buttons: {
                     activar: {
                         text: "No",
@@ -90,19 +98,21 @@
                         case "activar":
                             //ACTIVAR EL CHKBOX
                             elem.click();
+                            //CAMBIAR NOMBRE DE TEXTO
+                            $("#estadoBodega").html("Activo");
                             break;
 
                         case "desactivar":
                             //DESACTIVAR EL CHKBOX
                             swal.close();
+                            //CAMBIAR NOMBRE DE TEXTO
+                            $("#estadoBodega").html("Inactivo");
                             break;
-
-                        default:
-                            {
-                                swal.close();
-                            }
+                        default: swal.close();
                     }//FIN SWITCH
                 });//FIN THEN
-        }//FIN IF CHKBOX
+        } else {
+            $("#estadoBodega").html("Activo");
+        }//FIN IF-ELSE CHKBOX
     }//FIN FUNCION
 </script>

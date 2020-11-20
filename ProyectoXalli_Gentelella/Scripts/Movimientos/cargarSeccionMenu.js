@@ -94,7 +94,7 @@ function detallePedido(url, id) {
 }
 
 //CARGAR LOS DATOS DEL PLATILLO A LA MODAL
-function cargarDetalle(id){
+function cargarDetalle(id) {
     $.ajax({
         type: "GET", //TIPO DE ACCION
         url: "/Menus/getMenuItem/" + id, //URL DEL METODO A USAR
@@ -109,16 +109,18 @@ function cargarDetalle(id){
 
 //FUNCION PARA CALCULAR EL TOTAL GENERAL DE LA TABLA
 function CalcularTotal() {
+    //CALCULAR EL TOTAL
     var total = 0;
 
     //RECORRER LA TABLA PARA SUMAR TODOS LOS TOTALES DE PRODUCTOS
     $("#table_body tr").each(function () {
         var str = $(this).find("td").eq(3).html();
-        var res = str.split("$ ");
-        total += parseFloat(res[1]);
+        var res = str.split("$ ")[1];
+        total += parseFloat(res);
     });
 
-    return total;
+    //AGREGAR EL TOTAL TFOOT
+    $("#total").html("$ " + total.toFixed(2));
 }//FIN FUNCTION
 
 $("#filtro").on("keyup", function () {
@@ -149,20 +151,21 @@ function editPlatillo(indice) {
                 cargarDetalle(id.attr("value"));
                 $("#cantidadOrden").val(cantidad);
                 $("#notaOrden").val(nota.attr("value"));
+
             }//FIN SUCCESS
         });//FIN AJAX        
 
-        var prec = (nota.text()).split("$ ");
+        //var prec = (nota.text()).split("$ ");
 
-        //RECALCULAR TOTAL TFOOT
-        var totalF = $("#total").html();//AGARRAR EL TOTAL DE LA TABLA
-        var prodPrecio = totalF.split("$ ");//QUITARLE EL SIGNO DE DOLAR
-        var resta = parseFloat(prodPrecio[1] - (prec[1] * cantidad));
+        ////RECALCULAR TOTAL TFOOT
+        //var totalF = $("#total").html();//AGARRAR EL TOTAL DE LA TABLA
+        //var prodPrecio = totalF.split("$ ");//QUITARLE EL SIGNO DE DOLAR
+        //var resta = parseFloat(prodPrecio[1] - (prec[1] * cantidad));
 
-        $("#total").html("$ " + resta);
-
+        //$("#total").html("$ " + resta);
         indice.closest("tr").remove();//ELIMINAR LA FILA
-
+        CalcularTotal();
+        tablaVacia();
     });
 }//FIN FUNCTION
 
@@ -172,10 +175,23 @@ function deletePlatillo(row) {
     var indice = row.parentNode.parentNode.rowIndex;
     document.getElementById('productTable').deleteRow(indice);
 
-    //RECALCULAMOS EL TOTAL
-    var resta = parseFloat(CalcularTotal());
 
-    alert(resta);
-    $("#total").html("$ " + (resta));
+    CalcularTotal();
+    tablaVacia();
+    ////RECALCULAMOS EL TOTAL
+    //var resta = parseFloat(CalcularTotal());
+
+    //alert(resta);
+    //$("#total").html("$ " + (resta));
 
 }//FIN FUNCTION
+
+//MEUSTRA MENSAJE CUANDO LA TABLA ESTA VACIA
+function tablaVacia() {
+    var tbody = $("#productTable #table_body");//OBTENEMOS EL CONTENIDO DE LA TABLA
+    //SI NO HAY DATA
+    if (tbody.children().length === 0) {
+        var agregar = '<tr class="even pointer" id="noProd"><td colspan="5" style="text-align: center;">SIN REGISTROS DE PRODUCTOS</td></tr>';
+        $("#table_body").append(agregar);
+    }
+}
