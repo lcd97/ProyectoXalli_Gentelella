@@ -37,12 +37,14 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                 string nombreCompleto = (from m in db.Meseros.Where(m => m.EstadoMesero == true)
                                          join d in db.Datos on m.DatoId equals d.Id
                                          where m.Id == idcolaborador
-                                         select d.PNombre +" "+ d.PApellido).DefaultIfEmpty(null).FirstOrDefault();
+                                         select d.PNombre + " " + d.PApellido).DefaultIfEmpty(null).FirstOrDefault();
 
                 respuestaLogin.id = idcolaborador;
                 respuestaLogin.nombreCompleto = nombreCompleto;
                 respuestaLogin.rol = roles.FirstOrDefault();
                 respuestaLogin.exito = true;
+
+
             }
             else
             {

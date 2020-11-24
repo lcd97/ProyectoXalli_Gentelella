@@ -22,7 +22,7 @@ namespace MenuAPI.Areas.API.Controllers
         public async Task<JsonResult> Menus()
         {
             var menus = await (from m in db.Menus
-                         select new MenuWS
+                         select new
                          {
                              id = m.Id,
                              codigo = m.CodigoMenu,
@@ -61,7 +61,7 @@ namespace MenuAPI.Areas.API.Controllers
         public async Task<JsonResult> MenusCategoria(int id)
         {
             //ruta de la imagen desde la db para la local
-            string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
+            string root = "http://192.168.43.244/ProyectoXalli_Gentelella";
             //string root = "http://proyectoxally.somee.com";
 
             var menu = await (from m in db.Menus

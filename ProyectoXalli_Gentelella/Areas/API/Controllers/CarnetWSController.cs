@@ -82,6 +82,8 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                     }
                     catch (Exception)
                     {
+                        resultadoWS.Mensaje = "Error al guardar la imagen";
+                        resultadoWS.Resultado = false;
                         transact.Rollback();
                     }
                 }

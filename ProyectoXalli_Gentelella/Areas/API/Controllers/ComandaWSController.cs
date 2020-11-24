@@ -120,6 +120,8 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                     }
                     catch (Exception)
                     {
+                        resultadoWS.Mensaje = "Error al guardar la imagen";
+                        resultadoWS.Resultado = false;
                         transact.Rollback();
                     }
                 }
@@ -139,8 +141,9 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
         {
             ResultadoWS resultadoWS = new ResultadoWS();
 
-            string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
+            //string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
             //string root = "http://proyectoxally.somee.com";
+            string root = "http://192.168.43.244/ProyectoXalli_Gentelella";
             Orden orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Id == id);
 
             if (orden != null)
