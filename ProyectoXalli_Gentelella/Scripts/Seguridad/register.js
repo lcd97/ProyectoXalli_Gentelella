@@ -139,10 +139,12 @@ $("#cedula").blur(function () {
 
 //GENERAR EL NOMBRE DE USUARIO
 $("#nombre").blur(function () {
-    var valueName = ($(this).val()).substring(0, 5);//AGARRA EL NOMBRE
 
-    generarUserName(valueName);
-    generarPass();
+    if ($(this).val() != "") {
+        var valueName = ($(this).val()).substring(0, 5);//AGARRA EL NOMBRE
+
+        generarUserName(valueName);
+    }
 });
 
 //FUNCION PARA GENERAR EL USERNAME DEL COLABORADOR
@@ -162,7 +164,7 @@ function generarUserName(valueName) {
             }
 
             $("#username").val(userName);
-
+            generarPass();
         }
     });
 }

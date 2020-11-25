@@ -1,5 +1,6 @@
 ﻿//FUNCION PARA CARGAR LA MODAL
 function CargarParcial(url) { //RECIBE LA URL DE LA UBICACION DEL METODO
+
     $("#small-modal").modal("show"); //MUESTRA LA MODAL
     $("#VistaParcial").html("");//LIMPIA LA MODAL POR DATOS PRECARGADOS
 

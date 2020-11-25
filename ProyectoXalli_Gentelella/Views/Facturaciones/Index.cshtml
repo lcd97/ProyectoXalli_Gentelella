@@ -57,7 +57,7 @@
 
                                 <div class="col-md-3 col-sm-3 col-xs-6">
                                     <label>Identificación</label>
-                                    <input id="identificacion" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" style="text-transform:uppercase!important;">
+                                    <input id="identificacion" class="form-control" type="text" maxlength="16" placeholder="Incluya guiones si es necesario" autocomplete="off" style="text-transform:uppercase!important;">
                                 </div>
 
                                 <div class="col-md-2 col-sm-2 col-xs-6" style="margin-top: 25px !important;">
@@ -80,12 +80,9 @@
                             </div>
                             <br />
                             <div class="table-responsive">
-                                <table class="table table-hover jambo_table bulk_action">
+                                <table class="table table-hover jambo_table" id="tableInicio">
                                     <thead>
-                                        <tr class="headings">
-                                            <th id="celdaChk" style="display:none">
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>
+                                        <tr class="headings" id="flatButton">                                           
                                             <th class="column-title">No. Orden</th>
                                             <th class="column-title">Fecha Ordenada</th>
                                             <th class="column-title">Cliente</th>

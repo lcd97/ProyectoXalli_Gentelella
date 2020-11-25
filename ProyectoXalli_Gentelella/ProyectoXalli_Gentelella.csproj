@@ -589,6 +589,7 @@
     <Content Include="Views\Monedas\Index.cshtml" />
     <Content Include="Views\Monedas\Create.cshtml" />
     <Content Include="Views\Monedas\Edit.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

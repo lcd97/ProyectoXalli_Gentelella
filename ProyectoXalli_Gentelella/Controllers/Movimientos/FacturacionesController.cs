@@ -22,9 +22,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             int dia = DateTime.Now.Day;
             int mes = DateTime.Now.Month;
             int anio = DateTime.Now.Year;
-            var cambio = 36.97;
+            //var cambio = 0;
 
-            //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
         }
@@ -171,7 +171,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// CARGA LA VISTA PARA AGREGAR UN CLIENTE DIPLOMATICO
         /// </summary>
         /// <returns></returns>
-        public ActionResult ClienteDiplomatico() {
+        public ActionResult ClienteDiplomatico(int clienteId) {
+            ViewBag.Cliente = clienteId;
+
             return View();
         }
 

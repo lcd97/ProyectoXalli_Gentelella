@@ -2,81 +2,57 @@
 @model LoginViewModel
 @{
     ViewBag.Title = "Iniciar sesión";
-    Layout = null;
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | </title>
-    <link rel="shortcut icon" type="image/x-icon" href="~/logoXalli.ico" />
+<style>
+    .login_content h1::before {
+        background: none !important;
+    }
 
+    .login_content h1::after {
+        background: none !important;
+    }
 
-    @Styles.Render("~/Content/css")
-    @*@Scripts.Render("~/bundles/modernizr")*@
-    @*<!-- Bootstrap -->
-        <link href="~/Content/bootstrap.css" rel="stylesheet">
-        <!-- Font Awesome -->
-        <link href="~/Content/font-awesome.min.css" rel="stylesheet">*@
-    <!-- Animate.css -->
-    <link href="~/Content/animate.css" rel="stylesheet">
-    <!-- Custom Theme Style -->
-    @*<link href="~/Content/custom.min.css" rel="stylesheet">*@
+    .input-group-btn .btn {
+        margin-bottom: 50px !important;
+    }
+</style>
 
-    <style>
-        .login_content h1::before {
-            background: none !important;
-        }
+<div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
 
-        .login_content h1::after {
-            background: none !important;
-        }
-
-        .input-group-btn .btn {
-            margin-bottom: 50px !important;
-        }
-    </style>
-</head>
-<body class="login">
-    <div>
-        <a class="hiddenanchor" id="signup"></a>
-        <a class="hiddenanchor" id="signin"></a>
-
-        <div class="login_wrapper">
-            <div class="animate form login_form">
-                <div class="login_content">
-                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <div class="login_content">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div>
                         <img class="img-responsive" src="~/images/BlackLogo.png" />
                         <br />
                         <p style="font-style:italic !important; font-size:16px !important;">@ViewBag.mensaje</p>
                         <br />
 
-                        <div>
+                        <div class="form-group">
                             @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                             @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Nombre de Usuario" })
                         </div>
 
-                        <div class="input-group form-group">
+                        <div class="form-group">
                             @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Contraseña", @id = "txtPassword" })
-                            <span class="input-group-btn">
-                                <button onclick="mostrarPassword()" type="button" class="btn btn-default"><span class="icon fa fa-eye"></span></button>
-                            </span>
+                            <div class="input-group">
+                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Contraseña", @id = "txtPassword" })
+                                <span class="input-group-btn">
+                                    <button onclick="mostrarPassword()" type="button" class="btn btn-default"><span class="icon fa fa-eye"></span></button>
+                                </span>
+                            </div>
                         </div>
 
                         <div>
                             <input type="submit" value="Iniciar sesión" class="btn btn-default" />
-                            @*@Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")*@
                         </div>
                         <div>
                             @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
@@ -94,22 +70,14 @@
                             </div>
                         </div>
                     </div>
-                    }
-                </div>
+                }
             </div>
         </div>
     </div>
+</div>
 
+@section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
-    <!-- jQuery -->
-    <script src="~/Scripts/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <!-- FastClick -->
-    <script src="~/Scripts/fastclick.js"></script>
-    <!-- Custom Theme Scripts -->
-    <script src="~/Scripts/custom.js"></script>
-
     <script>
         function mostrarPassword() {
             var cambio = document.getElementById("txtPassword");
@@ -122,6 +90,4 @@
             }
         }
     </script>
-
-</body>
-</html>
+}

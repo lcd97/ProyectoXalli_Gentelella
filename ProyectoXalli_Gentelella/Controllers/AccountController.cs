@@ -19,7 +19,6 @@ namespace ProyectoXalli_Gentelella.Controllers {
         private ApplicationDbContext context = new ApplicationDbContext();
 
         private DBControl db = new DBControl();
-        private bool completado = false;
         private string mensaje = "";
 
         public AccountController() {
@@ -180,9 +179,11 @@ namespace ProyectoXalli_Gentelella.Controllers {
             //VALIDAR QUE LA CUENTA NO ESTE BLOQUEDA
             var userLogin = UserManager.Find(model.Username, model.Password);
 
-            if (!userLogin.LockoutEnabled) {
-                ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
-                return View(model);
+            if (userLogin != null) {
+                if (!userLogin.LockoutEnabled) {
+                    ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                    return View(model);
+                }
             }
 
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta

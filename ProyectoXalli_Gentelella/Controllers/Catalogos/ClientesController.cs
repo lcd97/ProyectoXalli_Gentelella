@@ -303,7 +303,25 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             Email = c.EmailCliente,
                             RUC = obj.RUC
                         }).FirstOrDefault();
-            
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult BuscarClienteD(int ClienteId) {
+            var dato = (from obj in db.Datos
+                        join c in db.Clientes on obj.Id equals c.DatoId
+                        where c.Id == ClienteId
+                        select new {
+                            Cedula = obj.Cedula != null ? obj.Cedula : c.PasaporteCliente,
+                            TipoDoc = obj.Cedula != null ? 1 : 2,
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
+                            Telefono = c.TelefonoCliente,
+                            Email = c.EmailCliente,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
             return Json(dato, JsonRequestBehavior.AllowGet);
         }
 

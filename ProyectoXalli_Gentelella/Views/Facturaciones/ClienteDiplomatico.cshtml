@@ -7,7 +7,6 @@
     <div class="x_content">
         <div data-parsley-validate class="form-horizontal form-label-left">
 
-
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Tipo de documento", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
@@ -20,7 +19,7 @@
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Número", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="numeroD" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" disabled style="text-transform:uppercase">
+                    <input id="numeroD" class="form-control" type="text" autocomplete="off" disabled style="text-transform:uppercase" val="@ViewBag.Cliente">
                 </div>
             </div>
 
@@ -57,7 +56,7 @@
             <div class="form-group">
                 <div class="ln_solid"></div>
 
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
                     @*<a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>*@
                     <button type="button" class="btn btn-success" onclick="guardarDiplomatico()">Guardar</button>
                 </div>
@@ -67,6 +66,50 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $(".close").remove();
+
+        //OBTENER PARA VER SI HAY DATOS DE CLIENTE CLIENTE
+        var cliente = $("#numeroD").attr("val");
+
+        //SI ES DIFERENTE A VACIO
+        if (cliente != 0) {
+            $.ajax({
+                type: "GET",
+                url: "/Clientes/BuscarClienteD/",
+                data: {
+                    ClienteId: cliente
+                },
+                success: function (data) {
+                    if (data != null) {
+                        var ruc = data.RUC != null ? data.RUC : "";
+                        var telefono = data.Telefono != null ? data.Telefono : "";
+
+                        if (data.TipoDoc == 1) {
+                            //LIMPIAR LOS INPUTS Y SELECT
+                            $("#documentoD").val("1");
+                            $('#documentoD').trigger('change'); // Notify any JS components that the value changed
+                        } else {
+                            //LIMPIAR LOS INPUTS Y SELECT
+                            $("#documentoD").val("2");
+                            $('#documentoD').trigger('change'); // Notify any JS components that the value changed
+                        }
+
+                        $("#numeroD").val(data.Cedula);
+                        $("#nombreD").val(data.Nombre);
+                        $("#nombreD").val(data.Nombre);
+                        $("#apellidoD").val(data.Apellido);
+                        $("#rucD").val(ruc);
+                        $("#emailD").val(data.Email);
+                        $("#telefonoD").val(telefono);
+
+                        $("#documentoD").attr("disabled", true);
+                    }
+                }
+            });
+        }
+    });
+
     //INICIALIZAR EL SELECT2
     $('.js-example-basic-single').select2({
         //MODIFICAR LAS FRASES DEFAULT DE SELECT2
