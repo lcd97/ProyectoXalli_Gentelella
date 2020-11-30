@@ -39,7 +39,6 @@ function tablaVacio() {
     }
 }
 
-
 function tablaPago() {
     var tbody = $("#tablePagos #bodyPagar");//OBTENEMOS EL CONTENIDO DE LA TABLA
     //SI NO HAY DATA
@@ -508,8 +507,8 @@ function cambiarTipo(clienteId) {
 function CalcularCambios(subtotalOrd, IVA, Total) {
     var dolares = $("#cambio").val();
 
-    var subCord = subtotalOrd * dolares;
-    var ivaCord = IVA * dolares;
+    //var subCord = subtotalOrd * dolares;
+    //var ivaCord = IVA * dolares;
     var totalCord = Total * dolares;
 
     //PONER TOTALES AL OTRO LADO DEL PAGO
@@ -519,10 +518,10 @@ function CalcularCambios(subtotalOrd, IVA, Total) {
     $("#propDol").html("$ 0");
     $("#totalDol").html("$ " + parseFloat(Total).toFixed(2));
 
-    $("#subCord").html("C$ " + subCord.toFixed(2));
-    $("#ivaCord").html("C$ " + ivaCord.toFixed(2));
-    $("#descCord").html("C$ 0");
-    $("#propCord").html("C$ 0");
+    //$("#subCord").html("C$ " + subCord.toFixed(2));
+    //$("#ivaCord").html("C$ " + ivaCord.toFixed(2));
+    //$("#descCord").html("C$ 0");
+    //$("#propCord").html("C$ 0");
     $("#totalCord").html("C$ " + totalCord.toFixed(2));
 }
 
@@ -592,20 +591,22 @@ function agregarVal() {
 
 //FUNCION PARA CALCULAR EL TOTAL DE PAGOS (FOOTER)
 function calcularPagos() {
-    var stCord = parseFloat($("#subCord").html().split("C$ ")[1]);
+    var dolares = $("#cambio").val();//TIPO DE CAMBIO DOLAR
+
+    //var stCord = parseFloat($("#subCord").html().split("C$ ")[1]);
     var stDol = parseFloat($("#subDol").html().split("$ ")[1]);
     var ivaDol = parseFloat($("#ivaDol").html().split("$ ")[1]);
-    var ivaCord = parseFloat($("#ivaCord").html().split("C$ ")[1]);
-    var propCord = parseFloat($("#propCord").html().split("$ ")[1]);
+    //var ivaCord = parseFloat($("#ivaCord").html().split("C$ ")[1]);
+    //var propCord = parseFloat($("#propCord").html().split("$ ")[1]);
     var propDol = parseFloat($("#propDol").html().split("$ ")[1]);
-    var descCord = parseFloat($("#descCord").html().split("$ ")[1]);
+    //var descCord = parseFloat($("#descCord").html().split("$ ")[1]);
     var descDol = parseFloat($("#descDol").html().split("$ ")[1]);
 
-    var totalCord = ((stCord + ivaCord) - descCord) + propCord;
     var totalDol = ((stDol + ivaDol) - descDol) + propDol;
+    var totalCord = totalDol.toFixed(2) * parseFloat(dolares);
 
-    $("#totalCord").html("C$ " + formatoPrecio(totalCord.toString()));
-    $("#totalDol").html("$ " + formatoPrecio(totalDol.toString()));
+    $("#totalCord").html("C$ " + totalCord.toFixed(2));
+    $("#totalDol").html("$ " + totalDol.toFixed(2));
 }
 
 //FUNCION PARA CONVERTIR DE DESCUENTO
@@ -668,7 +669,7 @@ function validado() {
     var replacePagar = parseFloat(pagar.replace(/,/g, ""));
     var replaceRecibido = parseFloat(recibido.replace(/,/g, ""));
 
-    var entregar = replaceRecibido - replacePagar;
+    var entregar = replacePagar;
 
     //OBTENGO EL METODO DE PAGO SELECCIONADO
     var metPago = $("#metPago").find("option:selected").text();
@@ -685,12 +686,14 @@ function validado() {
             if (pagar == "" || recibido == "") {
                 Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
             } else {
+                entregar = replaceRecibido.toFixed(2) - replacePagar.toFixed(2);
+
                 agregar = '<tr class="even pointer">' +
                     '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
                     '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
-                    '<td class="" >' + digitoMoneda + pagar + '</td>' +
-                    '<td class="" >' + digitoMoneda + recibido + '</td>' +
-                    '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(pagar).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(recibido).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(entregar).toFixed(2) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
                     '</tr>';
@@ -704,9 +707,9 @@ function validado() {
                 agregar = '<tr class="even pointer">' +
                     '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
                     '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
-                    '<td class="" >' + digitoMoneda + pagar.toString() + '</td>' +
-                    '<td class="" >' + digitoMoneda + recibido.toString() + '</td>' +
-                    '<td class="" >' + digitoMoneda + formatoPrecio(entregar.toString()) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(pagar).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(recibido).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(entregar).toFixed(2) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
                     '</tr>';
@@ -735,11 +738,9 @@ function calcularPagosFact() {
         //SI EL PAGO FUE EN CORDOBAS
         if (row.eq(1).html().toUpperCase() == "CÓRDOBAS") {
             //OBTENER EL VALOR EN CORDOBAS
-            res = parseFloat(row.eq(2).html().split("C$ ")[1].replace(/,/g, "")).toFixed(2);//QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
+            res = parseFloat(row.eq(2).html().split("C$ ")[1].replace(/,/g, ""));//QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
 
-            totalCord += res;//SUMAR LOS CORDOBAS   
-
-            alert(typeof(res));
+            totalCord += res.toFixed(2);//SUMAR LOS CORDOBAS   
 
             //CONVERSION DE CORDOBAS A DOLARES
             var convDol = parseFloat(parseFloat(res) / dolares).toFixed(2);
@@ -748,10 +749,8 @@ function calcularPagosFact() {
 
         } else {//SI EL PAGO ES EN DOLARES
             //OBTENER EL VALOR EN DOLARES
-            res = parseFloat(row.eq(2).html().split("$ ")[1].replace(/,/g, "")).toFixed(2);
-            totalDol += res;//SUMAR LOS DOLARES
-
-            alert(typeof (res));
+            res = parseFloat(row.eq(2).html().split("$ ")[1].replace(/,/g, ""));
+            totalDol += res.toFixed(2);//SUMAR LOS DOLARES
 
             //CONVERSION DE DOLARES A CORDOBAS
             var convCord = parseFloat((res) * dolares).toFixed(2);

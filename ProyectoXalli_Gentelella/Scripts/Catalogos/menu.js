@@ -62,21 +62,69 @@ function comprobar() {
     });
 }//FIN FUNCTION
 
-//FUNCION VALIDA QUE NO EXISTAN CAMPOS VACIOS
 function validar(nuevo) {
     var a = $("#platillo").val();
     var img = $("#file")[0].files[0];
     var code = $("#codigoMenu").val();
     var precio = $("#precio").val();
+    var time = $("#tiempo").val();
     var ingredients = $("#ingredientes").val();
 
-    //VALIDACIONES SHAMPOO
-    if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
-        editMenuItem();//METODO PARA EDITAR UN ELEMENTO
+    //SI ES VERDADERO
+    if (nuevo == true) {
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+            if (img != null) {
+                saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+            } else {
+                Alert("Error", "Adjunte una imagen", "error");
+            }//FIN VALIDACION IMAGEN
+        } else {
+            Alert("Error", "Campos vacios", "error");
+        }//FIN IF-ELSE VALIDACIONES
     } else {
-        Alert("Error", "Campos vacios", "error");
-    }//FIN VALIDACIONES IF-ELSE
+        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+            editMenuItem();//METODO PARA EDITAR UN ELEMENTO
+        } else {
+            Alert("Error", "Campos vacios", "error");
+        }//FIN VALIDACIONES IF-ELSE
+    }//FIN IF-ELSE NUEVO
 }//FIN FUNCTION
+
+//FUNCION PARA ALMACENAR PLATILLO DEL MENU
+function saveMenuItem() {
+    $("#filtro").removeAttr("disabled");//HABILITAR EL INPUT FILTRAR
+
+    //SE CREA UN OBJETO DE LA CLASE FORMDATA
+    var formData = new FormData();
+    var a = $("#platillo").val();
+
+    //USANDO EL METODO APPEND(CLAVE, VALOR) SE AGREGAN LOS PARAMETROS A ENVIAR
+    formData.append("urlImage", $("#file")[0].files[0]);
+    formData.append("codigoMenu", $("#codigoMenu").val());
+    //ASIGNAR DESCRIPCION DE MENU CON LA PRIMERA LETRA EN MAYUSCULA
+    formData.append("descripcionMenu", a.charAt(0).toUpperCase() + a.slice(1).toLowerCase());
+    formData.append("precio", $("#precio").val());
+    formData.append("categoriaId", $("#categoria").val());
+    formData.append("tiempo", $("#tiempo").val());
+    formData.append("ingredientes", $("#ingredientes").val());
+
+    $.ajax({
+        type: "POST",
+        url: "/Menus/Create/",
+        data: formData, //SE ENVIA TODO EL OBJETO FORMDATA CON LOS PARAMETROS EN EL APPEND ,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.success === true) {
+                $("#small-modal").modal("hide"); //CERRAR MODAL
+                AlertTimer("Completado", data.message, "success");
+                agregarItem(data.Id);//AGREGAR EL ELEMENTO CREADO
+            } else {
+                Alert("Error", data.message, "error");//ALMACENADO CORRECTAMENTE
+            }
+        }
+    });
+}
 
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU
 function editMenuItem() {

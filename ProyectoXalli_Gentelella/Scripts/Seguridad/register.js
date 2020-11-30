@@ -99,7 +99,7 @@ $("#cedula").mask("A00-CDEF00-0000B", {
         'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
         'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
         'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
-        'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'F': { pattern: /[0-9]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
     }
 });
 
