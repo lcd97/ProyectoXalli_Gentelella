@@ -72,7 +72,7 @@ $("#inss").mask("0000000-0");
 $("#telefono").mask("0000-0000");
 
 //MASCARA PARA EL NUMERO RUC
-$("#ruc").mask("A00-CDEF00-0000B", {
+$("#ruc").mask("A00CDEF000000B", {
     translation: {
         'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
         'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
@@ -196,7 +196,7 @@ function crearAcceso() {
     var nombres = $("#nombre").val(), apellidos = $("#apellido").val(), cedula = $("#cedula").val().toUpperCase(), inss = $("#inss").val(),
         ruc = $("#ruc").val().toUpperCase(), hentrada = $("#entrada").val(), hsalida = $("#salida").val();
 
-    if (validado() == true) {
+    if (validarRol() == true) {
         $.ajax({
             type: "POST",
             url: "/Meseros/Create",
@@ -260,4 +260,11 @@ function Acceso(meseroId) {
     } else {
         Alert("Error", "No se crearon las credenciales. Intentelo de nuevo", "error");
     }
+}
+
+function validarRol() {
+    if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#entrada").val() != "" && $("#salida").val() != "" && $("#cedula").val() != "" && $("#inss").val() && $("#role").val() !="") {
+        return true;
+    } else
+        return false;
 }

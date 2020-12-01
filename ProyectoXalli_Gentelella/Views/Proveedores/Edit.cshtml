@@ -207,6 +207,19 @@
                     //AGREGO LA CLASE ACTIVO AL BOTON SELECCIONADO
                     $("#local").toggleClass("active");
                     $("#comercio").removeClass("active");
+
+                    //MASCARA PARA EL NUMERO RUC
+                    $("#ruc").mask("A00CDEF000000B", {
+                        translation: {
+                            'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                            'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                            'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                            'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                            'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                            'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+                        }
+                    });
+
                 } else {
                     $("#nombre").val(data.NombreComercial);
                     $("#nombre").attr("disabled", true);

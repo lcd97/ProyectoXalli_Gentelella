@@ -22,9 +22,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             int dia = DateTime.Now.Day;
             int mes = DateTime.Now.Month;
             int anio = DateTime.Now.Year;
-            //var cambio = 0;
+            var cambio = 34.94;
 
-            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+            //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
         }
@@ -45,7 +45,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
         // GET: Facturaciones
-        public ActionResult Index() {
+        public ActionResult Index(string mensaje="") {
+            ViewBag.Message = mensaje;//MENSAJE DE RECARGO
+
             ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
             ViewBag.MonedaId = new SelectList(db.Monedas, "Id", "DescripcionMoneda");
 

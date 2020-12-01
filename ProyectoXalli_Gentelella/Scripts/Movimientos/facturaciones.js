@@ -28,6 +28,14 @@
     tablaVacio();
     tablaPago();
     metodoPagoCB();
+
+    var mensaje = $("#mensaje").attr("value");
+
+    if (mensaje != "") {
+        AlertTimer("Completado", mensaje, "success");
+    }
+
+    window.history.pushState('page2', 'Title', '/Facturaciones');
 });
 
 function tablaVacio() {
@@ -53,80 +61,87 @@ function guardarPago() {
     /*List<int> OrdenesIds, int ClienteId, int NoFactura, double FechaPago, bool Diplomatico, int DescuentoPago,
     double Propina, double Cambio, int MonedaPropina, int EvidenciaId, string DetallePago*/
 
-    //OBTENER LOS PARAMETROS
-    var ordenesIds = $("#dataId").attr("val");//LISTA DE ORDENES IDS
-    var clienteId = $("#nombCliente").attr("val");//CLIENTE ID
-    var noFactura = ($("#factNo").html()).substr(12);//NUMERO DE FACTURA
-    var fechaPago = moment().locale('es').format('L');
-    var diplomatico = $("#tipoPersona").html() == "true" ? true : false;//ES DIPLOMATICO
-    var descuento = ($("#txtDesc").attr("val")) != undefined ? ($("#txtDesc").attr("val")) : 0;//PORCENTAJE DE DESCUENTO
-    var propina = 0;//AGARRAR PROPINA
+    var pagoDol = parseFloat($("#footDol").html().split("$ ")[1]);
+    var pagoCord = parseFloat($("#footCord").html().split("C$ ")[1]);
 
-    var seleccionar = $("#propina").attr("name");//SI LA PROPINA FUE EN DOL O CORD
+    var calcDol = parseFloat($("#totalDol").html().split("$ ")[1]);
+    var calcCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
 
-    //SI LA PROPINA LA INGRESARON EN DOLARES
-    if (seleccionar == "propDol") {
-        propina = $("#propDol").html().split("$ ")[1];//AGARRAR LA PROPINA EN DOLARES
-    } else {//SI LA PROPINA LA INGRESARON EN DOLARES
-        propina = $("#propCord").html().split("C$ ")[1];//AGARRAR LA PROPINA EN CORDOBAS
-    }
+    if ((pagoDol == 0 || pagoDol != calcDol) && (pagoCord == 0 || pagoCord != calcCord)) {
+        Alert("Error", "Complete correctamente la forma de pago de la factura", "error");
+    } else {
+        //OBTENER LOS PARAMETROS
+        var ordenesIds = $("#dataId").attr("val");//LISTA DE ORDENES IDS
+        var clienteId = $("#nombCliente").attr("val");//CLIENTE ID
+        var noFactura = ($("#factNo").html()).substr(12);//NUMERO DE FACTURA
+        var fechaPago = moment().locale('es').format('L');
+        var diplomatico = $("#tipoPersona").html() == "true" ? true : false;//ES DIPLOMATICO
+        var descuento = ($("#txtDesc").attr("val")) != undefined ? ($("#txtDesc").attr("val")) : 0;//PORCENTAJE DE DESCUENTO
+        var propina = $("#propDol").html() == "" ? 0 : $("#propDol").html().split("$ ")[1];
 
-    var tipoCambio = $("#cambio").val();//TIPO DE CAMBIO
-    var monedaPropina = $("#monedaPropina").val();//TIPO DE MONEDA DE LA PROPINA
-    var imagen = $("#carnet").attr("val");//AGARRA EL ID DE LA EVIDENCIA
+        //var seleccionar = $("#propina").attr("name");//SI LA PROPINA FUE EN DOL O CORD
 
-    //RECORRER LA TABLA DE PAGO
-    var detallePago = new Array();
+        ////SI LA PROPINA LA INGRESARON EN DOLARES
+        //if (seleccionar == "propDol") {
+        //    propina = $("#propDol").html().split("$ ")[1];//AGARRAR LA PROPINA EN DOLARES
+        //} else {//SI LA PROPINA LA INGRESARON EN DOLARES
+        //    propina = $("#propCord").html().split("C$ ")[1];//AGARRAR LA PROPINA EN CORDOBAS
+        //}
 
-    $("#bodyPagar tr").each(function () {
+        var tipoCambio = $("#cambio").val();//TIPO DE CAMBIO
+        var monedaPropina = $("#monedaPropina").val();//TIPO DE MONEDA DE LA PROPINA
+        var imagen = $("#carnet").attr("val");//AGARRA EL ID DE LA EVIDENCIA
 
-        var row = $(this);
-        var item = {};
+        //RECORRER LA TABLA DE PAGO
+        var detallePago = new Array();
 
-        item["Id"] = 0;
+        $("#bodyPagar tr").each(function () {
 
-        var moneda = row.find("td").eq(1).html();
-        var pagar = row.find("td").eq(2).html();
-        var recibido = row.find("td").eq(3).html();
+            var row = $(this);
+            var item = {};
 
-        if (moneda == "CÓRDOBAS") {
-            item["CantidadPagar"] = pagar.split("C$ ")[1];
-            item["MontoRecibido"] = recibido.split("C$ ")[1];
-        } else {
-            item["CantidadPagar"] = pagar.split("$ ")[1];
-            item["MontoRecibido"] = recibido.split("$ ")[1];
-        }
+            item["Id"] = 0;
 
-        item["TipoPagoId"] = row.find("td").eq(0).attr("val");
-        item["PagoId"] = 0;
-        item["MonedaId"] = row.find("td").eq(1).attr("val");
+            var moneda = row.find("td").eq(1).html();
+            var pagar = row.find("td").eq(2).html();
+            var recibido = row.find("td").eq(3).html();
 
-        detallePago.push(item);
-    });
-
-    //alert("ordenes id: " + ordenesIds + " clienteId " + clienteId + " NoFact " + noFactura + " fechaPago " + fechaPago + " diplomatico " + diplomatico + " descuento " + descuento + " propina " + propina);
-    //alert("tipo cambio " + tipoCambio + " monedapropina " + monedaPropina + " imagen " + imagen);
-    //alert(JSON.stringify(detallePago));
-
-    $.ajax({
-        type: "POST",
-        url: "/Facturaciones/Create/",
-        data: {
-            OrdenesIds: ordenesIds, ClienteId: clienteId, NoFactura: noFactura, FechaPago: fechaPago, Diplomatico: diplomatico, DescuentoPago: descuento,
-            Propina: propina, Cambio: tipoCambio, MonedaPropina: monedaPropina, EvidenciaId: imagen, DetallePago: JSON.stringify(detallePago)
-        },
-        success: function (data) {
-            if (data.success) {
-                AlertTimer("Completado", data.message, "success");
-
-                //window.location.reload();
+            if (moneda == "CÓRDOBAS") {
+                item["CantidadPagar"] = pagar.split("C$ ")[1];
+                item["MontoRecibido"] = recibido.split("C$ ")[1];
             } else {
-                Alert("Error", data.message, "error");
+                item["CantidadPagar"] = pagar.split("$ ")[1];
+                item["MontoRecibido"] = recibido.split("$ ")[1];
             }
-        }
-    });
 
+            item["TipoPagoId"] = row.find("td").eq(0).attr("val");
+            item["PagoId"] = 0;
+            item["MonedaId"] = row.find("td").eq(1).attr("val");
 
+            detallePago.push(item);
+        });
+
+        //alert("ordenes id: " + ordenesIds + " clienteId " + clienteId + " NoFact " + noFactura + " fechaPago " + fechaPago + " diplomatico " + diplomatico + " descuento " + descuento + " propina " + propina);
+        //alert("tipo cambio " + tipoCambio + " monedapropina " + monedaPropina + " imagen " + imagen);
+        //alert(JSON.stringify(detallePago));
+
+        $.ajax({
+            type: "POST",
+            url: "/Facturaciones/Create/",
+            data: {
+                OrdenesIds: ordenesIds, ClienteId: clienteId, NoFactura: noFactura, FechaPago: fechaPago, Diplomatico: diplomatico, DescuentoPago: descuento,
+                Propina: propina, Cambio: tipoCambio, MonedaPropina: monedaPropina, EvidenciaId: imagen, DetallePago: JSON.stringify(detallePago)
+            },
+            success: function (data) {
+                if (data.success) {
+                    var url = "/Facturaciones/Index/?mensaje=" + data.message;
+                    window.location.href = url;
+                } else {
+                    Alert("Error", data.message, "error");
+                }
+            }
+        });
+    }
 }
 
 //FUNCION PARA AGREGAR LA FECHA Y NUMERO DE FACTURA
@@ -636,8 +651,13 @@ function agregarPago() {
         validado();
     } else if (moneda.toUpperCase() == "CÓRDOBAS") {
         var totalCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
+        var totalC = $("#totalCord").html();
 
-        if (totalCord == totalPagCord) {
+        var excedeC = parseFloat(pagar) + parseFloat(totalPagCord);
+
+        if (excedeC > totalC) {
+            Alert("Error", "El total a pagar excede el total", "error");
+        } else if (totalCord == totalPagCord) {
             Alert("Error", "El pago total esta completo", "error");
         } else if (pagar > totalCord) {
             Alert("Error", "El monto a pagar no debe ser mayor que el total", "error");
@@ -646,7 +666,13 @@ function agregarPago() {
         }
     } else {
         var totalDol = parseFloat($("#totalDol").html().split("$ ")[1]);
+        var totalD = $("#totalCord").html();
 
+        var excedeD = parseFloat(pagar) + parseFloat(totalPagCord);
+
+        if (excedeD > totalD) {
+            Alert("Error", "El total a pagar excede el total", "error");
+        }
         if (totalDol == totalPagDol) {
             Alert("Error", "El pago total esta completo", "error");
         } else if (pagar > totalDol) {
@@ -723,12 +749,13 @@ function validado() {
         $("#pagar").val("");
 
         calcularPagosFact();
+        tablaPago();
     }
 }
 
 //CALCULO LOS TOTALES DE PAGO
 function calcularPagosFact() {
-    var totalDol = 0, totalCord = 0, res = 0;
+    var totalDol = 0.0, totalCord = 0.0, res = 0.0;
     var dolares = $("#cambio").val();//OBTENGO TIPO DE CAMBIO
 
     //RECORRO CADA UNA DE LAS FILAS
@@ -738,24 +765,28 @@ function calcularPagosFact() {
         //SI EL PAGO FUE EN CORDOBAS
         if (row.eq(1).html().toUpperCase() == "CÓRDOBAS") {
             //OBTENER EL VALOR EN CORDOBAS
-            res = parseFloat(row.eq(2).html().split("C$ ")[1].replace(/,/g, ""));//QUITARLE LA COMA A LA VARIABLE PARA CALCULAR BIEN NUMERO CON , EJ 1,200
+            res = parseFloat(row.eq(2).html().split("C$ ")[1].replace(/,/g, ""));//
+            totalCord += res;//SUMAR LOS CORDOBAS   
 
-            totalCord += res.toFixed(2);//SUMAR LOS CORDOBAS   
+            //alert(typeof (res));
 
             //CONVERSION DE CORDOBAS A DOLARES
-            var convDol = parseFloat(parseFloat(res) / dolares).toFixed(2);
+            var convDol = parseFloat(parseFloat(res) / dolares);
             //SUMARLE EL TOTAL CONVERTIDO AL OTRO LADO
-            totalDol += parseFloat(convDol).toFixed(2);
+            totalDol += parseFloat(convDol);
 
         } else {//SI EL PAGO ES EN DOLARES
             //OBTENER EL VALOR EN DOLARES
             res = parseFloat(row.eq(2).html().split("$ ")[1].replace(/,/g, ""));
-            totalDol += res.toFixed(2);//SUMAR LOS DOLARES
+
+            totalDol += res;//SUMAR LOS DOLARES
+
+            //alert(typeof (res));
 
             //CONVERSION DE DOLARES A CORDOBAS
-            var convCord = parseFloat((res) * dolares).toFixed(2);
+            var convCord = parseFloat((res) * dolares);
             //SUMARLE EL TOTAL CONVERTIDO AL OTRO LADO
-            totalCord += parseFloat(convCord).toFixed(2);
+            totalCord += parseFloat(convCord);
         }
     });
 

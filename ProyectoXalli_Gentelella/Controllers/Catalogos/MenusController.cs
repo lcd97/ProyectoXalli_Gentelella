@@ -265,7 +265,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(bar, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Mesero, Bartender")]
         /// <summary>
         /// METODO GET PARA MOSTRAR LA VISTA DETAIL
         /// </summary>

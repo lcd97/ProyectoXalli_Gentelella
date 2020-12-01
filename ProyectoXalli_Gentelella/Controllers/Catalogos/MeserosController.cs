@@ -70,7 +70,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [HttpPost]
         public ActionResult Create(string Nombres, string Apellido, string Cedula, string INSS, string RUC, string HoraEntrada, string HoraSalida) {
 
-            var meseroId = 0;
+            var meseroId = -1;
 
             if (INSS.Length != 9) {
                 mensaje = "El número INSS debe ser de 8 dígitos";
