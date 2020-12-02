@@ -34,6 +34,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<Orden> Ordenes { get; set; }
         public virtual DbSet<DetalleDeOrden> DetallesDeOrden { get; set; }
+        public virtual DbSet<TipoDeOrden> TiposDeOrden { get; set; }
 
         //MODULO FACTURACION
         public virtual DbSet<Pago> Pagos { get; set; }
@@ -48,5 +49,7 @@ namespace ProyectoXalli_Gentelella.Models {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
+
+        //public System.Data.Entity.DbSet<ProyectoXalli_Gentelella.Models.TipoDeOrden> TipoDeOrden { get; set; }
     }
 }

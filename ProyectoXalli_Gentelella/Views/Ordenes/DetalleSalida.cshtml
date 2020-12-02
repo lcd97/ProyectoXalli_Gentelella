@@ -14,27 +14,9 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-12">
-                    <h2 id="existencia" style="text-align: center;margin-top: -10px;margin-bottom: 0px;"></h2>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <label>Cantidad</label>
-                    <input name="cantidadOrden" id="cantidadOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="2" autocomplete="off" value="1">
-                </div>
-
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <label>Precio</label>
-                    <input id="precioOrden" class="form-control" type="text" autocomplete="off" readonly prefix="$">
-                </div>
-            </div>
-
-            <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
-                    <label>Nota</label>
-                    <input id="notaOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <label>Cantidad</label>
+                    <input name="cantidadOrden" id="cantidadOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="2" autocomplete="off" style="text-align:center" value="1">
                 </div>
             </div>
 
@@ -52,7 +34,7 @@
 </div>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $("#notaOrden").focus();
     });
 

@@ -107,6 +107,7 @@ function saveMenuItem() {
     formData.append("categoriaId", $("#categoria").val());
     formData.append("tiempo", $("#tiempo").val());
     formData.append("ingredientes", $("#ingredientes").val());
+    formData.append("shot", $("#shot").is(":checked"));
 
     $.ajax({
         type: "POST",
@@ -144,6 +145,7 @@ function editMenuItem() {
     formData.append("ingredientes", $("#ingredientes").val());
     //TOMAR EL VALOR DEL SWITCHERY
     formData.append("estado", $("#activo").is(":checked"));
+    formData.append("shot", $("#shot").is(":checked"));
 
     //FUNCION AJAX
     $.ajax({

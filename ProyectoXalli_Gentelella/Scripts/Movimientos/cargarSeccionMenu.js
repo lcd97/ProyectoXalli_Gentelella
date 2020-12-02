@@ -91,6 +91,7 @@ function detallePedido(url, id) {
 
     CargarSmallParcial(url);
     cargarDetalle(id);
+    mostrarExistencia(id);
 }
 
 //CARGAR LOS DATOS DEL PLATILLO A LA MODAL
@@ -104,8 +105,27 @@ function cargarDetalle(id) {
             $("#platillo").attr("name", data.menu.PlatilloId);
         }//FIN SUCCESS
     });//FIN AJAX
+}//FIN FUNCTION
 
+//FUNCION PARA MOSTRAR LA EXISTENCIA
+function mostrarExistencia(id) {
+    $.ajax({
+        type: "GET",
+        url: "/Ordenes/existencia/",
+        data: { id },
+        success: function (data) {
+            var agregar = "";
+            if (data != -1) {
+                agregar = '<small val="' + data + '">Existencia: ' + data + '</small>';
+            } else {
+                agregar = '<small val="-1">Existencia: No inventariado</small>';
+            }
+
+            $("#existencia").html(agregar);
+        }
+    });
 }
+
 
 //FUNCION PARA CALCULAR EL TOTAL GENERAL DE LA TABLA
 function CalcularTotal() {

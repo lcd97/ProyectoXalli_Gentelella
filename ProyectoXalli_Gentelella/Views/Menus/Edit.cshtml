@@ -92,11 +92,17 @@
                             </label>
                         </div>
 
-                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group col-md-9 col-sm-9 col-xs-9">
                             @Html.Label("Producto", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
                             <select class="js-example-basic-single form-control" id="ingredientes" style="width:100%!important;" multiple></select>
                         </div>
 
+                        <div class="form-group col-md-3 col-sm-3 col-xs-3">
+                            @Html.Label("No es shot", htmlAttributes: new { @class = "", @id = "shotLabel" })
+                            <label>
+                                <input type="checkbox" class="js-switch shot" id="shot" onclick="CheckShot()" />
+                            </label>
+                        </div>
                     </div>
 
                 </div>
@@ -131,6 +137,13 @@
     //    comboBx();
     //});
 
+    //INICIALIZA LOS ELEMENTOS DE JQUERY A SWITCHERY
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+    //CREA LOS ELEMENTOS DE SWITCHERY
+    elems.forEach(function (html) {
+        var switchery = new Switchery(html, { secondaryColor: '#CE2727' });
+    });
 
     //INICIALIZAR EL SELECT2
     $('.js-example-basic-single').select2({
@@ -148,7 +161,7 @@
         }
     });
 
-    var elem, init;
+    var elem, elemShot;
 
     $(document).ready(function () {
         //INICIALIZARDOR DE MASCARA FORMATO PRECIO
@@ -187,6 +200,12 @@
                 if (data.menu.Estado) {
                     elem.click();
                 }
+
+                //ACTIVAR EL SWITCHERY
+                if (data.menu.shot) {
+                    elemShot.click();
+                }
+
                 $("#precio").val(formatoPrecio(data.menu.Precio));
                 $("#tiempo").val(data.menu.Tiempo);
                 //INSERTAR IMAGEN
@@ -209,8 +228,9 @@
         $("#finalizar").attr("onclick", "comprobar()");
 
         //INICIALIZAR EL CHECKBOX
-        elem = document.querySelector('.js-switch');
-        init = new Switchery(elem, { secondaryColor: '#CE2727' });
+        elem = document.querySelector('.activo');
+        elemShot = document.querySelector('.shot');
+        //init = new Switchery(elem, { secondaryColor: '#CE2727' });
 
         if (elem.checked) {
             $("#estadoMenu").html("Activo");
@@ -218,6 +238,18 @@
             $("#estadoMenu").html("Inactivo");
         }
     });
+
+
+    //CONFIRMACION DE ACTIVAR/DESACTIVAR
+    function CheckShot() {
+        //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
+        if (!elemShot.checked) {
+            $("#shotLabel").html("No es shot");
+
+        } else {
+            $("#shotLabel").html("Shot");
+        }//FIN IF CHKBOX
+    }//FIN FUNCION
 
     //CONFIRMACION DE ACTIVAR/DESACTIVAR
     function Check() {

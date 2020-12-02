@@ -1,25 +1,23 @@
-﻿using ProyectoXalli_Gentelella.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ProyectoXalli_Gentelella.Models;
 
-namespace ProyectoXalli_Gentelella.Controllers.Catalogos
-{
-    [Authorize]
-    public class TiposDeEntradaController : Controller
-    {
+namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+    public class TiposDeOrdenController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
         [Authorize(Roles = "Admin")]
-        // GET: TiposDeEntrada
-        public ActionResult Index() {   
+        // GET: TiposDeOrden
+        public ActionResult Index() {
             return View();
         }
 
@@ -28,42 +26,42 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         /// </summary>
         /// <returns></returns>
         public async Task<JsonResult> GetData() {
-            var tiposDeEntrada = await db.TiposDeEntrada.Where(c => c.EstadoTipoEntrada == true).ToListAsync();
+            var tiposDeOrden = await db.TiposDeOrden.Where(c => c.EstadoTipoOrden == true).ToListAsync();
 
-            return Json(new { data = tiposDeEntrada }, JsonRequestBehavior.AllowGet);
+            return Json(new { data = tiposDeOrden }, JsonRequestBehavior.AllowGet);
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: TiposDeEntrada/Details/5
+        // GET: TiposDeOrden/Details/5
         public async Task<ActionResult> Details(int? id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TipoDeEntrada tiposDeEntrada = await db.TiposDeEntrada.FindAsync(id);
-            if (tiposDeEntrada == null) {
+            TipoDeOrden tiposDeOrden = await db.TiposDeOrden.FindAsync(id);
+            if (tiposDeOrden == null) {
                 return HttpNotFound();
             }
-            return View(tiposDeEntrada);
+            return View(tiposDeOrden);
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: TiposDeEntrada/Create
+        // GET: TiposDeOrden/Create
         public ActionResult Create() {
             return View();
         }
 
-        // POST: TiposDeEntrada/Create
+        // POST: TiposDeOrden/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,CodigoTipoEntrada,DescripcionTipoEntrada,EstadoTipoEntrada")] TipoDeEntrada TipoDeEntrada) {
+        public async Task<ActionResult> Create([Bind(Include = "Id,CodigoTipoOrden,DescripcionTipoOrden,EstadoTipoOrden")] TipoDeOrden TipoDeOrden) {
             //BUSCAR QUE LA DESCRIPCION DE TIPO DE BODEGA NO EXISTA
-            TipoDeEntrada bod = db.TiposDeEntrada.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionTipoEntrada.ToUpper().Trim() == TipoDeEntrada.DescripcionTipoEntrada.ToUpper().Trim());
+            TipoDeOrden bod = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionTipoOrden.ToUpper().Trim() == TipoDeOrden.DescripcionTipoOrden.ToUpper().Trim());
 
             //SI LA BODEGA EXISTE CON ESA DESCRIPCION
             if (bod != null) {
-                ModelState.AddModelError("DescripcionTipoEntrada", "Utilice otro nombre");
+                ModelState.AddModelError("DescripcionTipoOrden", "Utilice otro nombre");
                 mensaje = "La descripción ya se encuentra registrada";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
             }
@@ -71,9 +69,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //ESTADO DE TIPO DE ENTRADA CUANDO SE CREA SIEMPRE ES TRUE
-                    TipoDeEntrada.EstadoTipoEntrada = true;
+                    TipoDeOrden.EstadoTipoOrden = true;
                     if (ModelState.IsValid) {
-                        db.TiposDeEntrada.Add(TipoDeEntrada);
+                        db.TiposDeOrden.Add(TipoDeOrden);
                         completado = await db.SaveChangesAsync() > 0 ? true : false;
                         mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
                     }
@@ -89,30 +87,30 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: TiposDeEntrada/Edit/5
+        // GET: TiposDeOrden/Edit/5
         public async Task<ActionResult> Edit(int? id) {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TipoDeEntrada TipoDeEntrada = await db.TiposDeEntrada.FindAsync(id);
-            if (TipoDeEntrada == null) {
+            TipoDeOrden TipoDeOrden = await db.TiposDeOrden.FindAsync(id);
+            if (TipoDeOrden == null) {
                 return HttpNotFound();
             }
-            return View(TipoDeEntrada);
+            return View(TipoDeOrden);
         }
 
-        // POST: TiposDeEntrada/Edit/5
+        // POST: TiposDeOrden/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,CodigoTipoEntrada,DescripcionTipoEntrada,EstadoTipoEntrada")] TipoDeEntrada TipoDeEntrada) {
+        public async Task<ActionResult> Edit([Bind(Include = "Id,CodigoTipoOrden,DescripcionTipoOrden,EstadoTipoOrden")] TipoDeOrden TipoDeOrden) {
             //BUSCAR QUE LA DESCRIPCION DE TIPO DE BODEGA NO EXISTA
-            TipoDeEntrada bod = db.TiposDeEntrada.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionTipoEntrada.ToUpper().Trim() == TipoDeEntrada.DescripcionTipoEntrada.ToUpper().Trim() && b.Id != TipoDeEntrada.Id);
+            TipoDeOrden bod = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionTipoOrden.ToUpper().Trim() == TipoDeOrden.DescripcionTipoOrden.ToUpper().Trim() && b.Id != TipoDeOrden.Id);
 
             //SI LA BODEGA EXISTE CON ESA DESCRIPCION
             if (bod != null) {
-                ModelState.AddModelError("DescripcionTipoEntrada", "Utilice otro nombre");
+                ModelState.AddModelError("DescripcionTipoOrden", "Utilice otro nombre");
                 mensaje = "La descripción ya se encuentra registrada";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
             }
@@ -120,7 +118,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     if (ModelState.IsValid) {
-                        db.Entry(TipoDeEntrada).State = EntityState.Modified;
+                        db.Entry(TipoDeOrden).State = EntityState.Modified;
                         completado = await db.SaveChangesAsync() > 0 ? true : false;
                         mensaje = completado ? "Modificado correctamente" : "Error al modificar";
                     }
@@ -142,7 +140,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         /// <returns></returns>
         public ActionResult SearchCode() {
             //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
-            var code = db.TiposDeEntrada.Max(x => x.CodigoTipoEntrada.Trim());
+            var code = db.TiposDeOrden.Max(x => x.CodigoTipoOrden.Trim());
             int valor;
             string num;
 
@@ -165,19 +163,19 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(num, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: TiposDeEntrada/Delete/5
+        // POST: TiposDeOrden/Delete/5
         [HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id) {
-            var TipoDeEntrada = db.TiposDeEntrada.Find(id);
+            var TipoDeOrden = db.TiposDeOrden.Find(id);
             //BUSCANDO QUE TIPO DE ENTRADA NO TENGA SALIDAS NI ENTRADAS REGISTRADAS CON SU ID
-            Entrada oEntrada = db.Entradas.DefaultIfEmpty(null).FirstOrDefault(p => p.TipoEntradaId == TipoDeEntrada.Id);
+            Orden oEntrada = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(p => p.TipoOrdenId == TipoDeOrden.Id);
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //SI EL TIPO DE ENTRADA NO TIENE ENTRADAS ASOCIADAS AL ID
                     if (oEntrada == null) {
-                        db.TiposDeEntrada.Remove(TipoDeEntrada);
+                        db.TiposDeOrden.Remove(TipoDeOrden);
                         completado = await db.SaveChangesAsync() > 0 ? true : false;
                         mensaje = completado ? "Eliminado correctamente" : "Error al eliminar";
                     } else {
@@ -192,13 +190,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             }//FIN USING
 
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
-        }
-
-        protected override void Dispose(bool disposing) {
-            if (disposing) {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

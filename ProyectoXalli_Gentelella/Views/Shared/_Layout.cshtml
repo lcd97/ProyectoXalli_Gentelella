@@ -96,7 +96,7 @@
                                     <a><i class="fa fa-truck"></i> Control de Insumos <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="@Url.Action("Index", "Entradas")">Entradas</a></li>
-                                        <li><a href="@Url.Action("Index", "Salidas")">Salidas</a></li>
+                                        <li><a href="@Url.Action("Salidas", "Ordenes")">Salidas</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -140,6 +140,7 @@
                                 <li>
                                     <a><i class="fa fa-list-alt"></i>Orden<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
+                                        <li><a href="@Url.Action("Index", "TiposDeOrden")">Tipos de Orden</a></li>
                                         <li><a href="@Url.Action("Index", "Meseros")">Colaboradores</a></li>
                                         <li><a href="@Url.Action("Index", "Clientes")">Clientes</a></li>
                                     </ul>

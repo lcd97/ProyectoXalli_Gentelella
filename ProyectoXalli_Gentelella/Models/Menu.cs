@@ -44,6 +44,10 @@ namespace ProyectoXalli_Gentelella.Models {
         [Display(Name = "Activo")]
         public bool EstadoMenu { get; set; }
 
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [Display(Name = "¿Es shot?")]
+        public bool shot { get; set; }
+
         //DEFINCION DE FK
         public int CategoriaMenuId { get; set; }
 

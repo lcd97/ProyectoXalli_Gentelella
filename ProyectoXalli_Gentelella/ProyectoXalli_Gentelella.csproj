@@ -221,6 +221,7 @@
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
     <Compile Include="Controllers\Catalogos\ProveedoresController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDeEntradaController.cs" />
+    <Compile Include="Controllers\Catalogos\TiposDeOrdenController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDePagoController.cs" />
     <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\TipoDeEntrada.cs" />
+    <Compile Include="Models\TipoDeOrden.cs" />
     <Compile Include="Models\TipoDePago.cs" />
     <Compile Include="Models\UnidadDeMedida.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -488,6 +490,7 @@
     <Content Include="Scripts\Movimientos\entradas.js" />
     <Content Include="Scripts\Movimientos\home.js" />
     <Content Include="Scripts\Movimientos\ordenes.js" />
+    <Content Include="Scripts\Movimientos\salidas.js" />
     <Content Include="Scripts\Movimientos\verComanda.js" />
     <Content Include="Scripts\Movimientos\verOrden.js" />
     <Content Include="Scripts\Operaciones\ventanas.js" />
@@ -590,6 +593,11 @@
     <Content Include="Views\Monedas\Create.cshtml" />
     <Content Include="Views\Monedas\Edit.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Ordenes\Salidas.cshtml" />
+    <Content Include="Views\TiposDeOrden\Create.cshtml" />
+    <Content Include="Views\TiposDeOrden\Edit.cshtml" />
+    <Content Include="Views\TiposDeOrden\Index.cshtml" />
+    <Content Include="Views\Ordenes\DetalleSalida.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

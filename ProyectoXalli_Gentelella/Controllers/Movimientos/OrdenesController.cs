@@ -4,11 +4,13 @@ using ProyectoXalli_Gentelella.Web_Sockets;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -22,6 +24,23 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         //CONEXION A LA BASE DE DATOS SEGURIDAD
         private ApplicationDbContext context = new ApplicationDbContext();
+
+        public ActionResult Salidas() {
+            return View();
+        }
+
+        public ActionResult categoryList() {
+            var data = (from obj in db.CategoriasMenu.ToList()
+                        join c in db.Bodegas.ToList() on obj.BodegaId equals c.Id
+                        where c.DescripcionBodega.ToUpper() == "BAR"
+                        select new {
+                            Id = obj.Id,
+                            Descripcion = obj.DescripcionCategoriaMenu
+                        }).ToList();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
 
         [Authorize(Roles = "Admin, Mesero")]
         // GET: Ordenes
@@ -114,21 +133,31 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
         /// <summary>
-        /// ALMACENAR UNA NUEVA ORDEN
+        /// MUESTRA LA VISTA DEL DETALLE DE ORDEN
         /// </summary>
-        /// <param name="Codigo"></param>
-        /// <param name="MeseroId"></param>
-        /// <param name="ClienteId"></param>
-        /// <param name="FechaOrden"></param>
-        /// <param name="DetalleOrden"></param>
         /// <returns></returns>
-        [HttpPost]
-        public ActionResult Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden) {
+        public ActionResult DetalleSalida() {
+            return View();
+        }
 
+        public ActionResult guardarSalida(int Codigo, int MeseroId, DateTime FechaOrden, string detalleOrden) {
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //DESERIALIZACION DE OBJETO DONDE ESTA EL DETALLE DE LA ORDEN
                     var DetalleOrden = JsonConvert.DeserializeObject<List<DetalleDeOrden>>(detalleOrden);
+                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.DescripcionTipoOrden.ToUpper() == "SALIDAS");
+
+                    //SI NO EXISTE EL TIPO DE ORDEN CREARLO
+                    if (tipoOrden == null) {
+                        tipoOrden = new TipoDeOrden();
+
+                        tipoOrden.CodigoTipoOrden = codigoOrden();
+                        tipoOrden.DescripcionTipoOrden = "Salidas";
+                        tipoOrden.EstadoTipoOrden = true;
+
+                        db.TiposDeOrden.Add(tipoOrden);
+                        db.SaveChanges();
+                    }
 
                     //SE CREA UN NUEVO OBJETO PARA ALMACENAR LA ORDEN(TABLA PADRE)
                     Orden orden = new Orden();
@@ -145,6 +174,139 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
                     orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
                     orden.MeseroId = MeseroId;
+                    orden.TipoOrdenId = tipoOrden.Id;
+
+                    //SE BUSCA EL CLIENTE DEFAULT
+                    var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
+
+                    //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
+                    if (buscarP == null) {
+                        datoDefault.Cedula = "000-000000-0000X";
+                        datoDefault.PNombre = "Default";
+                        datoDefault.PApellido = "User";
+
+                        db.Datos.Add(datoDefault);
+                        db.SaveChanges();
+
+                        clienteDefault.DatoId = datoDefault.Id;
+                        clienteDefault.EmailCliente = "defaultuser@xalli.com";
+                        clienteDefault.EstadoCliente = false;
+
+                        db.Clientes.Add(clienteDefault);
+                        db.SaveChanges();
+
+                        //ASIGNAR EL ID DE LA PLANTILLA RECIEN CREADA
+                        clientePlantilla = clienteDefault;
+                    } else {//YA EXISTE EL REGISTRO DE CLIENTE PLANTILLA
+                            //SE MANDA A BUSCAR PARA OBTENER EL ID DE LA PLANTILLA
+                        clientePlantilla = db.Clientes.FirstOrDefault(c => c.DatoId == buscarP.Id);
+                    }
+
+                    //ALMACENO EL REGISTRO CON EL CLIENTE DE VISITANTE (PLANTILLA DEFAULT)
+                    orden.ClienteId = clientePlantilla.Id;
+
+                    //BUSCO SI EXISTE EL REGISTRO DE LA COMANDA POR DEFAULT
+                    var comandaCero = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
+                    Imagen img = new Imagen();//CREO UNA INSTANCIA DE IMAGEN PARA ALMACENAR EL DEFAULT
+
+                    //EN CASO QUE NO EXISTA EL REGISTRO DEFAULT DE LA COMANDA
+                    if (comandaCero == null) {
+                        //SE CREA EL DEFAUTL
+                        img.Ruta = "N/A";
+                        db.Imagenes.Add(img);
+                        db.SaveChanges();
+                    }
+                    //ALMACENAMOS UNA PLANTILLA
+                    orden.ImagenId = comandaCero != null ? comandaCero.Id : img.Id;
+
+                    //GUARDAR LA ORDEN
+                    db.Ordenes.Add(orden);
+
+                    //SI CAMBIOS SE REALIZO BIEN
+                    if (db.SaveChanges() > 0) {
+                        //ALMACENAR EL DETALLE DE LA ORDEN
+                        foreach (var item in DetalleOrden) {
+                            DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                            detalleItem.CantidadOrden = item.CantidadOrden;
+                            //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                            detalleItem.NotaDetalleOrden = null;
+                            detalleItem.PrecioOrden = 1;
+                            detalleItem.MenuId = item.MenuId;
+                            detalleItem.OrdenId = orden.Id;
+                            //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                            detalleItem.EstadoDetalleOrden = false;
+
+                            //SE ALMACENA CADA ITEM
+                            db.DetallesDeOrden.Add(detalleItem);
+                            completado = db.SaveChanges() > 0 ? true : false;
+                        }
+                        mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
+                    }
+
+                    transact.Commit();
+                } catch (DbEntityValidationException dbEx) {
+
+                    //CAPTURAR ERRORES DE VALIDACION
+                    foreach (var validationErrors in dbEx.EntityValidationErrors) {
+                        foreach (var validationError in validationErrors.ValidationErrors) {
+                            System.Console.WriteLine("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        }
+                    }
+
+                    //mensaje = "Error al almacenar orden";
+                    transact.Rollback();
+                }//FIN TRY-CATCH
+            }//FIN USING
+            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// ALMACENAR UNA NUEVA ORDEN
+        /// </summary>
+        /// <param name="Codigo"></param>
+        /// <param name="MeseroId"></param>
+        /// <param name="ClienteId"></param>
+        /// <param name="FechaOrden"></param>
+        /// <param name="DetalleOrden"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden) {
+
+            using (var transact = db.Database.BeginTransaction()) {
+                try {
+                    //DESERIALIZACION DE OBJETO DONDE ESTA EL DETALLE DE LA ORDEN
+                    var DetalleOrden = JsonConvert.DeserializeObject<List<DetalleDeOrden>>(detalleOrden);
+                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.DescripcionTipoOrden.ToUpper() == "VENTAS");
+
+                    //SI NO EXISTE EL TIPO DE ORDEN CREARLO
+                    if (tipoOrden == null) {
+                        tipoOrden = new TipoDeOrden();
+
+                        tipoOrden.CodigoTipoOrden = codigoOrden();
+                        tipoOrden.DescripcionTipoOrden = "Ventas";
+                        tipoOrden.EstadoTipoOrden = true;
+
+                        db.TiposDeOrden.Add(tipoOrden);
+                        db.SaveChanges();
+                    }
+
+                    //SE CREA UN NUEVO OBJETO PARA ALMACENAR LA ORDEN(TABLA PADRE)
+                    Orden orden = new Orden();
+
+                    //SE CREAN OBJETOS PARA ALMACENAR A CLIENTE POR DEFAULT EN CASO DE QUE NO EXISTA EN LA BD
+                    Dato datoDefault = new Dato();
+                    Cliente clienteDefault = new Cliente();
+
+                    //SE CREA OBJETO PARA ALMACENAR EL CLIENTE
+                    Cliente clientePlantilla = new Cliente();
+
+                    //SE GUARDDA LOS DATOS DE LA ORDEN
+                    orden.CodigoOrden = Codigo;
+                    orden.FechaOrden = Convert.ToDateTime(FechaOrden);
+                    orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
+                    orden.MeseroId = MeseroId;
+                    orden.TipoOrdenId = tipoOrden.Id;
 
                     //SI EL CLIENTE ES VISITANTE SE MANDA EL CLIENTE POR DEFAULT
                     if (ClienteId == 0) {
@@ -257,6 +419,31 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             ViewBag.Message = mensaje;
 
             return View();
+        }
+
+        public string codigoOrden() {
+            //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
+            var code = db.TiposDeOrden.Max(x => x.CodigoTipoOrden.Trim());
+            int valor;
+            string num;
+
+            //SI EXISTE ALGUN REGISTRO
+            if (code != null) {
+                //CONVERTIR EL CODIGO A ENTERO
+                valor = int.Parse(code);
+
+                //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
+                if (valor <= 8)
+                    num = "00" + (valor + 1);
+                else
+                if (valor >= 9 && valor < 99)
+                    num = "0" + (valor + 1);
+                else
+                    num = (valor + 1).ToString();
+            } else
+                num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+
+            return num;
         }
 
         /// <summary>
@@ -786,6 +973,64 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             };
 
             AddNewOrder.Preppend(obj);
+        }
+
+        //si el menuid es de bar o no 
+        public async Task<bool> esDeBar(int id) {
+            string Bodega = await (from c in db.CategoriasMenu
+                                   join b in db.Bodegas on c.BodegaId equals b.Id
+                                   join m in db.Menus on c.Id equals m.CategoriaMenuId
+                                   where m.Id == id
+                                   select b.CodigoBodega).DefaultIfEmpty().FirstOrDefaultAsync();
+
+            if (Bodega == "B01") {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// CONSULTA LA EXISTENCIAS 
+        /// </summary>
+        /// <param name="id">ID DE MENU</param>
+        /// <returns></returns>
+        public async Task<ActionResult> existencia(int id) {
+            int existencia;
+            int salidas;
+            double entradas;
+
+            if (await esDeBar(id)) {
+
+                int idProd = (from m in db.Menus
+                              join i in db.Ingredientes on m.Id equals i.MenuId
+                              where i.MenuId == id
+                              select i.ProductoId).DefaultIfEmpty(-1).FirstOrDefault();
+
+                if (idProd != -1) {
+                    salidas = (from m in db.Menus
+                               join dor in db.DetallesDeOrden on m.Id equals dor.MenuId
+                               join o in db.Ordenes on dor.OrdenId equals o.Id
+                               where m.Id == id
+                               select dor.CantidadOrden).DefaultIfEmpty(0).Sum();
+
+                    entradas = (from p in db.Productos
+                                join de in db.DetallesDeEntrada on p.Id equals de.ProductoId
+                                join e in db.Entradas on de.EntradaId equals e.Id
+                                where p.Id == idProd
+                                select de.CantidadEntrada).DefaultIfEmpty(0).Sum();
+
+                    //calculando las existencias
+                    existencia = (int)entradas - salidas;
+                } else {
+                    //Este menu no tiene un producto relacionado
+                    existencia = -1;
+                }
+            } else {
+                existencia = -1;
+            }
+
+            return Json(existencia, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing) {

@@ -110,9 +110,24 @@ $('.js-example-basic-single').select2({
     }
 });
 
-//FUNCION PARA AGREGAR NUEVOS ITEMS DEL MENU A LA ORDEN
+//AGREGA EL PLATILLO SELECCIONADO A LA TABLA
 function addDetails() {
+    var cantidad = $("#cantidadOrden").val(), existencia = $("#existencia small").attr("val");
 
+    if (cantidad <= 0) {
+        Alert("Error", "Ingrese una cantidad a ordenar", "error");
+    } else if (existencia > 0) {
+        if (parseInt(cantidad) <= parseInt(existencia)) {
+            agregarDetalle();
+        } else {
+            Alert("Error", "La cantidad no puede ser mayor a la existencia", "error");
+        }
+    } else {
+        agregarDetalle();
+    }
+}//FIN FUNCTION
+
+function agregarDetalle() {
     var platillo = $("#platillo").val(), platilloId = $("#platillo").attr("name"), cantidad = $("#cantidadOrden").val(),
         precio = $("#precioOrden").val(), nota = $("#notaOrden").val();
 
@@ -170,8 +185,7 @@ function addDetails() {
     }
 
     $("body").removeClass("modal-open");
-
-}//FIN FUNCTION
+}
 
 //FUNCION PARA EDITAR LA ORDEN -INICIO
 function editOrden(terminar) {

@@ -36,11 +36,13 @@ namespace ProyectoXalli_Gentelella.Models {
         public int MeseroId { get; set; }
         public int ClienteId { get; set; }
         public int ImagenId { get; set; }
+        public int TipoOrdenId { get; set; }
 
         //DECLARACION DE RELACION PADRE
         public virtual Mesero Mesero { get; set; }
         public virtual Cliente Cliente { get; set; }
         public virtual Imagen Imagen { get; set; }
+        public virtual TipoDeOrden TipoOrden { get; set; }
 
         //DECLARACION DE RELACION HIJA
         public virtual ICollection<DetalleDeOrden> DetallesDeOrden { get; set; }

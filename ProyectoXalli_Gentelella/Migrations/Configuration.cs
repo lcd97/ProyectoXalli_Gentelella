@@ -56,6 +56,11 @@ namespace ProyectoXalli_Gentelella.Migrations {
                new TipoDePago { CodigoTipoPago = "002", DescripcionTipoPago = "Tarjeta", EstadoTipoPago = true });
             context.SaveChanges();
 
+            context.TiposDeOrden.AddOrUpdate(u => u.CodigoTipoOrden,
+              new TipoDeOrden { CodigoTipoOrden = "001", DescripcionTipoOrden = "Ventas", EstadoTipoOrden = true },
+              new TipoDeOrden { CodigoTipoOrden = "002", DescripcionTipoOrden = "Salidas", EstadoTipoOrden = true });
+            context.SaveChanges();
+
             context.Monedas.AddOrUpdate(m => m.CodigoMoneda,
                 new Moneda { CodigoMoneda = "001", DescripcionMoneda = "Córdobas", EstadoMoneda = true },
                 new Moneda { CodigoMoneda = "002", DescripcionMoneda = "Dólares", EstadoMoneda = true });

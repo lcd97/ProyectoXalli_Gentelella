@@ -92,7 +92,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Create(HttpPostedFileBase urlImage, string codigoMenu, string descripcionMenu, double precio, int categoriaId, string tiempo, string ingredientes) {
+        public ActionResult Create(HttpPostedFileBase urlImage, string codigoMenu, string descripcionMenu, double precio, int categoriaId, string tiempo, string ingredientes, bool shot) {
             int EnviarId = 0;
             //PRIMERO SE ALMACENA LA IMAGEN Y SU DIRECCION EN LA BD
             string path = Server.MapPath("~/images/Menu");
@@ -150,6 +150,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 item.ImagenId = obj.Id;//SE ASIGNA EL ID RECIEN ALMACENADO
                                 item.EstadoMenu = true;
                                 item.TiempoEstimado = tiempo != "" ? tiempo : null;
+                                item.shot = shot;
 
                                 db.Menus.Add(item);
                                 //SI SE ALMACENO CORRECTAMENTE EL PLATILLO
@@ -220,29 +221,31 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public ActionResult getMenuItem(int Id) {
+        public async Task<ActionResult> getMenuItem(int Id) {
+
             //BUSCA LOS DATOS DEL PLATILLO
-            var menu = (from obj in db.Menus
-                        join u in db.Imagenes on obj.ImagenId equals u.Id
-                        join c in db.CategoriasMenu on obj.CategoriaMenuId equals c.Id
-                        join r in db.Ingredientes on obj.Id equals r.MenuId
-                        where obj.Id == Id
-                        select new {
-                            PlatilloId = obj.Id,
-                            codigoMenu = obj.CodigoMenu,
-                            Platillo = obj.DescripcionMenu,
-                            Precio = obj.PrecioMenu.ToString(),
-                            Categoria = c.DescripcionCategoriaMenu,
-                            CategoriaId = c.Id,
-                            Tiempo = obj.TiempoEstimado,
-                            Ruta = u.Ruta,
-                            Estado = obj.EstadoMenu
-                        }).FirstOrDefault();
+            var menu = await (from obj in db.Menus
+                              join u in db.Imagenes on obj.ImagenId equals u.Id
+                              join c in db.CategoriasMenu on obj.CategoriaMenuId equals c.Id
+                              join r in db.Ingredientes on obj.Id equals r.MenuId
+                              where obj.Id == Id
+                              select new {
+                                  PlatilloId = obj.Id,
+                                  codigoMenu = obj.CodigoMenu,
+                                  Platillo = obj.DescripcionMenu,
+                                  Precio = obj.PrecioMenu.ToString(),
+                                  Categoria = c.DescripcionCategoriaMenu,
+                                  CategoriaId = c.Id,
+                                  Tiempo = obj.TiempoEstimado,
+                                  Ruta = u.Ruta,
+                                  Estado = obj.EstadoMenu,
+                                  shot = obj.shot
+                              }).FirstOrDefaultAsync();
 
             //BUSCA LOS INGREDIENTES DEL PLATILLO
-            var ingredientes = (from obj in db.Ingredientes
-                                where obj.MenuId == Id
-                                select obj.ProductoId).ToList();
+            var ingredientes = await (from obj in db.Ingredientes
+                                      where obj.MenuId == Id
+                                      select obj.ProductoId).ToListAsync();
 
             return Json(new { menu, ingredientes }, JsonRequestBehavior.AllowGet);
         }
@@ -309,7 +312,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         /// <param name="ingredientes"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(HttpPostedFileBase urlImage, string codigoMenu, string descripcionMenu, double precio, int categoriaId, string tiempo, string ingredientes, bool estado) {
+        public ActionResult Edit(HttpPostedFileBase urlImage, string codigoMenu, string descripcionMenu, double precio, int categoriaId, string tiempo, string ingredientes, bool estado, bool shot) {
             //BUSCAR EL OBJETO A MODIFICAR
             var menu = db.Menus.DefaultIfEmpty(null).FirstOrDefault(m => m.CodigoMenu.Trim() == codigoMenu.Trim());
 
@@ -358,6 +361,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             menu.CategoriaMenuId = categoriaId;
                             menu.EstadoMenu = estado;
                             menu.TiempoEstimado = tiempo != "" ? tiempo : null;
+                            menu.shot = shot;
 
                             db.Entry(menu).State = EntityState.Modified;//SE MODIFICA EL OBJETO
 
@@ -451,6 +455,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                     menu.CategoriaMenuId = categoriaId;
                                     menu.EstadoMenu = estado;
                                     menu.TiempoEstimado = tiempo;
+                                    menu.shot = shot;
 
                                     db.Entry(menu).State = EntityState.Modified;//SE MODIFICA EL OBJETO
                                                                                 //SI SE ALMACENO CORRECTAMENTE EL PLATILLO
