@@ -18,7 +18,7 @@
     } else {
         cargarTabla(EmpleadoId);
     }
-    var mensaje = $("#mensaje").attr("value"); 
+    var mensaje = $("#mensaje").attr("value");
 
     if (mensaje != "") {
         AlertTimer("Completado", mensaje, "success");
@@ -55,7 +55,7 @@ function cargarTabla(EmpleadoId) {
                 $(".x_content").append(agregar);
             } else {
                 //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
-                var thead = '<tr> <th>No. Orden</th> <th>Hora ordenada</th> <th>Cliente</th>';
+                var thead = '<tr> <th>No. Orden</th> <th>No. Mesa</th> <th>Hora ordenada</th> <th>Cliente</th>';
                 var theadFin = "";
 
                 //CREA EL TBODY DE LA TABLA ORDENES
@@ -64,7 +64,7 @@ function cargarTabla(EmpleadoId) {
 
                 for (var i = 0; i < Object.keys(data).length; i++) {
 
-                    tbody = '<tr><th scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</th><th>' + data[i].HoraOrden + '</th><td>' + data[i].Cliente + '</td>';
+                    tbody = '<tr><td scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</td>' + '<td>' + data[i].Mesa + '</td><td>' + data[i].HoraOrden + '</td><td>' + data[i].Cliente + '</td>';
 
                     //DEPENDIENDO SI EL ROL ES DIFERENTE A MESERO
                     if ($("#rol").attr("val") == "false") {

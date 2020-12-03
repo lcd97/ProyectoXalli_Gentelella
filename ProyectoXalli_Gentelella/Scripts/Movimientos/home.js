@@ -134,7 +134,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
                 $("#x_content").append(agregar);
             } else {
                 //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
-                var thead = '<tr> <th>No. Orden</th> <th>Hora ordenada</th> <th>Cliente</th>';
+                var thead = '<tr> <th>No. Orden</th> <th>No. Mesa</th> <th>Hora ordenada</th> <th>Cliente</th>';
                 var theadFin = "";
 
                 //CREA EL TBODY DE LA TABLA ORDENES
@@ -143,7 +143,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
 
                 for (var i = 0; i < Object.keys(data).length; i++) {
 
-                    tbody = '<tr><th scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</th><th>' + data[i].HoraOrden + '</th><td>' + data[i].Cliente + '</td>';
+                    tbody = '<tr><td scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</td><td>' + data[i].Mesa + '</td><td>' + data[i].HoraOrden + '</td><td>' + data[i].Cliente + '</td>';
 
                     if (EmpleadoRole != "Mesero") {
                         theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';

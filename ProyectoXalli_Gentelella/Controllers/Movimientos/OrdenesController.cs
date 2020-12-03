@@ -445,12 +445,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
                              HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
-                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A"
+                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+                             Mesa = m.DescripcionMesa
                          }).ToList();
             } else if (EmpleadoRol == "Cocinero") {
                 //OBTENGO TODAS LAS ORDENES CON PLATILLO PENDIENTES
@@ -462,12 +464,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA" && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
                              HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
                              Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+                             Mesa = m.DescripcionMesa,
                              Mesero = (from o in db.Ordenes
                                        join m in db.Meseros on o.MeseroId equals m.Id
                                        join a in db.Datos on m.DatoId equals a.Id
@@ -484,12 +488,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR" && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
                              HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
                              Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+                             Mesa = m.DescripcionMesa,
                              Mesero = (from o in db.Ordenes
                                        join m in db.Meseros on o.MeseroId equals m.Id
                                        join a in db.Datos on m.DatoId equals a.Id
@@ -501,12 +507,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
                              HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
                              Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+                             Mesa = m.DescripcionMesa,
                              Mesero = (from o in db.Ordenes
                                        join m in db.Meseros on o.MeseroId equals m.Id
                                        join a in db.Datos on m.DatoId equals a.Id
