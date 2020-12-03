@@ -72,9 +72,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
             string where = "";
 
             if (Role == "Cocinero") {
-                where = "WHERE b.Id = 2";
+                where = "WHERE b.Id = 2 AND t.CodigoTipoOrden='V01' ";
             } else if (Role == "Bartender") {
-                where = "WHERE b.Id = 1";
+                where = "WHERE b.Id = 1 AND t.CodigoTipoOrden='V01' ";
             } else {
                 where = "";
             }
@@ -89,7 +89,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                         "inner join Menu.CategoriasMenu c " +
                         "on m.CategoriaMenuId = c.Id " +
                         "inner join inv.Bodegas b " +
-                        "on b.Id = c.BodegaId " + where +
+                        "on b.Id = c.BodegaId " +
+                        "inner join ord.TiposDeOrden t " +
+                        "on t.Id = o.TipoOrdenId " + where +
                         "GROUP BY m.DescripcionMenu " +
                         "order by cantidad desc";
 
@@ -114,12 +116,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
         /// </summary>
         /// <returns></returns>
         public ActionResult DashboardSign() {
+            //ORDENES ACTIVAS DE LAS VENTAS REALIZADAS
             var ordenesActivas = (from obj in db.Ordenes.ToList()
-                                  where obj.EstadoOrden == 1
+                                  join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                                  where obj.EstadoOrden == 1 && t.CodigoTipoOrden == "V01"
                                   select obj).Count();
 
+            //ORDENES TOTALES DE LAS VENTAS REALIZADAS
             var ordenesTotales = (from obj in db.Ordenes.ToList()
-                                  where (obj.FechaOrden).Month == (DateTime.Now).Month
+                                  join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                                  where (obj.FechaOrden).Month == (DateTime.Now).Month && t.CodigoTipoOrden == "V01"
                                   select obj).Count();
 
             /*
@@ -131,9 +137,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 WHERE datepart(month,o.FechaOrden)=datepart(month,GETDATE())
              */
 
+            //TOTAL DE LAS VENTAS REALIZADAS
             var ventasTotales = (from obj in db.Ordenes.ToList()
+                                 join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                                  join dt in db.DetallesDeOrden.ToList() on obj.Id equals dt.OrdenId
-                                 where (obj.FechaOrden).Month == (DateTime.Now).Month
+                                 where (obj.FechaOrden).Month == (DateTime.Now).Month && t.CodigoTipoOrden == "V01"
                                  select (dt.CantidadOrden * dt.PrecioOrden)).Sum();
 
             return Json(new { ordenesActivas, ordenesTotales, ventasTotales }, JsonRequestBehavior.AllowGet);

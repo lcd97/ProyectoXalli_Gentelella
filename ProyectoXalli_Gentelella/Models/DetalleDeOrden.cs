@@ -27,7 +27,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public bool EstadoDetalleOrden { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
-        [Range(1, (double)decimal.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
+        //[Range(1, (double)decimal.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "(0:c2)")]
         [Display(Name = "Precio")]

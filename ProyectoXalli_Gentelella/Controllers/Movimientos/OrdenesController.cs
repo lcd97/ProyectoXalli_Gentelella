@@ -231,7 +231,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             detalleItem.CantidadOrden = item.CantidadOrden;
                             //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
                             detalleItem.NotaDetalleOrden = null;
-                            detalleItem.PrecioOrden = 1;
+                            detalleItem.PrecioOrden = 0;
                             detalleItem.MenuId = item.MenuId;
                             detalleItem.OrdenId = orden.Id;
                             //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
@@ -467,7 +467,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId
+                         join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -483,7 +484,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join bod in db.Bodegas.ToList() on cat.BodegaId equals bod.Id
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA"
+                         join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA" && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -504,7 +506,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join bod in db.Bodegas.ToList() on cat.BodegaId equals bod.Id
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR"
+                         join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR" && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -520,7 +523,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 orden = (from obj in db.Ordenes.ToList()
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where obj.EstadoOrden == 1
+                         join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
+                         where obj.EstadoOrden == 1 && t.CodigoTipoOrden == "V01"
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,

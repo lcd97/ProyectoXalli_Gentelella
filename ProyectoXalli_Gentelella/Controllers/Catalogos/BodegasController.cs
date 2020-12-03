@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ProyectoXalli_Gentelella.Controllers.Catalogos
-{
+namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
     [Authorize]
-    public class BodegasController : Controller
-    {
+    public class BodegasController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
@@ -166,26 +164,32 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
         /// </summary>
         /// <returns></returns>
         public ActionResult SearchCode() {
-            //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
-            var code = db.Bodegas.Max(x => x.CodigoBodega.Trim());
-            int valor;
+            var bod = db.Bodegas.ToList();
             string num;
 
-            //SI EXISTE ALGUN REGISTRO
-            if (code != null) {
-                //CONVERTIR EL CODIGO A ENTERO
-                valor = int.Parse(code);
+            if (bod.Count() == 0) {
+                //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
+                var code = db.Bodegas.Max(x => x.CodigoBodega.Trim());
+                int valor;
 
-                //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
-                if (valor <= 8)
-                    num = "00" + (valor + 1);
-                else
-                if (valor >= 9 && valor < 100)
-                    num = "0" + (valor + 1);
-                else
-                    num = (valor + 1).ToString();
-            } else
+                //SI EXISTE ALGUN REGISTRO
+                if (code != null) {
+                    //CONVERTIR EL CODIGO A ENTERO
+                    valor = int.Parse(code);
+
+                    //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
+                    if (valor <= 8)
+                        num = "00" + (valor + 1);
+                    else
+                    if (valor >= 9 && valor < 100)
+                        num = "0" + (valor + 1);
+                    else
+                        num = (valor + 1).ToString();
+                } else
+                    num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+            } else {
                 num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+            }
 
             return Json(num, JsonRequestBehavior.AllowGet);
         }
