@@ -216,6 +216,7 @@
     <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
     <Compile Include="Controllers\Catalogos\ClientesController.cs" />
     <Compile Include="Controllers\Catalogos\MenusController.cs" />
+    <Compile Include="Controllers\Catalogos\MesasController.cs" />
     <Compile Include="Controllers\Catalogos\MeserosController.cs" />
     <Compile Include="Controllers\Catalogos\MonedasController.cs" />
     <Compile Include="Controllers\Catalogos\ProductosController.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Models\Ingrediente.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\Mesa.cs" />
     <Compile Include="Models\Mesero.cs" />
     <Compile Include="Models\Moneda.cs" />
     <Compile Include="Models\Orden.cs" />
@@ -598,6 +600,9 @@
     <Content Include="Views\TiposDeOrden\Edit.cshtml" />
     <Content Include="Views\TiposDeOrden\Index.cshtml" />
     <Content Include="Views\Ordenes\DetalleSalida.cshtml" />
+    <Content Include="Views\Mesas\Index.cshtml" />
+    <Content Include="Views\Mesas\Create.cshtml" />
+    <Content Include="Views\Mesas\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

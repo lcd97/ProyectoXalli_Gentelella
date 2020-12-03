@@ -35,6 +35,7 @@ namespace ProyectoXalli_Gentelella.Models {
         public virtual DbSet<Orden> Ordenes { get; set; }
         public virtual DbSet<DetalleDeOrden> DetallesDeOrden { get; set; }
         public virtual DbSet<TipoDeOrden> TiposDeOrden { get; set; }
+        public virtual DbSet<Mesa> Mesas { get; set; }
 
         //MODULO FACTURACION
         public virtual DbSet<Pago> Pagos { get; set; }

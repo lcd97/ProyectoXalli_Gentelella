@@ -19,8 +19,8 @@ namespace ProyectoXalli_Gentelella.Migrations {
             //  to avoid creating duplicate seed data.
 
             context.Bodegas.AddOrUpdate(u => u.CodigoBodega,
-                new Bodega { CodigoBodega = "001", DescripcionBodega = "Bar", EstadoBodega = true },
-                new Bodega { CodigoBodega = "002", DescripcionBodega = "Cocina", EstadoBodega = true });
+                new Bodega { CodigoBodega = "B01", DescripcionBodega = "Bar", EstadoBodega = true },
+                new Bodega { CodigoBodega = "C01", DescripcionBodega = "Cocina", EstadoBodega = true });
             context.SaveChanges();
 
             context.CategoriasProducto.AddOrUpdate(u => u.CodigoCategoria,
@@ -57,8 +57,8 @@ namespace ProyectoXalli_Gentelella.Migrations {
             context.SaveChanges();
 
             context.TiposDeOrden.AddOrUpdate(u => u.CodigoTipoOrden,
-              new TipoDeOrden { CodigoTipoOrden = "001", DescripcionTipoOrden = "Ventas", EstadoTipoOrden = true },
-              new TipoDeOrden { CodigoTipoOrden = "002", DescripcionTipoOrden = "Salidas", EstadoTipoOrden = true });
+              new TipoDeOrden { CodigoTipoOrden = "V01", DescripcionTipoOrden = "Ventas", EstadoTipoOrden = true },
+              new TipoDeOrden { CodigoTipoOrden = "S01", DescripcionTipoOrden = "Salidas", EstadoTipoOrden = true });
             context.SaveChanges();
 
             context.Monedas.AddOrUpdate(m => m.CodigoMoneda,
