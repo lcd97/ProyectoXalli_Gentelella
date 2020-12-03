@@ -52,8 +52,8 @@ $(document).ready(function () {
 //LIMPIAR TODO
 function limpiarInicio() {
     //INICIALIZAR EL SELECT2 CATEGORIA
-    $("#categoria").val("-1");
-    $('#categoria').trigger('change'); // Notify any JS components that the value changed
+    $("select").val("");
+    $('select').trigger('change'); // Notify any JS components that the value changed
 
     var elem = document.querySelector('.js-switch');
 
@@ -121,11 +121,13 @@ $('#fechaOrden').datetimepicker({
 });
 
 //AGREGAR LA OPCION DONDE IRA EL PLACEHOLDER DEL SELECT 2
-$(".js-example-basic-single").prepend("<option value='-1' readonly></option>");
+//$("select").prepend("<option value='-1' disabled>Seleccione</option>");
+//$("#mesa").prepend("");
 
 //INICIALIZADOR DE LENGUAJE SELECT 2
-$('.js-example-basic-single').select2({
+$('select').select2({
     placeholder: { id: "-1", text: "Seleccione" },//CARGAR PRIMERO EL PLACEHOLDER
+    allowClear: true,
     //MODIFICAR LAS FRASES DEFAULT DE SELECT2
     language: {
 
@@ -250,7 +252,7 @@ $("#identificacion").blur(function () {
 
 //FUNCION PARA ALMACENAR LA ORDEN
 function guardarOrden() {
-    var codigo = $("#codigoOrden").val(), meseroId = $("#mesero").attr("value"), clienteId = "";
+    var codigo = $("#codigoOrden").val(), meseroId = $("#mesero").attr("value"), clienteId = "", mesa = $("#mesa").val();
 
     //PASAR UN VALOR POR DEFECTO EN CASO QUE NO EXISTA REGISTRO DE UN NUEVO CLIENTE
     clienteId = $("#nombreCliente").attr("val") != "" ? $("#nombreCliente").attr("val") : 0;
@@ -285,7 +287,7 @@ function guardarOrden() {
     //alert(JSON.stringify(OrdenDetails));
 
     if (OrdenDetails.length > 0) {
-        var data = "Codigo=" + parseInt(codigo) + "&MeseroId=" + meseroId + "&ClienteId=" + clienteId + "&FechaOrden=" + date + "&detalleOrden=" + JSON.stringify(OrdenDetails);
+        var data = "Codigo=" + parseInt(codigo) + "&MeseroId=" + meseroId + "&ClienteId=" + clienteId + "&FechaOrden=" + date + "&detalleOrden=" + JSON.stringify(OrdenDetails) + "&mesaId=" + mesa;
 
         //alert(data);
 
@@ -323,7 +325,7 @@ function guardarOrden() {
 function validado() {
     var validado = false;
 
-    if ($("#table_body tr").length != 0 && $("#codigoOrden").val() && $("#fechaOrden").val() != "") {
+    if ($("#table_body tr").length != 0 && $("#codigoOrden").val() && $("#fechaOrden").val() != "" && $("#mesa").val() != null) {
         //SI ES HUESPED Y NO ESTA VACIO LOS DATOS PASAR TRUE
         if (!$(".js-switch").is(":checked") && $("#nombreCliente").val() != "") {
             validado = true;

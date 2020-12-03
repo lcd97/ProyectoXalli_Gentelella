@@ -59,7 +59,9 @@
 
                         <div class="col-md-2 col-sm-4 col-xs-6">
                             <label class="col-md-4 col-sm-4 col-xs-4">Mesa</label>
-                            <select id="mesero" class="js-example-basic-single form-control" style="width:100%"></select>
+                            @*<select id="mesa" class="js-example-basic-single form-control" style="width:100%">
+                                </select>*@
+                            @Html.DropDownList("MesasId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "mesa" })
                         </div>
                     </div>
 
@@ -78,7 +80,7 @@
                             <button type="button" onclick="CargarParcial('/Busquedas/BuscarCliente/')" class="btn btn-primary" data-toggle="tooltip" id="buscarCliente" title="Buscar el cliente" disabled><i class="fa fa-search"></i></button>
                             <button type="button" onclick="CargarParcial('/Clientes/Create/')" class="btn btn-primary" data-toggle="tooltip" id="agregarCliente" title="Buscar el cliente" disabled><i class="fa fa-plus"></i></button>
                         </div>
-                   
+
                         <div class="col-md-3 col-sm-5 col-xs-7">
                             <label>Cliente</label>
                             <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
@@ -116,7 +118,7 @@
                     <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <label>Categoría</label>
-                            @Html.DropDownList("CategoriaId", null, "Seleccione", htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "categoria" })
+                            @Html.DropDownList("CategoriaId", null, htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "categoria" })
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6">
                             <input id="filtro" class="form-control" type="text" autocomplete="off" placeholder="Buscar Platillo" style="margin-top:25px" disabled>

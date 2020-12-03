@@ -45,6 +45,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         [Authorize(Roles = "Admin, Mesero")]
         // GET: Ordenes
         public ActionResult Index() {
+            ViewBag.MesasId = new SelectList(ListaMesas(), "Id", "Descripcion");
             ViewBag.CategoriaId = new SelectList(db.CategoriasMenu, "Id", "DescripcionCategoriaMenu");
 
             return View();
@@ -145,13 +146,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 try {
                     //DESERIALIZACION DE OBJETO DONDE ESTA EL DETALLE DE LA ORDEN
                     var DetalleOrden = JsonConvert.DeserializeObject<List<DetalleDeOrden>>(detalleOrden);
-                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.DescripcionTipoOrden.ToUpper() == "SALIDAS");
+                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.CodigoTipoOrden.ToUpper() == "S01");
 
                     //SI NO EXISTE EL TIPO DE ORDEN CREARLO
                     if (tipoOrden == null) {
                         tipoOrden = new TipoDeOrden();
 
-                        tipoOrden.CodigoTipoOrden = codigoOrden();
+                        tipoOrden.CodigoTipoOrden = "S01";
                         tipoOrden.DescripcionTipoOrden = "Salidas";
                         tipoOrden.EstadoTipoOrden = true;
 
@@ -271,19 +272,19 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="DetalleOrden"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden) {
+        public ActionResult Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden, int mesaId) {
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //DESERIALIZACION DE OBJETO DONDE ESTA EL DETALLE DE LA ORDEN
                     var DetalleOrden = JsonConvert.DeserializeObject<List<DetalleDeOrden>>(detalleOrden);
-                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.DescripcionTipoOrden.ToUpper() == "VENTAS");
+                    var tipoOrden = db.TiposDeOrden.DefaultIfEmpty(null).FirstOrDefault(t => t.CodigoTipoOrden.ToUpper() == "V01");
 
                     //SI NO EXISTE EL TIPO DE ORDEN CREARLO
                     if (tipoOrden == null) {
                         tipoOrden = new TipoDeOrden();
 
-                        tipoOrden.CodigoTipoOrden = codigoOrden();
+                        tipoOrden.CodigoTipoOrden = "V01";
                         tipoOrden.DescripcionTipoOrden = "Ventas";
                         tipoOrden.EstadoTipoOrden = true;
 
@@ -307,6 +308,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
                     orden.MeseroId = MeseroId;
                     orden.TipoOrdenId = tipoOrden.Id;
+                    orden.MesaId = mesaId;
 
                     //SI EL CLIENTE ES VISITANTE SE MANDA EL CLIENTE POR DEFAULT
                     if (ClienteId == 0) {
@@ -419,31 +421,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             ViewBag.Message = mensaje;
 
             return View();
-        }
-
-        public string codigoOrden() {
-            //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
-            var code = db.TiposDeOrden.Max(x => x.CodigoTipoOrden.Trim());
-            int valor;
-            string num;
-
-            //SI EXISTE ALGUN REGISTRO
-            if (code != null) {
-                //CONVERTIR EL CODIGO A ENTERO
-                valor = int.Parse(code);
-
-                //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
-                if (valor <= 8)
-                    num = "00" + (valor + 1);
-                else
-                if (valor >= 9 && valor < 99)
-                    num = "0" + (valor + 1);
-                else
-                    num = (valor + 1).ToString();
-            } else
-                num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
-
-            return num;
         }
 
         /// <summary>
@@ -564,6 +541,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             var OrderHead = (from obj in db.Ordenes.ToList()
                              join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                              join d in db.Datos.ToList() on c.DatoId equals d.Id
+                             join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                              where obj.Id == orderId
                              select new {
                                  Id = obj.Id,
@@ -582,7 +560,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                            join m in db.Meseros on o.MeseroId equals m.Id
                                            join a in db.Datos on m.DatoId equals a.Id
                                            where obj.Id == o.Id
-                                           select a.PNombre + " " + a.PApellido).FirstOrDefault()
+                                           select a.PNombre + " " + a.PApellido).FirstOrDefault(),
+                                 Mesa = m.DescripcionMesa
                              }).FirstOrDefault();
 
             //DETALLE DE LA ORDEN
@@ -959,6 +938,32 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 }
             }
             return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// GENERA UNA LISTA DE LAS MESAS DISPONIBLES
+        /// </summary>
+        /// <returns></returns>
+        public List<MesasClass> ListaMesas() {
+            /*
+            SELECT M.DescripcionMesa		
+            FROM ORD.Mesas M
+            WHERE M.EstadoMesa=1 AND M.Id not in (SELECT o.MesaId FROM ORD.Ordenes O WHERE O.EstadoOrden=1) 
+             */
+            var mesas = (from obj in db.Mesas.ToList()
+                         where obj.EstadoMesa == true && !(from ord in db.Ordenes.ToList() where ord.EstadoOrden == 1
+                                                           select ord.MesaId).Contains(obj.Id)
+                         select new MesasClass {
+                             Id = obj.Id,
+                             Descripcion = obj.DescripcionMesa
+                         }).ToList();
+
+            return mesas;
+        }
+
+        public class MesasClass {
+            public int Id { get; set; }
+            public string Descripcion { get; set; }
         }
 
         public void RetornarAlgoFelix() {

@@ -1,10 +1,20 @@
 ﻿//CAMBIAR EL MENU POR CATEGORIAS
 $("#categoria").change(function () {
     //ALMACENO EL ID DEL SELECT 2
-    var categoriaId = $("#categoria").val();
+    var categoriaId = $(this).val();
+    //var categoriaId = $("#categoria").val();
 
     //SI CATEGORIA ES DIFERENTE AL PLACEHOLDER
-    if (categoriaId != "") {
+    if (categoriaId === null || categoriaId == "") {
+
+        $("#filtro").attr("disabled", true);//DESACTIVO EL INPUT DE FILTRO
+
+        //LIMPIAR BUSQUEDA ANTERIOS
+        deleteRows();
+
+        var agregar = '<h2 id="nada" style="text-align:center;" col-md-12 col-sm-12 col-xs-12>Seleccione una categoría</h2>';
+        $("#menuCategory").append(agregar);
+    } else {
         $.ajax({
             type: "GET",
             url: "/Ordenes/MenuByCategoria/" + categoriaId,
@@ -60,16 +70,31 @@ $("#categoria").change(function () {
                 }//FIN IF-ELSE ELEMENTOS
             }
         });
-    } else {
-        $("#filtro").attr("disabled", true);//DESACTIVO EL INPUT DE FILTRO
-
-        //LIMPIAR BUSQUEDA ANTERIOS
-        deleteRows();
-
-        var agregar = '<h2 id="nada" style="text-align:center;" col-md-12 col-sm-12 col-xs-12>Seleccione una categoría</h2>';
-        $("#menuCategory").append(agregar);
     }
 });
+
+//FUNCION PARA CARGAR LAS MESAS DISPONIBLES
+function cargarMesas() {
+    $.ajax({
+        type: "GET",
+        url: "/Ordenes/ListaMesas/",
+        success: function (data) {
+            var agregar = "";
+            var mesas = data.length;
+
+            if (mesas < 0) {
+                agregar += "<option value='-1' readonly>SIN MESAS DISPONIBLES</option>";
+            } else {
+
+                for (var i = 0; i < mesas; i++) {
+                    agregar += "<option value='" + data[i].Id + "' readonly>" + data[i].Descripcion + "</option>";
+                }
+            }
+
+            $("#mesa").html(agregar);
+        }
+    });
+}//FIN FUNCTION
 
 //ELIMINA TODOS LOS ELEMENTOS DENTRO DE UN DIV
 function deleteRows() {

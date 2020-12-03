@@ -17,6 +17,7 @@
             $("#codigoOrden").val(cargarCodigo(data.Principal.Codigo));
             $("#fechaOrden").val(data.Principal.Fecha);
             $("#mesero").val(data.Principal.Mesero);
+            $("#mesa").val(data.Principal.Mesa);
 
             //HUESPED
             if (data.Principal.TipoCliente == 1) {
