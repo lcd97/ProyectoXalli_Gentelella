@@ -17,16 +17,15 @@ namespace MenuAPI.Areas.API.Controllers
         //conexion con la db
         private DBControl db = new DBControl();
 
-
-       //Obtener las ordenes con estado atendido y sin facturar con fecha igual al dia de hoy
-       [HttpGet]
-        public JsonResult Ordenes()
+        //Obtener las ordenes con estado atendido con fecha igual al dia de hoy
+        [HttpGet]
+        public JsonResult OrdenesAbiertas()
         {
-            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1)
-                           join m in db.Meseros on o.MeseroId equals m.Id
-                           join c in db.Clientes on o.ClienteId equals c.Id
-                           join d in db.Datos on c.DatoId equals d.Id
-                           //where o.FechaOrden == DateTime.Today
+            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1).ToList()
+                           join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join c in db.Clientes.ToList() on o.ClienteId equals c.Id
+                           join d in db.Datos.ToList() on c.DatoId equals d.Id
+                           where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
                            orderby o.FechaOrden descending
                            select new OrdenWS
                            {
@@ -36,7 +35,7 @@ namespace MenuAPI.Areas.API.Controllers
                                estado = o.EstadoOrden,
                                meseroid = m.Id,
                                clienteid = c.Id,
-                               cliente = c.Dato.PNombre +" "+ c.Dato.PApellido,
+                               cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
                                mesero = m.Dato.PNombre + " " + m.Dato.PApellido
 
                            }).ToList();
@@ -44,12 +43,65 @@ namespace MenuAPI.Areas.API.Controllers
             return Json(ordenes, JsonRequestBehavior.AllowGet);
         }
 
+        //Obtener las ordenes con estado sin facturar o cerrado con fecha igual al dia de hoy
+        [HttpGet]
+        public JsonResult OrdenesCerradas()
+        {
+            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 2).ToList()
+                           join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join c in db.Clientes.ToList() on o.ClienteId equals c.Id
+                           join d in db.Datos.ToList() on c.DatoId equals d.Id
+                           where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
+                           orderby o.FechaOrden descending
+                           select new OrdenWS
+                           {
+                               id = o.Id,
+                               codigo = o.CodigoOrden,
+                               fechaorden = o.FechaOrden,
+                               estado = o.EstadoOrden,
+                               meseroid = m.Id,
+                               clienteid = c.Id,
+                               cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+
+                           }).ToList();
+
+            return Json(ordenes, JsonRequestBehavior.AllowGet);
+        }
+
+        //Obtener las ordenes con estado ordenado y sin facturar o cerrado con fecha igual al dia de hoy
+        [HttpGet]
+        public JsonResult Ordenes()
+        {
+            var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1 || x.EstadoOrden == 2).ToList()
+                           join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join c in db.Clientes.ToList() on o.ClienteId equals c.Id
+                           join d in db.Datos.ToList() on c.DatoId equals d.Id
+                           where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
+                           orderby o.FechaOrden descending
+                           select new OrdenWS
+                           {
+                               id = o.Id,
+                               codigo = o.CodigoOrden,
+                               fechaorden = o.FechaOrden,
+                               estado = o.EstadoOrden,
+                               meseroid = m.Id,
+                               clienteid = c.Id,
+                               cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+
+                           }).ToList();
+
+            return Json(ordenes, JsonRequestBehavior.AllowGet);
+        }
+
+
         //buscar el ultimo codigo de orden
         [HttpGet]
         public async Task<JsonResult> UltimoCodigo()
         {
             var num = await (from obj in db.Ordenes
-                       select obj.CodigoOrden).DefaultIfEmpty().MaxAsync();
+                             select obj.CodigoOrden).DefaultIfEmpty().MaxAsync();
 
             int codigo = 1;
 
@@ -68,7 +120,7 @@ namespace MenuAPI.Areas.API.Controllers
                            join m in db.Meseros on o.MeseroId equals m.Id
                            join c in db.Clientes on o.ClienteId equals c.Id
                            join d in db.Datos on c.DatoId equals d.Id
-                           where c.Id==id
+                           where c.Id == id
                            orderby o.FechaOrden descending
                            select new OrdenWS
                            {
@@ -119,7 +171,7 @@ namespace MenuAPI.Areas.API.Controllers
                 {
                     resultadoWS.Mensaje = "Error al cerrar la orden";
                     resultadoWS.Resultado = false;
-                    transact.Rollback();  
+                    transact.Rollback();
                 }
             }
 
@@ -135,7 +187,5 @@ namespace MenuAPI.Areas.API.Controllers
             }
             base.Dispose(disposing);
         }
-
-
     }
 }

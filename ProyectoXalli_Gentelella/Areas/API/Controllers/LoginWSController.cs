@@ -16,7 +16,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
     public class LoginWSController : Controller
     {
         DBControl db = new DBControl();
-       
+
         [HttpGet]
         public JsonResult Login(string user, string pass)
         {
@@ -39,12 +39,19 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                                          where m.Id == idcolaborador
                                          select d.PNombre + " " + d.PApellido).DefaultIfEmpty(null).FirstOrDefault();
 
-                respuestaLogin.id = idcolaborador;
-                respuestaLogin.nombreCompleto = nombreCompleto;
-                respuestaLogin.rol = roles.FirstOrDefault();
-                respuestaLogin.exito = true;
 
-
+                if (roles.FirstOrDefault() == "Admin" || roles.FirstOrDefault() == "Mesero")
+                {
+                    respuestaLogin.id = idcolaborador;
+                    respuestaLogin.nombreCompleto = nombreCompleto;
+                    respuestaLogin.rol = roles.FirstOrDefault();
+                    respuestaLogin.exito = true;
+                }
+                else
+                {
+                    respuestaLogin.exito = false;
+                    respuestaLogin.nombreCompleto = "Usted no esta autorizado para utilizar la aplicacion movil";
+                }
             }
             else
             {
