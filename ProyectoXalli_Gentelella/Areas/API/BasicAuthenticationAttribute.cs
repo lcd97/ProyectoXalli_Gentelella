@@ -1,35 +1,62 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Web;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Areas.API
 {
-    public class BasicAuthenticationAttribute: AuthorizationFilterAttribute
+    public class BasicAuthenticationAttribute : ActionFilterAttribute
     {
-        public override void OnAuthorization(HttpActionContext actionContext)
+        public SignInStatus SingnInStatus { get; private set; }
+
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (actionContext.Request.Headers.Authorization == null)
+            var req = filterContext.HttpContext.Request;
+            var auth = req.Headers["Authorization"];
+
+            if (!String.IsNullOrEmpty(auth))
             {
-                actionContext.Response = actionContext.Request.CreateResponse(System.Net.HttpStatusCode.Unauthorized);
+                var cred = System.Text.ASCIIEncoding.ASCII.GetString(Convert.FromBase64String(auth.Substring(6))).Split(':');
+                var user = new { Name = cred[0], Pass = cred[1] };
+
+                if (login(user.Name, user.Pass))
+                {
+                    return;
+                }
+                else
+                {
+
+                }
             }
-            else
+
+            filterContext.HttpContext.Response.AddHeader("WWW-Authenticate", "Basic");
+            filterContext.HttpContext.Response.StatusCode = 403;
+            filterContext.HttpContext.Response.StatusDescription = "Acceso denegado, Debe Authenticarse";
+            filterContext.Result = new JsonResult
             {
-                string authenticationToken = actionContext.Request.Headers.Authorization.Parameter;
-                string decodeauthenticationToken = Encoding.UTF8.GetString(Convert.FromBase64String(authenticationToken));
-                string[] usernamePasswordArray = decodeauthenticationToken.Split(':');
-                string username = usernamePasswordArray[0];
-                string password = usernamePasswordArray[1];
+                Data = new { Success = false, Data = "UnAuthorized" },
+                ContentEncoding = System.Text.Encoding.UTF8,
+                ContentType = "application/json",
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
 
-
-
-            }
-
-                    
+            base.OnActionExecuting(filterContext);
         }
+
+        private bool login(string user, string pass)
+        {
+            var resul = System.Web.HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>().PasswordSignIn(user, pass, false, false);
+
+            if (resul == SignInStatus.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
     }
 }

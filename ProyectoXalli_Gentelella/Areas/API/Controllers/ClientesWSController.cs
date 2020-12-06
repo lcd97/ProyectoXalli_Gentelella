@@ -7,9 +7,11 @@ using System.Web;
 using System.Web.Mvc;
 using ProyectoXalli_Gentelella.Areas.API.Models;
 using System.Data.Entity;
+using MenuAPI.Areas.API.Models;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class ClientesWSController : Controller
     {
         //conexion con la db
@@ -75,6 +77,23 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
             return Json(clientes, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<JsonResult> ClienteConOrdenes(int id)
+        {
+            ResultadoWS resultadoWS = new ResultadoWS();
+            resultadoWS.Mensaje = "";
+            resultadoWS.Resultado = false;
+
+            var orden = await db.Ordenes.Where(o => o.ClienteId == id && o.EstadoOrden == 1).Select(o => o.FechaOrden).DefaultIfEmpty().MaxAsync();
+
+            if (orden.Date == DateTime.Today.Date)
+            {
+                resultadoWS.Resultado = true;
+                resultadoWS.Mensaje = "Este cliente ya posee una orden abierta";
+            }
+
+            return Json(resultadoWS, JsonRequestBehavior.AllowGet);
+        }
 
 
         //Cerrar la db
