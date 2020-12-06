@@ -1028,15 +1028,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                               select i.ProductoId).ToList();
 
                 //EN ESTA CONDICION SE SACARA LA EXISTENCIA EN NUMEROS-EN CASO QUE SEA
-                if (idProd.Count == 1) {
-                    Entradas(idProd[0], ref entradas);//OBTENEMOS LA ENTRADA DEL PRODUCTO
-
-                    if (entradas == 0) {
+                if (idProd.Count == 1) {                    
+                    if (ExistEntrada(idProd[0], ref entradas)) {//OBTENEMOS LA ENTRADA DEL PRODUCTO
                         mensaje = "No disponible";//NO TIENE ENTRADAS, NO HAY EXISTENCIA
                         existencia = -1;
                     } else {
                         //SI HAY ENTRADAS BUSCAR LAS SALIDAS
-                        Salidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
+                        ExistSalidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
                         existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
                         mensaje = existencia.ToString();
                     }
@@ -1046,8 +1044,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
                     while (w < idProd.Count && completo) {
                         //SI EL PRODUCTO ES DE BAR
-                        if (Entradas(idProd[w], ref entradas)) {
-                            Salidas(idProd[w], ref salidas);
+                        if (ExistEntrada(idProd[w], ref entradas)) {
+                            ExistSalidas(idProd[w], ref salidas);
 
                             existencia = (int)entradas - salidas;
                             mensaje = "Disponible";
@@ -1073,7 +1071,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { mensaje, existencia }, JsonRequestBehavior.AllowGet);
         }
 
-        public bool Entradas(int prodId, ref double entradas) {
+        public bool ExistEntrada(int prodId, ref double entradas) {
             //SE COMPRUEBA QUE HAYAN ENTRADAS EN EL BAR            
             var comprobar = (from obj in db.Entradas
                              join de in db.DetallesDeEntrada on obj.Id equals de.EntradaId
@@ -1090,7 +1088,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return false;
         }
 
-        public void Salidas(int item, ref int salidas) {
+        public void ExistSalidas(int item, ref int salidas) {
             //BUSCAR TODOS LOS PLATILLOS DEL AREA DE BAR QUE TENGAN EL INGREDIENTE            
             var buscar = (from obj in db.Menus
                           join i in db.Ingredientes on obj.Id equals i.MenuId
