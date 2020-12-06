@@ -95,8 +95,9 @@ $('#fechaOrden').datetimepicker({
 });
 
 //INICIALIZADOR DE LENGUAJE SELECT 2
-$('.js-example-basic-single').select2({
+$('select').select2({
     placeholder: { id: "-1", text: "Seleccione" },//CARGAR PRIMERO EL PLACEHOLDER
+    allowClear: true,
     //MODIFICAR LAS FRASES DEFAULT DE SELECT2
     language: {
 
@@ -117,14 +118,16 @@ function addDetails() {
 
     if (cantidad <= 0) {
         Alert("Error", "Ingrese una cantidad a ordenar", "error");
+    } else if (existencia == -1) {
+        Alert("Error", "La bebida no esta disponible para agregar", "error");
+    } else if (existencia == -2) {
+        agregarDetalle();
     } else if (existencia > 0) {
         if (parseInt(cantidad) <= parseInt(existencia)) {
             agregarDetalle();
         } else {
             Alert("Error", "La cantidad no puede ser mayor a la existencia", "error");
         }
-    } else {
-        agregarDetalle();
     }
 }//FIN FUNCTION
 

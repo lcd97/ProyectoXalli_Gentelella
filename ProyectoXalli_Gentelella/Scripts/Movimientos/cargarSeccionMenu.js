@@ -1,5 +1,8 @@
 ﻿//CAMBIAR EL MENU POR CATEGORIAS
 $("#categoria").change(function () {
+    //LIMPIAR EL INPUT DE FILTRO
+    $("#filtro").val("");
+
     //ALMACENO EL ID DEL SELECT 2
     var categoriaId = $(this).val();
     //var categoriaId = $("#categoria").val();
@@ -73,29 +76,6 @@ $("#categoria").change(function () {
     }
 });
 
-//FUNCION PARA CARGAR LAS MESAS DISPONIBLES
-function cargarMesas() {
-    $.ajax({
-        type: "GET",
-        url: "/Ordenes/ListaMesas/",
-        success: function (data) {
-            var agregar = "";
-            var mesas = data.length;
-
-            if (mesas < 0) {
-                agregar += "<option value='-1' readonly>SIN MESAS DISPONIBLES</option>";
-            } else {
-
-                for (var i = 0; i < mesas; i++) {
-                    agregar += "<option value='" + data[i].Id + "' readonly>" + data[i].Descripcion + "</option>";
-                }
-            }
-
-            $("#mesa").html(agregar);
-        }
-    });
-}//FIN FUNCTION
-
 //ELIMINA TODOS LOS ELEMENTOS DENTRO DE UN DIV
 function deleteRows() {
     //TOMO EL DIV PRINCIPAL (PADRE)
@@ -128,6 +108,8 @@ function cargarDetalle(id) {
             $("#precioOrden").val("$ " + data.menu.Precio);
             $("#platillo").val(data.menu.Platillo);
             $("#platillo").attr("name", data.menu.PlatilloId);
+
+            mostrarExistencia(id);
         }//FIN SUCCESS
     });//FIN AJAX
 }//FIN FUNCTION
@@ -138,13 +120,10 @@ function mostrarExistencia(id) {
         type: "GET",
         url: "/Ordenes/existencia/",
         data: { id },
+        dataType: "JSON",
         success: function (data) {
-            var agregar = "";
-            if (data != -1) {
-                agregar = '<small val="' + data + '">Existencia: ' + data + '</small>';
-            } else {
-                agregar = '<small val="-1">Existencia: No inventariado</small>';
-            }
+
+            var agregar = '<small val="' + data.existencia + '">Existencia: ' + data.mensaje + '</small>';
 
             $("#existencia").html(agregar);
         }
@@ -196,7 +175,6 @@ function editPlatillo(indice) {
                 cargarDetalle(id.attr("value"));
                 $("#cantidadOrden").val(cantidad);
                 $("#notaOrden").val(nota.attr("value"));
-
             }//FIN SUCCESS
         });//FIN AJAX        
 

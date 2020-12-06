@@ -148,14 +148,16 @@ function addDetails() {
 
     if (cantidad <= 0) {
         Alert("Error", "Ingrese una cantidad a ordenar", "error");
+    } else if (existencia == -1) {
+        Alert("Error", "La bebida no esta disponible para agregar", "error");
+    } else if (existencia == -2) {
+        agregarDetalle();
     } else if (existencia > 0) {
         if (parseInt(cantidad) <= parseInt(existencia)) {
             agregarDetalle();
         } else {
             Alert("Error", "La cantidad no puede ser mayor a la existencia", "error");
         }
-    } else {
-        agregarDetalle();
     }
 }//FIN FUNCTION
 
@@ -298,6 +300,10 @@ function guardarOrden() {
                 data: data,
                 success: function (data) {
                     if (data.success) {
+                        //ELIMINAR LA MESA 
+                        var mesa = document.getElementById("mesa");
+                        mesa.remove(mesa.selectedIndex);
+
                         //LIMPIAR PANTALLA
                         limpiarInputs();
                         limpiarInicio();

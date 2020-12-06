@@ -79,7 +79,7 @@
                 </div>
                 <div id="step-2">
 
-                    <div class="col-md-8 center-margin">
+                    <div class="col-md-10 center-margin">
 
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             @Html.Label("Tiempo preparación", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="form-group col-md-3 col-sm-3 col-xs-3">
-                            @Html.Label("No es shot", htmlAttributes: new { @class = "", @id = "shotLabel" })
+                            @Html.Label("Inventariar", htmlAttributes: new { @class = "", @id = "shotLabel" })
                             <label>
                                 <input type="checkbox" class="js-switch" id="shot" onclick="Check()" />
                             </label>
@@ -176,10 +176,10 @@
     function Check() {
         //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
         if (!elem.checked) {
-            $("#shotLabel").html("No es shot");
+            $("#shotLabel").html("No inventariar");
 
         } else {
-            $("#shotLabel").html("Shot");
+            $("#shotLabel").html("Inventariar");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 
@@ -189,9 +189,9 @@
         init = new Switchery(elem, { secondaryColor: '#CE2727' });
 
         if (elem.checked) {
-            $("#shotLabel").html("Shot");
+            $("#shotLabel").html("Inventariar");
         } else {
-            $("#shotLabel").html("No es shot");
+            $("#shotLabel").html("No inventariar");
         }
 
         //INICIALIZARDOR DE MASCARA FORMATO PRECIO

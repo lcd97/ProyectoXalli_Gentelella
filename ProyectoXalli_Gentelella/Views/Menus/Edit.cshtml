@@ -78,7 +78,7 @@
                 </div>
                 <div id="step-2">
 
-                    <div class="col-md-8 center-margin">
+                    <div class="col-md-10 center-margin">
 
                         <div class="form-group col-md-9 col-sm-9 col-xs-9">
                             @Html.Label("Tiempo estimado de preparación", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="form-group col-md-3 col-sm-3 col-xs-3">
-                            @Html.Label("No es shot", htmlAttributes: new { @class = "", @id = "shotLabel" })
+                            @Html.Label("No inventariar", htmlAttributes: new { @class = "", @id = "shotLabel" })
                             <label>
                                 <input type="checkbox" class="js-switch shot" id="shot" onclick="CheckShot()" />
                             </label>
@@ -244,10 +244,10 @@
     function CheckShot() {
         //DEPENDE DE SU ESTADO MANDAMOS UN ALERT
         if (!elemShot.checked) {
-            $("#shotLabel").html("No es shot");
+            $("#shotLabel").html("No inventariar");
 
         } else {
-            $("#shotLabel").html("Shot");
+            $("#shotLabel").html("Inventariar");
         }//FIN IF CHKBOX
     }//FIN FUNCION
 

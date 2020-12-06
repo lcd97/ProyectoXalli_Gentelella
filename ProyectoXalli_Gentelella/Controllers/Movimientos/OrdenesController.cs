@@ -1007,47 +1007,103 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return false;
         }
 
+        [HttpGet]
         /// <summary>
         /// CONSULTA LA EXISTENCIAS 
         /// </summary>
         /// <param name="id">ID DE MENU</param>
         /// <returns></returns>
         public async Task<ActionResult> existencia(int id) {
-            int existencia;
-            int salidas;
-            double entradas;
+            bool completo = true;
+            double entradas = 0;
+            int salidas = 0, existencia = 0;
 
+            //SI LA CATEGORIA DEL PLATILLO PERTENECE A BAR
             if (await esDeBar(id)) {
 
-                int idProd = (from m in db.Menus
+                //LISTAR TODOS LOS PRODUCTOS QUE CONFORMAN EL MENU
+                var idProd = (from m in db.Menus
                               join i in db.Ingredientes on m.Id equals i.MenuId
                               where i.MenuId == id
-                              select i.ProductoId).DefaultIfEmpty(-1).FirstOrDefault();
+                              select i.ProductoId).ToList();
 
-                if (idProd != -1) {
-                    salidas = (from m in db.Menus
-                               join dor in db.DetallesDeOrden on m.Id equals dor.MenuId
-                               join o in db.Ordenes on dor.OrdenId equals o.Id
-                               where m.Id == id
-                               select dor.CantidadOrden).DefaultIfEmpty(0).Sum();
+                //EN ESTA CONDICION SE SACARA LA EXISTENCIA EN NUMEROS-EN CASO QUE SEA
+                if (idProd.Count == 1) {
+                    Entradas(idProd[0], ref entradas);//OBTENEMOS LA ENTRADA DEL PRODUCTO
 
-                    entradas = (from p in db.Productos
-                                join de in db.DetallesDeEntrada on p.Id equals de.ProductoId
-                                join e in db.Entradas on de.EntradaId equals e.Id
-                                where p.Id == idProd
-                                select de.CantidadEntrada).DefaultIfEmpty(0).Sum();
-
-                    //calculando las existencias
-                    existencia = (int)entradas - salidas;
+                    if (entradas == 0) {
+                        mensaje = "No disponible";//NO TIENE ENTRADAS, NO HAY EXISTENCIA
+                        existencia = -1;
+                    } else {
+                        //SI HAY ENTRADAS BUSCAR LAS SALIDAS
+                        Salidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
+                        existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                        mensaje = existencia.ToString();
+                    }
                 } else {
-                    //Este menu no tiene un producto relacionado
-                    existencia = -1;
-                }
+                    int w = 0;//CONTADOR DE WHILE
+
+                    //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
+                    while (w < idProd.Count && completo) {
+                        //SI EL PRODUCTO ES DE BAR
+                        if (Entradas(idProd[w], ref entradas)) {
+                            Salidas(idProd[w], ref salidas);
+
+                            existencia = (int)entradas - salidas;
+                            mensaje = "Disponible";
+
+                            //NO HAY UN PRODUCTO EN EXISTENCIA
+                            if (existencia < 0) {
+                                completo = false;
+                                mensaje = "Productos faltantes";
+                            }
+
+                            existencia = -2;//AGREGA EL PRODUCTO AUNQUE FALTEN PRODUCTOS
+                        }
+
+                        w++;
+                    }
+                }//FIN IF-ELSE
             } else {
-                existencia = -1;
+                //PERTENECE A COCINA
+                mensaje = "No inventariado";
+                existencia = -2;
             }
 
-            return Json(existencia, JsonRequestBehavior.AllowGet);
+            return Json(new { mensaje, existencia }, JsonRequestBehavior.AllowGet);
+        }
+
+        public bool Entradas(int prodId, ref double entradas) {
+            //SE COMPRUEBA QUE HAYAN ENTRADAS EN EL BAR            
+            var comprobar = (from obj in db.Entradas
+                             join de in db.DetallesDeEntrada on obj.Id equals de.EntradaId
+                             join b in db.Bodegas on obj.BodegaId equals b.Id
+                             where de.ProductoId == prodId && b.CodigoBodega == "B01"
+                             select (double?)de.CantidadEntrada).Sum();
+
+            //SI CONTIENE AL MENOS UN ELEMENTO EL PRODUCTO TIENE EXISTENCIA
+            if (comprobar != null) {
+                entradas = (double)comprobar;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Salidas(int item, ref int salidas) {
+            //BUSCAR TODOS LOS PLATILLOS DEL AREA DE BAR QUE TENGAN EL INGREDIENTE            
+            var buscar = (from obj in db.Menus
+                          join i in db.Ingredientes on obj.Id equals i.MenuId
+                          join c in db.CategoriasMenu on obj.CategoriaMenuId equals c.Id
+                          join b in db.Bodegas on c.BodegaId equals b.Id
+                          join d in db.DetallesDeOrden on obj.Id equals d.MenuId
+                          where i.ProductoId == item && b.CodigoBodega == "B01" && obj.Inventariado == true
+                          select (int?)d.CantidadOrden).Sum();
+
+            //SI CONTIENE AL MENOS UN ELEMENTO EL PRODUCTO TIENE EXISTENCIA
+            if (buscar != null) {
+                salidas = (int)buscar;
+            }
         }
 
         protected override void Dispose(bool disposing) {

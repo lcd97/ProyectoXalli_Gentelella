@@ -150,7 +150,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 item.ImagenId = obj.Id;//SE ASIGNA EL ID RECIEN ALMACENADO
                                 item.EstadoMenu = true;
                                 item.TiempoEstimado = tiempo != "" ? tiempo : null;
-                                item.shot = shot;
+                                item.Inventariado = shot;
 
                                 db.Menus.Add(item);
                                 //SI SE ALMACENO CORRECTAMENTE EL PLATILLO
@@ -239,7 +239,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                   Tiempo = obj.TiempoEstimado,
                                   Ruta = u.Ruta,
                                   Estado = obj.EstadoMenu,
-                                  shot = obj.shot
+                                  shot = obj.Inventariado
                               }).FirstOrDefaultAsync();
 
             //BUSCA LOS INGREDIENTES DEL PLATILLO
@@ -361,7 +361,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             menu.CategoriaMenuId = categoriaId;
                             menu.EstadoMenu = estado;
                             menu.TiempoEstimado = tiempo != "" ? tiempo : null;
-                            menu.shot = shot;
+                            menu.Inventariado = shot;
 
                             db.Entry(menu).State = EntityState.Modified;//SE MODIFICA EL OBJETO
 
@@ -455,7 +455,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                     menu.CategoriaMenuId = categoriaId;
                                     menu.EstadoMenu = estado;
                                     menu.TiempoEstimado = tiempo;
-                                    menu.shot = shot;
+                                    menu.Inventariado = shot;
 
                                     db.Entry(menu).State = EntityState.Modified;//SE MODIFICA EL OBJETO
                                                                                 //SI SE ALMACENO CORRECTAMENTE EL PLATILLO
