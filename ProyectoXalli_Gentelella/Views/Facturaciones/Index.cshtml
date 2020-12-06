@@ -198,40 +198,42 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Dólares</th>
-                                                    @*<th>Córdobas</th>*@
+                                                    <th>Totales</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="bodyPago">
                                                 <tr>
-                                                    <th style="width:80%">Subtotal:</th>
+                                                    <th>Subtotal:</th>
                                                     <td id="subDol"></td>
-                                                    @*<td id="subCord"></td>*@
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <th>IVA (15%)</th>
                                                     <td id="ivaDol"></td>
-                                                    @*<td id="ivaCord"></td>*@
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <th id="txtDesc">Descuento:</th>
                                                     <td id="descDol"></td>
-                                                    @*<td id="descCord"></td>*@
+                                                    <td></td>
                                                 </tr>
 
                                                 <tr>
                                                     <th id="propina">Propina:</th>
                                                     <td id="propDol"></td>
-                                                    @*<td id="propCord"></td>*@
+                                                    <td></td>
                                                 </tr>
 
                                                 <tr>
                                                     <th>Total Dólares:</th>
                                                     <td id="totalDol"></td>
+                                                    <td id="restoDol"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Total Córdobas:</th>
                                                     <td id="totalCord"></td>
+                                                    <td id="restoCord"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -254,7 +256,7 @@
                                     @Html.DropDownList("MonedaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "monedaPago" })
                                 </div>
 
-                                <div class="form-group col-md-2 col-sm-3 col-xs-3">
+                                <div class="form-group col-md-3 col-sm-3 col-xs-3">
                                     <label>Monto Pagar</label>
                                     <input id="pagar" class="form-control" type="text" maxlength="8" autocomplete="off">
                                 </div>
@@ -264,7 +266,7 @@
                                     <input id="rec" class="form-control" type="text" maxlength="8" autocomplete="off">
                                 </div>
 
-                                <div class="form-group col-md-2 col-sm-4 col-xs-4" style="margin-top: 25px !important;">
+                                <div class="form-group col-md-1 col-sm-4 col-xs-4" style="margin-top: 25px !important;">
                                     <a class="btn btn-primary" onclick="agregarPago()"><i class="fa fa-plus"></i></a>
                                 </div>
 
