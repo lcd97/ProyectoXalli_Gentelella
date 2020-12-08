@@ -56,6 +56,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// </summary>
         /// <returns></returns>
         public ActionResult OrdenesCode() {
+            int codigo = calcularMax();
+
+            return Json(codigo, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// CALCULA EL NUMERO DE ORDEN MAXIMO DE LA ORDEN
+        /// </summary>
+        /// <returns></returns>
+        public int calcularMax() {
             //BUSCAR EL VALLOR MAXIMO ALMACENADO DE CODIGO
             var num = (from obj in db.Ordenes
                        select obj.CodigoOrden).DefaultIfEmpty().Max();
@@ -66,7 +76,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 codigo = num + 1;
             }
 
-            return Json(codigo, JsonRequestBehavior.AllowGet);
+            return codigo;
         }
 
         /// <summary>
@@ -303,7 +313,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     Cliente clientePlantilla = new Cliente();
 
                     //SE GUARDDA LOS DATOS DE LA ORDEN
-                    orden.CodigoOrden = Codigo;
+                    orden.CodigoOrden = calcularMax();//EN CASO DE QUE HAYA UNA ORDEN ATRAS DE ESTA CON EL MISMO NUMERO DE ORDEN
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
                     orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
                     orden.MeseroId = MeseroId;
@@ -1114,10 +1124,25 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                         mensaje = "No disponible";//NO TIENE ENTRADAS, NO HAY EXISTENCIA
                         existencia = -1;
                     } else {
+                        //BUSCAR LA BEBIDA PARA SABER SI ES TRAGO O BOTELLA
+                        var menu = db.Menus.Find(id);
+
                         //SI HAY ENTRADAS BUSCAR LAS SALIDAS
                         ExistSalidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
-                        existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
-                        mensaje = existencia.ToString();//MANDO LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
+
+                        if (menu.Inventariado) {
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                            mensaje = existencia.ToString();//MANDO LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
+                        } else {
+                            //SI ES UN TRAGO
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                            mensaje = existencia.ToString();//MANDO LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
+
+                            //MANDO -2 PARA QUE PUEDA AGREGAR CUANTOS TRAGOS SE NECESITEN
+                            existencia = -2;
+                        }
+
+
                     }
                 } else {
                     int w = 0;//CONTADOR DE WHILE
@@ -1141,6 +1166,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                     existencia = -2;//PUEDE SELECCIONAR PARA ORDENAR
                                 }
                             }
+                        } else {
+                            mensaje = "No disponible";
+                            existencia = -1;
                         }
 
                         w++;

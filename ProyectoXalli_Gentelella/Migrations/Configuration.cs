@@ -76,12 +76,12 @@ namespace ProyectoXalli_Gentelella.Migrations {
             context.SaveChanges();
 
             context.Mesas.AddOrUpdate(c => c.CodigoMesa,
-                new Mesa { CodigoMesa = "001", DescripcionMesa = "Bar & Snacks", EstadoMesa = true },
-                new Mesa { CodigoMesa = "002", DescripcionMesa = "Platos Fuertes", EstadoMesa = true },
-                new Mesa { CodigoMesa = "003", DescripcionMesa = "Platos Vegetarianos", EstadoMesa = true },
-                new Mesa { CodigoMesa = "004", DescripcionMesa = "Desayunos", EstadoMesa = true },
-                new Mesa { CodigoMesa = "005", DescripcionMesa = "Pastas", EstadoMesa = true },
-                new Mesa { CodigoMesa = "006", DescripcionMesa = "Bebidas", EstadoMesa = true });
+                new Mesa { CodigoMesa = "001", DescripcionMesa = "Mesa 1", EstadoMesa = true },
+                new Mesa { CodigoMesa = "002", DescripcionMesa = "Mesa 2", EstadoMesa = true },
+                new Mesa { CodigoMesa = "003", DescripcionMesa = "Mesa 3", EstadoMesa = true },
+                new Mesa { CodigoMesa = "004", DescripcionMesa = "Mesa 4", EstadoMesa = true },
+                new Mesa { CodigoMesa = "005", DescripcionMesa = "Mesa 5", EstadoMesa = true },
+                new Mesa { CodigoMesa = "006", DescripcionMesa = "Mesa 6", EstadoMesa = true });
             context.SaveChanges();
         }
     }
