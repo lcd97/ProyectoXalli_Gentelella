@@ -391,7 +391,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                         //BUSCO EL OBJETO
                                         Ingrediente Ingrediente = db.Ingredientes.FirstOrDefault(c => c.ProductoId == item && c.MenuId == menu.Id);
                                         db.Ingredientes.Remove(Ingrediente);
-                                        db.SaveChanges();
+                                        completado = db.SaveChanges() > 0 ? true : false;
                                     }
                                 }
 
@@ -407,10 +407,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                         db.Ingredientes.Add(Ingrediente);
                                         completado = db.SaveChanges() > 0 ? true : false;
                                     }
-                                }
-
-                                if (addIt.Count == 0 && deleteIt.Count == 0) {
-                                    completado = true;
                                 }
 
                                 mensaje = completado ? "Modificado correctamente" : "Error al modificar";

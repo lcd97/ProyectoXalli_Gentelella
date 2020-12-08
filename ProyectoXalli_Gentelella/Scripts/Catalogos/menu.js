@@ -67,14 +67,17 @@ function validar(nuevo) {
     var img = $("#file")[0].files[0];
     var code = $("#codigoMenu").val();
     var precio = $("#precio").val();
-    var time = $("#tiempo").val();
     var ingredients = $("#ingredientes").val();
 
     //SI ES VERDADERO
     if (nuevo == true) {
-        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
+        if (code !== "" && a !== "" && precio !== "") {
             if (img != null) {
-                saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+                if (ingredients == null || ingredients == "null" || ingredients == "") {
+                    Alert("Error", "Campos vacios", "error");
+                } else {
+                    saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+                }
             } else {
                 Alert("Error", "Adjunte una imagen", "error");
             }//FIN VALIDACION IMAGEN
@@ -82,8 +85,12 @@ function validar(nuevo) {
             Alert("Error", "Campos vacios", "error");
         }//FIN IF-ELSE VALIDACIONES
     } else {
-        if (code !== "" && a !== "" && precio !== "" && ingredients !== "") {
-            editMenuItem();//METODO PARA EDITAR UN ELEMENTO
+        if (code !== "" && a !== "" && precio !== "") {
+            if (ingredients == null || ingredients == "null" || ingredients == "") {
+                Alert("Error", "Campos vacios", "error");
+            } else {
+                editMenuItem();//METODO PARA EDITAR UN ELEMENTO
+            }
         } else {
             Alert("Error", "Campos vacios", "error");
         }//FIN VALIDACIONES IF-ELSE
@@ -130,6 +137,8 @@ function saveMenuItem() {
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU
 function editMenuItem() {
 
+    //var menuId = $("#codigoMenu").attr("val");
+
     //SE CREA UN OBJETO DE LA CLASE FORMDATA
     var formData = new FormData();
     var a = $("#platillo").val();
@@ -173,21 +182,23 @@ function editMenuItem() {
 }//FIN FUNCTION
 
 //MODIFICAR EL DIV DEL ELEMENTO DEL MENU
-function modificarItem(id) {
-    $.ajax({
-        type: "GET",
-        url: "/Menus/getMenuItem/" + id,
-        success: function (data) {
-            //ASIGNAR NUEVOS VALORES EN LA VISTA
-            $("#" + id).find("strong").text(data.menu.Platillo);
-            $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
-            $("#" + id).find("img").attr("src", "");
-            $("#" + id).find("img").attr("src", data.menu.Ruta);
-        },
-        error: function () {
-            Alert("Error al modificar", "Recargue la página", "error");
-        }
-    });//FIN AJAX      
+function modificarItem(/*id*/) {
+    //$.ajax({
+    //    type: "GET",
+    //    url: "/Menus/getMenuItem/" + id,
+    //    success: function (data) {
+    //        //ASIGNAR NUEVOS VALORES EN LA VISTA
+    //        $("#" + id).find("strong").text(data.menu.Platillo);
+    //$("#" + menuId).find("img").attr("src", "");
+    //        $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
+    //        $("#" + id).find("img").attr("src", data.menu.Ruta);
+    //    },
+    //    error: function () {
+    //        Alert("Error al modificar", "Recargue la página", "error");
+    //    }
+    //});//FIN AJAX      
+
+    location.reload();
 }//FIN FUNCTION
 
 //AGREGAR UN CAMPO MAS AL INDEX
