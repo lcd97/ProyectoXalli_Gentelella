@@ -7,11 +7,11 @@ using System.Web;
 namespace ProyectoXalli_Gentelella.Web_Sockets {
     public static class AddNewOrder {
 
-        public static void Preppend(object orden) {
+        public static void Preppend(/*object orden*/) {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<RowAdd>();
 
             if (hubContext !=null ) {
-                hubContext.Clients.All.nuevaFila(orden);
+                hubContext.Clients.All.nuevaFila(/*orden*/);
             }
         }
     }

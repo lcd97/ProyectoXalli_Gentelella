@@ -25,44 +25,46 @@ namespace ProyectoXalli_Gentelella.Web_Sockets {
         }
 
         //LO QUE QUIERO RECUPERAR Y MOSTRAR EN LA VISTA
-        public async Task<object> GetData(int empleadoId, string EmpleadoRol) {
-            var orden = await (dynamic)null;
+        public async Task<object> GetData(int empleadoId, string EmpleadoRol) {        
+            //var orden = await (dynamic)null;
 
-            if (EmpleadoRol == "Mesero") {
-                orden = (from obj in db.Ordenes.ToList()
-                         join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
-                         join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId
-                         select new {
-                             OrdenId = obj.Id,
-                             CodigoOrden = obj.CodigoOrden,
-                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
-                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
-                             Mesero = (from o in db.Ordenes
-                                       join m in db.Meseros on o.MeseroId equals m.Id
-                                       join a in db.Datos on m.DatoId equals a.Id
-                                       where obj.Id == o.Id
-                                       select a.PNombre + " " + a.PApellido).FirstOrDefault()
-                         }).LastOrDefault();
-            } else {
-                orden = (from obj in db.Ordenes.ToList()
-                         join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
-                         join d in db.Datos.ToList() on c.DatoId equals d.Id
-                         where obj.EstadoOrden == 1
-                         select new {
-                             OrdenId = obj.Id,
-                             CodigoOrden = obj.CodigoOrden,
-                             HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
-                             Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
-                             Mesero = (from o in db.Ordenes
-                                       join m in db.Meseros on o.MeseroId equals m.Id
-                                       join a in db.Datos on m.DatoId equals a.Id
-                                       where obj.Id == o.Id
-                                       select a.PNombre + " " + a.PApellido).FirstOrDefault()
-                         }).LastOrDefault();
-            }
+            //if (EmpleadoRol == "Mesero") {
+            //    orden = (from obj in db.Ordenes.ToList()
+            //             join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
+            //             join d in db.Datos.ToList() on c.DatoId equals d.Id
+            //             where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId
+            //             select new {
+            //                 OrdenId = obj.Id,
+            //                 CodigoOrden = obj.CodigoOrden,
+            //                 HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
+            //                 Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+            //                 Mesero = (from o in db.Ordenes
+            //                           join m in db.Meseros on o.MeseroId equals m.Id
+            //                           join a in db.Datos on m.DatoId equals a.Id
+            //                           where obj.Id == o.Id
+            //                           select a.PNombre + " " + a.PApellido).FirstOrDefault()
+            //             }).LastOrDefault();
+            //} else {
+            //    orden = (from obj in db.Ordenes.ToList()
+            //             join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
+            //             join d in db.Datos.ToList() on c.DatoId equals d.Id
+            //             where obj.EstadoOrden == 1
+            //             select new {
+            //                 OrdenId = obj.Id,
+            //                 CodigoOrden = obj.CodigoOrden,
+            //                 HoraOrden = ConvertHour(obj.FechaOrden.Hour, obj.FechaOrden.Minute),
+            //                 Cliente = d.PNombre.ToUpper() != "DEFAULT" ? d.PNombre + " " + d.PApellido : "N/A",
+            //                 Mesero = (from o in db.Ordenes
+            //                           join m in db.Meseros on o.MeseroId equals m.Id
+            //                           join a in db.Datos on m.DatoId equals a.Id
+            //                           where obj.Id == o.Id
+            //                           select a.PNombre + " " + a.PApellido).FirstOrDefault()
+            //             }).LastOrDefault();
+            //}
 
-            return orden;
+            //return orden;
+
+            return true;
         }
 
         /// <summary>
@@ -82,8 +84,8 @@ namespace ProyectoXalli_Gentelella.Web_Sockets {
         }
 
         //HACER LA NUEVA ORDEN (FELIX)
-        public void NuevaFila(object ordenes) {
-            clients.All.nuevaFila(ordenes);
+        public void NuevaFila(/*object ordenes*/) {
+            clients.All.nuevaFila(/*ordenes*/);
         }
     }
 }

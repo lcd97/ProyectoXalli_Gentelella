@@ -495,6 +495,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     }
 
                     transact.Commit();
+                    AddNewOrder.Preppend(/*obj*/);//CONEXION DE WEBSOCKETS
                 } catch (Exception) {
                     mensaje = "Error al almacenar orden";
                     transact.Rollback();
@@ -557,6 +558,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -576,6 +578,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA" && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -600,6 +603,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR" && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -619,6 +623,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -926,6 +931,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             }
                         }
                         transact.Commit();
+                        AddNewOrder.Preppend(/*obj*/);//CONEXION DE WEBSOCKETS
                     } catch (Exception) {
                         transact.Rollback();
                         mensaje = "Error al almacenar";
@@ -1137,8 +1143,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 Hora = "10 00 AM",
                 Cliente = "Felix Hdez"
             };
-
-            AddNewOrder.Preppend(obj);
         }
 
         //si el menuid es de bar o no 
