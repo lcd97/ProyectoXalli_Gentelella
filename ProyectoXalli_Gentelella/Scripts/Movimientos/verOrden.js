@@ -23,6 +23,9 @@
     if (mensaje != "") {
         AlertTimer("Completado", mensaje, "success");
     }
+
+    window.history.pushState('page2', 'Title', '/Ordenes/VerOrdenes');//QUITAMOS CUALQUIER MENSAJE DE LA URL
+
 });//FIN DOCUMENT READY
 
 //CREA EL FORMATO DEL CODIGO
