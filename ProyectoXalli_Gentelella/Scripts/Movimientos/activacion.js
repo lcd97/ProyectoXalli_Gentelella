@@ -100,10 +100,18 @@ function obtenerURL() {
             break;
         //TIPOS DE PAGO
         case "10":
-            DataTable("/Activaciones/getTiposDePago");
+            DataTable("/Activaciones/getTiposDeOrden");
             break;
         //MONEDAS
         case "11":
+            DataTable("/Activaciones/getMesas");
+            break;
+        //TIPOS DE PAGO
+        case "12":
+            DataTable("/Activaciones/getTiposDePago");
+            break;
+        //MONEDAS
+        case "13":
             DataTable("/Activaciones/getMonedas");
             break;
         default: console.log("Fin");

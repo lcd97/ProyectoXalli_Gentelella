@@ -81,7 +81,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 where obj.EstadoProducto == true
                                 select new {
                                     Id = obj.Id,
-                                    Presentacion = obj.NombreProducto.Trim() + " " + obj.MarcaProducto.Trim() + " " + um.AbreviaturaUM.Trim()
+                                    Presentacion = obj.MarcaProducto != null && obj.PresentacionProducto != 1 ?
+                               obj.NombreProducto + " - " + obj.MarcaProducto + " - " + obj.PresentacionProducto + " " + um.AbreviaturaUM :
+                               obj.NombreProducto + " - " + um.AbreviaturaUM
                                 }).ToList();
 
             return Json(presentacion, JsonRequestBehavior.AllowGet);
@@ -295,7 +297,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 join m in db.Menus on obj.MenuId equals m.Id
                                 join p in db.Productos on obj.ProductoId equals p.Id
                                 where obj.MenuId == id
-                                select p.NombreProducto.Trim() + " " + p.MarcaProducto.Trim()).ToList();
+                                select p.NombreProducto.Trim() + " - " + p.MarcaProducto.Trim()).ToList();
 
             return Json(ingredientes, JsonRequestBehavior.AllowGet);
         }
