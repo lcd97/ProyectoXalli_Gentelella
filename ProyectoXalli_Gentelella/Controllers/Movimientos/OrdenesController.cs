@@ -200,7 +200,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     Cliente clientePlantilla = new Cliente();
 
                     //SE GUARDDA LOS DATOS DE LA ORDEN
-                    orden.CodigoOrden = Codigo;
+                    orden.CodigoOrden = calcularMax();
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
                     orden.EstadoOrden = 4;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA 4 SALIDAS
                     orden.MeseroId = MeseroId;
@@ -442,7 +442,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             if (existAntigua == -1) {//NO HAY EXISTENCIAS
                                 completado = false;
                                 var platillo = db.Menus.Find(item.MenuId);
-                                mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                mensaje = "Uno o varios productos que son ingredientes de " + platillo.DescripcionMenu + " no poseen existencias";
                                 transact.Rollback();
 
                                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
@@ -877,7 +877,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                     if (existAntigua == -1) {//NO HAY EXISTENCIAS
                                         completado = false;
                                         var platillo = db.Menus.Find(item.MenuId);
-                                        mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                        mensaje = "Uno o varios productos que son ingredientes de " + platillo.DescripcionMenu + " no poseen existencias";
                                         transact.Rollback();
 
                                         return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
@@ -1211,6 +1211,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
                     //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
                     while (w < idProd.Count && completo) {
+                        salidas = 0;
+                        entradas = 0;
+
                         if (ExistEntrada(idProd[w], ref entradas)) {//SI LAS ENTRADAS PERTENECEN AL AREA DE BAR
                                                                     //SI EL PRODUCTO ES DE BAR
                             if (entradas > 0) {//SI LAS ENTRADAS FUERON MAYOR A 0
@@ -1219,7 +1222,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 existencia = (int)entradas - salidas;//CALCULO LA EXISTENCIA
 
                                 //NO HAY UN PRODUCTO EN EXISTENCIA
-                                if (existencia < 0) {
+                                if (existencia == 0) {
                                     completo = false;
                                     mensaje = "Productos faltantes";
                                     existencia = -1;//NO PUEDE SELECCIONAR PARA ORDENAR
@@ -1228,10 +1231,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                     existencia = -2;//PUEDE SELECCIONAR PARA ORDENAR
                                 }
                             }
-                        }// else {
-                        //    mensaje = "No disponible";
-                        //    existencia = -1;
-                        //}
+                        }
 
                         w++;
                     }
@@ -1273,15 +1273,30 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     if (entradas == 0) {
                         existencia = -1;
                     } else {
+                        //BUSCAR LA BEBIDA PARA SABER SI ES TRAGO O BOTELLA
+                        var menu = db.Menus.Find(id);
+
                         //SI HAY ENTRADAS BUSCAR LAS SALIDAS
                         ExistSalidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
-                        existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+
+                        if (menu.Inventariado) {
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                        } else {
+                            //SI ES UN TRAGO
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+
+                            //MANDO -2 PARA QUE PUEDA AGREGAR CUANTOS TRAGOS SE NECESITEN
+                            existencia = -2;
+                        }
                     }
                 } else {
                     int w = 0;//CONTADOR DE WHILE
 
                     //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
                     while (w < idProd.Count && completo) {
+                        salidas = 0;
+                        entradas = 0;
+
                         if (ExistEntrada(idProd[w], ref entradas)) {//SI LAS ENTRADAS PERTENECEN AL AREA DE BAR
                                                                     //SI EL PRODUCTO ES DE BAR
                             if (entradas > 0) {//SI LAS ENTRADAS FUERON MAYOR A 0
@@ -1290,7 +1305,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 existencia = (int)entradas - salidas;//CALCULO LA EXISTENCIA
 
                                 //NO HAY UN PRODUCTO EN EXISTENCIA
-                                if (existencia < 0) {
+                                if (existencia == 0) {
+                                    completo = false;
                                     existencia = -1;//NO PUEDE SELECCIONAR PARA ORDENAR
                                 } else {
                                     existencia = -2;//PUEDE SELECCIONAR PARA ORDENAR

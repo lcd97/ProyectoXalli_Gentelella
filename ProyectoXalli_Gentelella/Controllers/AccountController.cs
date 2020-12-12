@@ -157,10 +157,10 @@ namespace ProyectoXalli_Gentelella.Controllers {
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl) {
+        public ActionResult Login(string returnUrl, string mensaje = "") {
 
-            if (TempData["completado"] != null)
-                ViewBag.mensaje = TempData["completado"].ToString();
+            if (mensaje != "")
+                ViewBag.mensaje = mensaje;
 
             ViewBag.ReturnUrl = returnUrl;
             return View();
