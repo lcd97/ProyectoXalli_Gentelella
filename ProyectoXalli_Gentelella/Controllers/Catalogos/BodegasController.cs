@@ -164,32 +164,52 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         /// </summary>
         /// <returns></returns>
         public ActionResult SearchCode() {
-            var bod = db.Bodegas.ToList();
-            string num;
+            var bod = db.Bodegas.ToList().LastOrDefault();//AGARRO EL ULTIMO VALOR
+            string num = "";
+            int i = 0;
+            bool isNumeric = int.TryParse(bod.CodigoBodega, out i);
 
-            if (bod.Count() == 0) {
-                //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
-                var code = db.Bodegas.Max(x => x.CodigoBodega.Trim());
-                int valor;
-
-                //SI EXISTE ALGUN REGISTRO
-                if (code != null) {
-                    //CONVERTIR EL CODIGO A ENTERO
-                    valor = int.Parse(code);
-
-                    //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
-                    if (valor <= 8)
-                        num = "00" + (valor + 1);
-                    else
-                    if (valor >= 9 && valor < 100)
-                        num = "0" + (valor + 1);
-                    else
-                        num = (valor + 1).ToString();
-                } else
-                    num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
-            } else {
+            if (!isNumeric) {
+                //ES STRING
                 num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+            } else {
+                //SI ES NUMERICO
+                int valor = int.Parse(bod.CodigoBodega);
+
+                //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
+                if (valor <= 8)
+                    num = "00" + (valor + 1);
+                else
+                if (valor >= 9 && valor < 100)
+                    num = "0" + (valor + 1);
+                else
+                    num = (valor + 1).ToString();
             }
+
+
+            //if (bod.Count() == 0) {
+            //    //BUSCAR EL VALOR MAXIMO DE LAS BODEGAS REGISTRADAS
+            //    var code = db.Bodegas.Max(x => x.CodigoBodega.Trim());
+            //    int valor;
+
+            //    //SI EXISTE ALGUN REGISTRO
+            //    if (code != null) {
+            //        //CONVERTIR EL CODIGO A ENTERO
+            //        valor = int.Parse(code);
+
+            //        //SE COMIENZA A AGREGAR UN VALOR SECUENCIAL AL CODIGO ENCONTRADO
+            //        if (valor <= 8)
+            //            num = "00" + (valor + 1);
+            //        else
+            //        if (valor >= 9 && valor < 100)
+            //            num = "0" + (valor + 1);
+            //        else
+            //            num = (valor + 1).ToString();
+            //    } else
+            //        num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+            //} else {
+            //    num = "001";//SE COMIENZA CON EL PRIMER CODIGO DEL REGISTRO
+            //}
 
             return Json(num, JsonRequestBehavior.AllowGet);
         }
