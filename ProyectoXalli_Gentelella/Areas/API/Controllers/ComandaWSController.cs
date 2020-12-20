@@ -78,13 +78,13 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 
                                     if (await db.SaveChangesAsync() > 0)
                                     {
-                                        resultadoWS.Mensaje = "Almecenado con exito";
+                                        resultadoWS.Mensaje = "Imagen de la comanda almecenada con exito";
                                         resultadoWS.Resultado = true;
                                         transact.Commit();
                                     }
                                     else
                                     {
-                                        resultadoWS.Mensaje = "Error al modificar la orden";
+                                        resultadoWS.Mensaje = "Error al guardar la imagen de la orden";
                                         resultadoWS.Resultado = false;
                                         throw new Exception();
                                     }
@@ -98,7 +98,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                             }
                             else
                             {
-                                resultadoWS.Mensaje = "Error al guardar la imagen";
+                                resultadoWS.Mensaje = "Error al guardar la ruta de la imagen de la comanda";
                                 resultadoWS.Resultado = false;
                                 throw new Exception();
                             }
@@ -109,7 +109,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                             path = Path.Combine(Server.MapPath("~/images/Comanda"), photo.FileName);
                             photo.SaveAs(path);
 
-                            resultadoWS.Mensaje = "Almecenado con exito";
+                            resultadoWS.Mensaje = "Imagen de la comanda modificada con exito";
                             resultadoWS.Resultado = true;
                         }
                         else {
@@ -143,7 +143,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 
             //string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
             //string root = "http://proyectoxally.somee.com";
-            string root = "http://192.168.43.244/ProyectoXalli_Gentelella";
+            //string root = "http://192.168.137.213/ProyectoXalli_Gentelella";
             Orden orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Id == id);
 
             if (orden != null)
@@ -152,12 +152,21 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 
                 if (imagen.Ruta != "N/A")
                 {
-                    resultadoWS.Mensaje = root + imagen.Ruta;
+                    resultadoWS.Mensaje = imagen.Ruta;
                     resultadoWS.Resultado = true;
                 }
             }
 
             return Json(resultadoWS,JsonRequestBehavior.AllowGet);
+        }
+
+                protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
      

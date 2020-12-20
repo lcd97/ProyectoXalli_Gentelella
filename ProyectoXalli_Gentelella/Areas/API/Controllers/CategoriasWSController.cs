@@ -22,13 +22,14 @@ namespace MenuAPI.Areas.API.Controllers
         public async Task<JsonResult> Categorias()
         {
             var categorias = await (from c in db.CategoriasMenu.Where(c =>c.EstadoCategoriaMenu == true)
+                                    join b in db.Bodegas on c.BodegaId equals b.Id
                               select new CategoriaWS
                               {
                                   id = c.Id,
                                   codigo = c.CodigoCategoriaMenu,
                                   descripcion = c.DescripcionCategoriaMenu,
-                                  estado = c.EstadoCategoriaMenu
-
+                                  estado = c.EstadoCategoriaMenu,
+                                  bar = b.CodigoBodega == "B01" ? true : false
                               }).ToListAsync();
 
             return Json(categorias, JsonRequestBehavior.AllowGet);

@@ -59,7 +59,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 
                             if (await db.SaveChangesAsync() > 0)
                             {
-                                resultadoWS.Mensaje = "Almecenado con exito";
+                                resultadoWS.Mensaje = "Imagen del carnet almecenada con exito";
                                 resultadoWS.Resultado = true;
                                 transact.Commit();
                             }
@@ -76,7 +76,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                             path = Path.Combine(Server.MapPath("~/images/Carnet"), photo.FileName);
                             photo.SaveAs(path);
 
-                            resultadoWS.Mensaje = "Almecenado con exito";
+                            resultadoWS.Mensaje = "Imagen del carnet actualizada con exito";
                             resultadoWS.Resultado = true;
                         }
                     }
@@ -102,19 +102,29 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
         {
             ResultadoWS resultadoWS = new ResultadoWS();
 
-            string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
+            //string root = "http://192.168.0.52/ProyectoXalli_Gentelella";
             //string root = "http://proyectoxally.somee.com";
+            //string root = "http://192.168.137.213/ProyectoXalli_Gentelella";
             string ruta = "/images/Carnet" + @"\";
 
              var imagen = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(o => o.Ruta == ruta+id+".png");
 
             if (imagen != null)
             { 
-                    resultadoWS.Mensaje = root + imagen.Ruta;
+                    resultadoWS.Mensaje = imagen.Ruta;
                     resultadoWS.Resultado = true;
             }
 
             return Json(resultadoWS, JsonRequestBehavior.AllowGet);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }

@@ -15,7 +15,7 @@
     <AssemblyName>ProyectoXalli_Gentelella</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -198,6 +198,7 @@
     <Compile Include="Areas\API\Controllers\InventarioWSController.cs" />
     <Compile Include="Areas\API\Controllers\LoginWSController.cs" />
     <Compile Include="Areas\API\Controllers\MenusWSController.cs" />
+    <Compile Include="Areas\API\Controllers\MesasWSController.cs" />
     <Compile Include="Areas\API\Controllers\OrdenesWSController.cs" />
     <Compile Include="Areas\API\Controllers\ReportesWSController.cs" />
     <Compile Include="Areas\API\Models\CategoriaWS.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Areas\API\Models\DetallesDeOrdenWS.cs" />
     <Compile Include="Areas\API\Models\IngredienteWS.cs" />
     <Compile Include="Areas\API\Models\MenuWS.cs" />
+    <Compile Include="Areas\API\Models\MesaWS.cs" />
     <Compile Include="Areas\API\Models\OrdenWS.cs" />
     <Compile Include="Areas\API\Models\ReporteMasVendidosWS.cs" />
     <Compile Include="Areas\API\Models\ResportesVentasMes.cs" />
@@ -621,6 +623,7 @@
     <Folder Include="Areas\API\Views\Comanda\" />
     <Folder Include="Areas\API\Views\InventarioWS\" />
     <Folder Include="Areas\API\Views\Login\" />
+    <Folder Include="Areas\API\Views\MesaWS\" />
     <Folder Include="Areas\API\Views\ReportesWS\" />
     <Folder Include="Areas\API\Views\Shared\" />
     <Folder Include="images\Carnet\" />
@@ -680,7 +683,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49742</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:5000/</IISUrl>
+          <IISUrl>http://localhost/ProyectoXalli_Gentelella</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

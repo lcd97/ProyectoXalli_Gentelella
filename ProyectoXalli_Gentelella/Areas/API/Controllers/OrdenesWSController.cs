@@ -23,6 +23,7 @@ namespace MenuAPI.Areas.API.Controllers
         {
             var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1).ToList()
                            join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join me in db.Mesas.ToList() on o.MesaId equals me.Id
                            join c in db.Clientes.ToList() on o.ClienteId equals c.Id
                            join d in db.Datos.ToList() on c.DatoId equals d.Id
                            where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
@@ -35,8 +36,10 @@ namespace MenuAPI.Areas.API.Controllers
                                estado = o.EstadoOrden,
                                meseroid = m.Id,
                                clienteid = c.Id,
+                               mesaid = me.Id,
                                cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
-                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido,
+                               mesa = me.DescripcionMesa
 
                            }).ToList();
 
@@ -49,6 +52,7 @@ namespace MenuAPI.Areas.API.Controllers
         {
             var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 2).ToList()
                            join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join me in db.Mesas.ToList() on o.MesaId equals me.Id
                            join c in db.Clientes.ToList() on o.ClienteId equals c.Id
                            join d in db.Datos.ToList() on c.DatoId equals d.Id
                            where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
@@ -61,8 +65,10 @@ namespace MenuAPI.Areas.API.Controllers
                                estado = o.EstadoOrden,
                                meseroid = m.Id,
                                clienteid = c.Id,
+                               mesaid = me.Id,
                                cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
-                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido,
+                               mesa = me.DescripcionMesa
 
                            }).ToList();
 
@@ -75,6 +81,7 @@ namespace MenuAPI.Areas.API.Controllers
         {
             var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1 || x.EstadoOrden == 2).ToList()
                            join m in db.Meseros.ToList() on o.MeseroId equals m.Id
+                           join me in db.Mesas.ToList() on o.MesaId equals me.Id
                            join c in db.Clientes.ToList() on o.ClienteId equals c.Id
                            join d in db.Datos.ToList() on c.DatoId equals d.Id
                            where o.FechaOrden.ToShortDateString() == DateTime.Today.ToShortDateString()
@@ -87,9 +94,10 @@ namespace MenuAPI.Areas.API.Controllers
                                estado = o.EstadoOrden,
                                meseroid = m.Id,
                                clienteid = c.Id,
+                               mesaid = me.Id,
                                cliente = c.Dato.PNombre + " " + c.Dato.PApellido,
-                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
-
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido,
+                               mesa = me.DescripcionMesa
                            }).ToList();
 
             return Json(ordenes, JsonRequestBehavior.AllowGet);
@@ -118,6 +126,7 @@ namespace MenuAPI.Areas.API.Controllers
         {
             var ordenes = (from o in db.Ordenes.Where(x => x.EstadoOrden == 1 || x.EstadoOrden == 2)
                            join m in db.Meseros on o.MeseroId equals m.Id
+                           join me in db.Mesas on o.MesaId equals me.Id
                            join c in db.Clientes on o.ClienteId equals c.Id
                            join d in db.Datos on c.DatoId equals d.Id
                            where c.Id == id
@@ -129,8 +138,11 @@ namespace MenuAPI.Areas.API.Controllers
                                fechaorden = o.FechaOrden,
                                estado = o.EstadoOrden,
                                meseroid = m.Id,
+                               mesaid = me.Id,
                                clienteid = c.Id,
-                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido
+                               mesero = m.Dato.PNombre + " " + m.Dato.PApellido,
+                               mesa = me.DescripcionMesa
+                               
 
                            }).ToList();
 

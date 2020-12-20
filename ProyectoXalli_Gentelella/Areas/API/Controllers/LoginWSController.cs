@@ -61,5 +61,15 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 
             return Json(respuestaLogin, JsonRequestBehavior.AllowGet);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
     }
 }

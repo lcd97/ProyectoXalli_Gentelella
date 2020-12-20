@@ -14,8 +14,10 @@ namespace MenuAPI.Areas.API.Models
         public int estado { get; set; }
         public int meseroid { get; set; }
         public int clienteid { get; set; }
+        public int mesaid { get; set; }
         public string cliente { get; set; }
         public string mesero { get; set;}
+        public string mesa { get; set; }
 
     }
 }
