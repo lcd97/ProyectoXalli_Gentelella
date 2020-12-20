@@ -45,7 +45,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
         // GET: Facturaciones
-        public ActionResult Index(string mensaje="") {
+        public ActionResult Index(string mensaje = "") {
             ViewBag.Message = mensaje;//MENSAJE DE RECARGO
 
             ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
@@ -139,7 +139,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="evidenciaCode">ID DEL PAGO</param>
         /// <returns></returns>
         public Imagen buscarEvidencia(int evidenciaCode) {
-            string ruta = "/images/Pago/" + evidenciaCode + ".png";
+            string ruta = "/images/Carnet\\" + evidenciaCode + ".png";
 
             //SE REALIZA LA BUSQUEDA EN LA TABLA IMAGENES
             Imagen img = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(r => r.Ruta == ruta);
