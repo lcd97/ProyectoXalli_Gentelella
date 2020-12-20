@@ -56,6 +56,16 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// </summary>
         /// <returns></returns>
         public ActionResult OrdenesCode() {
+            int codigo = calcularMax();
+
+            return Json(codigo, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// CALCULA EL NUMERO DE ORDEN MAXIMO DE LA ORDEN
+        /// </summary>
+        /// <returns></returns>
+        public int calcularMax() {
             //BUSCAR EL VALLOR MAXIMO ALMACENADO DE CODIGO
             var num = (from obj in db.Ordenes
                        select obj.CodigoOrden).DefaultIfEmpty().Max();
@@ -66,7 +76,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 codigo = num + 1;
             }
 
-            return Json(codigo, JsonRequestBehavior.AllowGet);
+            return codigo;
         }
 
         /// <summary>
@@ -78,6 +88,25 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             var menu = from obj in db.Menus.ToList()
                        join i in db.Imagenes.ToList() on obj.ImagenId equals i.Id
                        where obj.CategoriaMenuId == id
+                       select new {
+                           Id = obj.Id,
+                           Platillo = obj.DescripcionMenu,
+                           Precio = obj.PrecioMenu,
+                           Imagen = i.Ruta
+                       };
+
+            return Json(menu, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// RECUPERA TODOS LOS PLATILLOS POR CATEGORIA DE BEBIDAS INVENTARIADS
+        /// </summary>
+        /// <param name="id">CATEGORIA ID</param>
+        /// <returns></returns>
+        public ActionResult BebidasInventariado(int id) {
+            var menu = from obj in db.Menus.ToList()
+                       join i in db.Imagenes.ToList() on obj.ImagenId equals i.Id
+                       where obj.CategoriaMenuId == id && obj.Inventariado
                        select new {
                            Id = obj.Id,
                            Platillo = obj.DescripcionMenu,
@@ -141,7 +170,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return View();
         }
 
-        public ActionResult guardarSalida(int Codigo, int MeseroId, DateTime FechaOrden, string detalleOrden) {
+        public async Task<ActionResult> guardarSalida(int Codigo, int MeseroId, DateTime FechaOrden, string detalleOrden) {
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //DESERIALIZACION DE OBJETO DONDE ESTA EL DETALLE DE LA ORDEN
@@ -171,11 +200,12 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     Cliente clientePlantilla = new Cliente();
 
                     //SE GUARDDA LOS DATOS DE LA ORDEN
-                    orden.CodigoOrden = Codigo;
+                    orden.CodigoOrden = calcularMax();
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
-                    orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
+                    orden.EstadoOrden = 4;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA 4 SALIDAS
                     orden.MeseroId = MeseroId;
                     orden.TipoOrdenId = tipoOrden.Id;
+                    orden.MesaId = db.Mesas.FirstOrDefault().Id; //SE PASA LA PRIMERA MESA QUE ENCUENTRE
 
                     //SE BUSCA EL CLIENTE DEFAULT
                     var buscarP = db.Datos.DefaultIfEmpty(null).FirstOrDefault(b => b.Cedula == "000-000000-0000X");
@@ -227,20 +257,60 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     if (db.SaveChanges() > 0) {
                         //ALMACENAR EL DETALLE DE LA ORDEN
                         foreach (var item in DetalleOrden) {
-                            DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+                            //RECALCULAR LA EXISTENCIA DEL PRODUCTO DE MENU
+                            int existAntigua = await recalcularExist(item.MenuId);
 
-                            detalleItem.CantidadOrden = item.CantidadOrden;
-                            //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
-                            detalleItem.NotaDetalleOrden = null;
-                            detalleItem.PrecioOrden = 0;
-                            detalleItem.MenuId = item.MenuId;
-                            detalleItem.OrdenId = orden.Id;
-                            //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
-                            detalleItem.EstadoDetalleOrden = false;
+                            if (existAntigua == -1) {//NO HAY EXISTENCIAS
+                                completado = false;
+                                var platillo = db.Menus.Find(item.MenuId);
+                                mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                transact.Rollback();
 
-                            //SE ALMACENA CADA ITEM
-                            db.DetallesDeOrden.Add(detalleItem);
-                            completado = db.SaveChanges() > 0 ? true : false;
+                                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                            } else if (existAntigua == -2) {//ES PRODUCTO NO CONTROLADO (EJEMPLO AREA COCINA)
+                                DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                                detalleItem.CantidadOrden = item.CantidadOrden;
+                                //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                                detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
+                                detalleItem.PrecioOrden = item.PrecioOrden;
+                                detalleItem.MenuId = item.MenuId;
+                                detalleItem.OrdenId = orden.Id;
+                                //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                                detalleItem.EstadoDetalleOrden = false;
+
+                                //SE ALMACENA CADA ITEM
+                                db.DetallesDeOrden.Add(detalleItem);
+                                completado = db.SaveChanges() > 0 ? true : false;
+                            } else {
+                                //PRODUCTO CONTROLADO
+                                int existencia = existAntigua - item.CantidadOrden;
+
+                                if (existencia < 0) {
+                                    //NO ES POSIBLE ALMACENAR EL DETALLE
+                                    completado = false;
+                                    var platillo = db.Menus.Find(item.MenuId);
+                                    mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                    transact.Rollback();
+
+                                    return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                                } else {
+                                    DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                                    detalleItem.CantidadOrden = item.CantidadOrden;
+                                    //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                                    detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
+                                    detalleItem.PrecioOrden = item.PrecioOrden;
+                                    detalleItem.MenuId = item.MenuId;
+                                    detalleItem.OrdenId = orden.Id;
+                                    //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                                    detalleItem.EstadoDetalleOrden = false;
+
+                                    //SE ALMACENA CADA ITEM
+                                    db.DetallesDeOrden.Add(detalleItem);
+                                    completado = db.SaveChanges() > 0 ? true : false;
+                                }
+                            }
                         }
                         mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
                     }
@@ -272,7 +342,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="DetalleOrden"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden, int mesaId) {
+        public async Task<ActionResult> Create(int Codigo, int MeseroId, int ClienteId, DateTime FechaOrden, string detalleOrden, int mesaId) {
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
@@ -303,7 +373,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     Cliente clientePlantilla = new Cliente();
 
                     //SE GUARDDA LOS DATOS DE LA ORDEN
-                    orden.CodigoOrden = Codigo;
+                    orden.CodigoOrden = calcularMax();//EN CASO DE QUE HAYA UNA ORDEN ATRAS DE ESTA CON EL MISMO NUMERO DE ORDEN
                     orden.FechaOrden = Convert.ToDateTime(FechaOrden);
                     orden.EstadoOrden = 1;//1 ORDENADA 2 SIN FACTURAR 3 FACTURADA
                     orden.MeseroId = MeseroId;
@@ -366,25 +436,66 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     if (db.SaveChanges() > 0) {
                         //ALMACENAR EL DETALLE DE LA ORDEN
                         foreach (var item in DetalleOrden) {
-                            DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+                            //RECALCULAR LA EXISTENCIA DEL PRODUCTO DE MENU
+                            int existAntigua = await recalcularExist(item.MenuId);
 
-                            detalleItem.CantidadOrden = item.CantidadOrden;
-                            //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
-                            detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
-                            detalleItem.PrecioOrden = item.PrecioOrden;
-                            detalleItem.MenuId = item.MenuId;
-                            detalleItem.OrdenId = orden.Id;
-                            //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
-                            detalleItem.EstadoDetalleOrden = false;
+                            if (existAntigua == -1) {//NO HAY EXISTENCIAS
+                                completado = false;
+                                var platillo = db.Menus.Find(item.MenuId);
+                                mensaje = "Uno o varios productos que son ingredientes de " + platillo.DescripcionMenu + " no poseen existencias";
+                                transact.Rollback();
 
-                            //SE ALMACENA CADA ITEM
-                            db.DetallesDeOrden.Add(detalleItem);
-                            completado = db.SaveChanges() > 0 ? true : false;
+                                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                            } else if (existAntigua == -2) {//ES PRODUCTO NO CONTROLADO (EJEMPLO AREA COCINA)
+                                DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                                detalleItem.CantidadOrden = item.CantidadOrden;
+                                //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                                detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
+                                detalleItem.PrecioOrden = item.PrecioOrden;
+                                detalleItem.MenuId = item.MenuId;
+                                detalleItem.OrdenId = orden.Id;
+                                //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                                detalleItem.EstadoDetalleOrden = false;
+
+                                //SE ALMACENA CADA ITEM
+                                db.DetallesDeOrden.Add(detalleItem);
+                                completado = db.SaveChanges() > 0 ? true : false;
+                            } else {
+                                //PRODUCTO CONTROLADO
+                                int existencia = existAntigua - item.CantidadOrden;
+
+                                if (existencia < 0) {
+                                    //NO ES POSIBLE ALMACENAR EL DETALLE
+                                    completado = false;
+                                    var platillo = db.Menus.Find(item.MenuId);
+                                    mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                    transact.Rollback();
+
+                                    return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                                } else {
+                                    DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                                    detalleItem.CantidadOrden = item.CantidadOrden;
+                                    //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                                    detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
+                                    detalleItem.PrecioOrden = item.PrecioOrden;
+                                    detalleItem.MenuId = item.MenuId;
+                                    detalleItem.OrdenId = orden.Id;
+                                    //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                                    detalleItem.EstadoDetalleOrden = false;
+
+                                    //SE ALMACENA CADA ITEM
+                                    db.DetallesDeOrden.Add(detalleItem);
+                                    completado = db.SaveChanges() > 0 ? true : false;
+                                }
+                            }
                         }
                         mensaje = completado ? "Almacenado correctamente" : "Error al almacenar";
                     }
 
                     transact.Commit();
+                    AddNewOrder.Preppend(/*obj*/);//CONEXION DE WEBSOCKETS
                 } catch (Exception) {
                     mensaje = "Error al almacenar orden";
                     transact.Rollback();
@@ -447,6 +558,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && obj.MeseroId == empleadoId && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -466,6 +578,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "COCINA" && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -490,6 +603,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == "BAR" && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -509,6 +623,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join t in db.TiposDeOrden.ToList() on obj.TipoOrdenId equals t.Id
                          join m in db.Mesas.ToList() on obj.MesaId equals m.Id
                          where obj.EstadoOrden == 1 && t.CodigoTipoOrden == "V01"
+                         orderby obj.FechaOrden.ToLongTimeString() ascending
                          select new {
                              OrdenId = obj.Id,
                              CodigoOrden = obj.CodigoOrden,
@@ -726,7 +841,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         /// <param name="detalleOrden"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult EditOrder(int Codigo, DateTime FechaOrden, int EstadoOrden, string detalleOrden) {
+        public async Task<ActionResult> EditOrder(int Codigo, DateTime FechaOrden, int EstadoOrden, string detalleOrden) {
             //BUSCAR LA ORDEN
             var Orden = db.Ordenes.DefaultIfEmpty(null).FirstOrDefault(o => o.CodigoOrden == Codigo);
             //DESERIALIZACION DE OBJETO DEL DETALLE (EN CASO DE QUE HAYA, EN CASO CONTRARIO SALE VACIO)
@@ -756,20 +871,59 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                 //var details = db.DetallesDeOrden.FirstOrDefault(d => d.OrdenId == Orden.Id);
                                 //RECORRO LA LISTA DE LOS NUEVOS PEDIDOS
                                 foreach (var item in DetalleOrden) {
-                                    //ABRO UNA NUEVA INSTANCIA DE DETALLE
-                                    DetalleDeOrden detalleItem = new DetalleDeOrden();
+                                    //RECALCULAR LA EXISTENCIA DEL PRODUCTO DE MENU
+                                    int existAntigua = await recalcularExist(item.MenuId);
 
-                                    //SI EL ESTADO DE LA LISTA DE CADA ITEM ES ACTIVO
-                                    if (item.EstadoDetalleOrden == false) {
+                                    if (existAntigua == -1) {//NO HAY EXISTENCIAS
+                                        completado = false;
+                                        var platillo = db.Menus.Find(item.MenuId);
+                                        mensaje = "Uno o varios productos que son ingredientes de " + platillo.DescripcionMenu + " no poseen existencias";
+                                        transact.Rollback();
+
+                                        return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                                    } else if (existAntigua == -2) {//ES PRODUCTO NO CONTROLADO (EJEMPLO AREA COCINA)
+                                        DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
                                         detalleItem.CantidadOrden = item.CantidadOrden;
+                                        //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
                                         detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
                                         detalleItem.PrecioOrden = item.PrecioOrden;
                                         detalleItem.MenuId = item.MenuId;
                                         detalleItem.OrdenId = Orden.Id;
+                                        //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
                                         detalleItem.EstadoDetalleOrden = false;
 
+                                        //SE ALMACENA CADA ITEM
                                         db.DetallesDeOrden.Add(detalleItem);
                                         completado = db.SaveChanges() > 0 ? true : false;
+                                    } else {
+                                        //PRODUCTO CONTROLADO
+                                        int existencia = existAntigua - item.CantidadOrden;
+
+                                        if (existencia < 0) {
+                                            //NO ES POSIBLE ALMACENAR EL DETALLE
+                                            completado = false;
+                                            var platillo = db.Menus.Find(item.MenuId);
+                                            mensaje = "La existencia es menor que la cantidad específicada del producto: " + platillo.DescripcionMenu;
+                                            transact.Rollback();
+
+                                            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+                                        } else {
+                                            DetalleDeOrden detalleItem = new DetalleDeOrden();//SE CREA LA INSTANCIA DE DETALLE DE ORDEN
+
+                                            detalleItem.CantidadOrden = item.CantidadOrden;
+                                            //EN CASO DE QUE NO EXISTA NOTA DE PLATILLO SE MANDA NULL
+                                            detalleItem.NotaDetalleOrden = item.NotaDetalleOrden != "" ? item.NotaDetalleOrden.Trim() : null;
+                                            detalleItem.PrecioOrden = item.PrecioOrden;
+                                            detalleItem.MenuId = item.MenuId;
+                                            detalleItem.OrdenId = Orden.Id;
+                                            //SE GUARDA FALSE PARA DECIR QUE NO ESTA ATENDIDO EL DETALLE (FALSE-NO ATENDIDO; TRUE-ATENDIDO)
+                                            detalleItem.EstadoDetalleOrden = false;
+
+                                            //SE ALMACENA CADA ITEM
+                                            db.DetallesDeOrden.Add(detalleItem);
+                                            completado = db.SaveChanges() > 0 ? true : false;
+                                        }
                                     }
                                 }
 
@@ -777,6 +931,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             }
                         }
                         transact.Commit();
+                        AddNewOrder.Preppend(/*obj*/);//CONEXION DE WEBSOCKETS
                     } catch (Exception) {
                         transact.Rollback();
                         mensaje = "Error al almacenar";
@@ -988,8 +1143,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 Hora = "10 00 AM",
                 Cliente = "Felix Hdez"
             };
-
-            AddNewOrder.Preppend(obj);
         }
 
         //si el menuid es de bar o no 
@@ -1028,35 +1181,56 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                               select i.ProductoId).ToList();
 
                 //EN ESTA CONDICION SE SACARA LA EXISTENCIA EN NUMEROS-EN CASO QUE SEA
-                if (idProd.Count == 1) {                    
-                    if (ExistEntrada(idProd[0], ref entradas)) {//OBTENEMOS LA ENTRADA DEL PRODUCTO
+                if (idProd.Count == 1) {
+                    ExistEntrada(idProd[0], ref entradas);//OBTENEMOS LA ENTRADA DEL PRODUCTO
+
+                    if (entradas == 0) {
                         mensaje = "No disponible";//NO TIENE ENTRADAS, NO HAY EXISTENCIA
                         existencia = -1;
                     } else {
+                        //BUSCAR LA BEBIDA PARA SABER SI ES TRAGO O BOTELLA
+                        var menu = db.Menus.Find(id);
+
                         //SI HAY ENTRADAS BUSCAR LAS SALIDAS
                         ExistSalidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
-                        existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
-                        mensaje = existencia.ToString();
+
+                        if (menu.Inventariado) {
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                            mensaje = existencia.ToString();//MANDO LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
+                        } else {
+                            //SI ES UN TRAGO
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                            mensaje = existencia.ToString();//MANDO LA CANTIDAD DE EXISTENCIA DEL PRODUCTO
+
+                            //MANDO -2 PARA QUE PUEDA AGREGAR CUANTOS TRAGOS SE NECESITEN
+                            existencia = -2;
+                        }
                     }
                 } else {
                     int w = 0;//CONTADOR DE WHILE
 
                     //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
                     while (w < idProd.Count && completo) {
-                        //SI EL PRODUCTO ES DE BAR
-                        if (ExistEntrada(idProd[w], ref entradas)) {
-                            ExistSalidas(idProd[w], ref salidas);
+                        salidas = 0;
+                        entradas = 0;
 
-                            existencia = (int)entradas - salidas;
-                            mensaje = "Disponible";
+                        if (ExistEntrada(idProd[w], ref entradas)) {//SI LAS ENTRADAS PERTENECEN AL AREA DE BAR
+                                                                    //SI EL PRODUCTO ES DE BAR
+                            if (entradas > 0) {//SI LAS ENTRADAS FUERON MAYOR A 0
+                                ExistSalidas(idProd[w], ref salidas);//CALCULAR LAS SALIDAS
 
-                            //NO HAY UN PRODUCTO EN EXISTENCIA
-                            if (existencia < 0) {
-                                completo = false;
-                                mensaje = "Productos faltantes";
+                                existencia = (int)entradas - salidas;//CALCULO LA EXISTENCIA
+
+                                //NO HAY UN PRODUCTO EN EXISTENCIA
+                                if (existencia == 0) {
+                                    completo = false;
+                                    mensaje = "Productos faltantes";
+                                    existencia = -1;//NO PUEDE SELECCIONAR PARA ORDENAR
+                                } else {
+                                    mensaje = "Disponible";
+                                    existencia = -2;//PUEDE SELECCIONAR PARA ORDENAR
+                                }
                             }
-
-                            existencia = -2;//AGREGA EL PRODUCTO AUNQUE FALTEN PRODUCTOS
                         }
 
                         w++;
@@ -1068,39 +1242,126 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                 existencia = -2;
             }
 
+            /*
+             CUANDO DEVUELVO EN EXISTENCIA 
+             -1 ES PARA QUE NO AGREGUE A LA ORDEN, 
+             -2 PERMITE AGREGAR A LA ORDEN (EN CASO QUE SEA DE LA COCINA O BIEN VARIOS PRODUCTOS Y MUESTRE DISPONIBLE)
+             CUANDO ES MAYOR A 0 ES LA EXISTENCIA DE BOTELLAS Y OTROS
+             */
+
             return Json(new { mensaje, existencia }, JsonRequestBehavior.AllowGet);
         }
 
-        public bool ExistEntrada(int prodId, ref double entradas) {
-            //SE COMPRUEBA QUE HAYAN ENTRADAS EN EL BAR            
-            var comprobar = (from obj in db.Entradas
-                             join de in db.DetallesDeEntrada on obj.Id equals de.EntradaId
-                             join b in db.Bodegas on obj.BodegaId equals b.Id
-                             where de.ProductoId == prodId && b.CodigoBodega == "B01"
-                             select (double?)de.CantidadEntrada).Sum();
+        public async Task<int> recalcularExist(int id) {
+            bool completo = true;
+            double entradas = 0;
+            int salidas = 0, existencia = 0;
 
-            //SI CONTIENE AL MENOS UN ELEMENTO EL PRODUCTO TIENE EXISTENCIA
-            if (comprobar != null) {
-                entradas = (double)comprobar;
-                return true;
+            //SI LA CATEGORIA DEL PLATILLO PERTENECE A BAR
+            if (await esDeBar(id)) {
+
+                //LISTAR TODOS LOS PRODUCTOS QUE CONFORMAN EL MENU
+                var idProd = (from m in db.Menus
+                              join i in db.Ingredientes on m.Id equals i.MenuId
+                              where i.MenuId == id
+                              select i.ProductoId).ToList();
+
+                //EN ESTA CONDICION SE SACARA LA EXISTENCIA EN NUMEROS-EN CASO QUE SEA
+                if (idProd.Count == 1) {
+                    ExistEntrada(idProd[0], ref entradas);//OBTENEMOS LA ENTRADA DEL PRODUCTO
+
+                    if (entradas == 0) {
+                        existencia = -1;
+                    } else {
+                        //BUSCAR LA BEBIDA PARA SABER SI ES TRAGO O BOTELLA
+                        var menu = db.Menus.Find(id);
+
+                        //SI HAY ENTRADAS BUSCAR LAS SALIDAS
+                        ExistSalidas(idProd[0], ref salidas);//OBTENEMOS LAS SALIDAS DEL PRODUCTO                    
+
+                        if (menu.Inventariado) {
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+                        } else {
+                            //SI ES UN TRAGO
+                            existencia = (int)entradas - salidas;//CALCULO DE LA EXISTENCIA
+
+                            //MANDO -2 PARA QUE PUEDA AGREGAR CUANTOS TRAGOS SE NECESITEN
+                            existencia = -2;
+                        }
+                    }
+                } else {
+                    int w = 0;//CONTADOR DE WHILE
+
+                    //RECORRER LA LISTA DE LOS INGREDIENTES Y COMRPOBAR QUE TENGA ENTRADAS DEL AREA DE BODEGA
+                    while (w < idProd.Count && completo) {
+                        salidas = 0;
+                        entradas = 0;
+
+                        if (ExistEntrada(idProd[w], ref entradas)) {//SI LAS ENTRADAS PERTENECEN AL AREA DE BAR
+                                                                    //SI EL PRODUCTO ES DE BAR
+                            if (entradas > 0) {//SI LAS ENTRADAS FUERON MAYOR A 0
+                                ExistSalidas(idProd[w], ref salidas);//CALCULAR LAS SALIDAS
+
+                                existencia = (int)entradas - salidas;//CALCULO LA EXISTENCIA
+
+                                //NO HAY UN PRODUCTO EN EXISTENCIA
+                                if (existencia == 0) {
+                                    completo = false;
+                                    existencia = -1;//NO PUEDE SELECCIONAR PARA ORDENAR
+                                } else {
+                                    existencia = -2;//PUEDE SELECCIONAR PARA ORDENAR
+                                }
+                            }
+                        }
+
+                        w++;
+                    }
+                }//FIN IF-ELSE
+            } else {
+                //PERTENECE A COCINA
+                existencia = -2;
             }
 
-            return false;
+            return existencia;
+        }
+
+
+        public bool ExistEntrada(int prodId, ref double entradas) {
+            bool esBar = false;
+
+            //SE COMPRUEBA QUE HAYAN ENTRADAS EN EL BAR            
+            var entradaProd = (from obj in db.Entradas
+                               join de in db.DetallesDeEntrada on obj.Id equals de.EntradaId
+                               join b in db.Bodegas on obj.BodegaId equals b.Id
+                               where de.ProductoId == prodId && b.CodigoBodega == "B01"
+                               group new { de, b } by new { b.CodigoBodega } into grouped
+                               select new {
+                                   Entradas = grouped.Sum(s => s.de.CantidadEntrada),//SUMAR TODAS LAS ENTRADAS
+                                   Bar = grouped.Key.CodigoBodega == "B01" ? true : false//DETERMINAR SI LAS ENTRADAS SON DE BAR O BODEGA
+                               }).FirstOrDefault();
+
+            //SI CONTIENE AL MENOS UN ELEMENTO EL PRODUCTO TIENE EXISTENCIA
+            if (entradaProd != null) {
+                entradas = (double)entradaProd.Entradas;
+                esBar = entradaProd.Bar;
+            }
+
+            return esBar;
         }
 
         public void ExistSalidas(int item, ref int salidas) {
             //BUSCAR TODOS LOS PLATILLOS DEL AREA DE BAR QUE TENGAN EL INGREDIENTE            
-            var buscar = (from obj in db.Menus
-                          join i in db.Ingredientes on obj.Id equals i.MenuId
-                          join c in db.CategoriasMenu on obj.CategoriaMenuId equals c.Id
-                          join b in db.Bodegas on c.BodegaId equals b.Id
-                          join d in db.DetallesDeOrden on obj.Id equals d.MenuId
-                          where i.ProductoId == item && b.CodigoBodega == "B01" && obj.Inventariado == true
-                          select (int?)d.CantidadOrden).Sum();
+            var salidasProd = (from obj in db.Menus
+                               join i in db.Ingredientes on obj.Id equals i.MenuId
+                               join c in db.CategoriasMenu on obj.CategoriaMenuId equals c.Id
+                               join b in db.Bodegas on c.BodegaId equals b.Id
+                               join d in db.DetallesDeOrden on obj.Id equals d.MenuId
+                               where i.ProductoId == item && b.CodigoBodega == "B01" && obj.Inventariado == true
+                               select (int?)d.CantidadOrden).Sum();
 
             //SI CONTIENE AL MENOS UN ELEMENTO EL PRODUCTO TIENE EXISTENCIA
-            if (buscar != null) {
-                salidas = (int)buscar;
+            if (salidasProd != null) {
+                salidas = (int)salidasProd;
             }
         }
 

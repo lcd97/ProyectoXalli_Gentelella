@@ -182,6 +182,30 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { data = meseros }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult getMesas() {
+            var meseros = (from obj in db.Mesas.ToList()
+                           where obj.EstadoMesa == false
+                           select new {
+                               Id = obj.Id,
+                               Descripcion = obj.DescripcionMesa,
+                               Codigo = obj.CodigoMesa
+                           });
+
+            return Json(new { data = meseros }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getTiposDeOrden() {
+            var meseros = (from obj in db.TiposDeOrden.ToList()
+                           where obj.EstadoTipoOrden == false
+                           select new {
+                               Id = obj.Id,
+                               Descripcion = obj.DescripcionTipoOrden,
+                               Codigo = obj.CodigoTipoOrden
+                           });
+
+            return Json(new { data = meseros }, JsonRequestBehavior.AllowGet);
+        }
+
         /**************************************************
          *            MODULO FACTURACION                 */
         public JsonResult getTiposDePago() {

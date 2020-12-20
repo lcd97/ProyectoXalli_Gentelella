@@ -189,9 +189,9 @@ function SubmitFormPassword(form) {
             data: $(form).serialize(), //SERIALIZACION DE LOS DATOS A ENVIAR
             success: function (data) {
                 if (data.success) {//SI SE REALIZO CORRECTAMENTE
-                    $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
-                    $("#small-modal").modal("hide"); //CERRAR MODAL
-                    AlertTimer("Completado", data.message, "success");
+                    //REDIRECCIONAR AL LOGIN
+                    var url = "/Account/Login/?returnUrl=" + " " + "&mensaje=" + data.message;
+                    window.location.href = url;
                 }//FIN IF
                 else {
                     //MANDAR EL ERROR DEL CONTROLADOR

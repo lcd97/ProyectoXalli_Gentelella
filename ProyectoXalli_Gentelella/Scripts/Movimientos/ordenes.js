@@ -158,6 +158,8 @@ function addDetails() {
         } else {
             Alert("Error", "La cantidad no puede ser mayor a la existencia", "error");
         }
+    } if (existencia == 0) {
+        Alert("Error", "Este producto no tiene existencias", "error");
     }
 }//FIN FUNCTION
 

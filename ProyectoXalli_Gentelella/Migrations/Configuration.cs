@@ -73,7 +73,16 @@ namespace ProyectoXalli_Gentelella.Migrations {
                 new CategoriaMenu { CodigoCategoriaMenu = "004", DescripcionCategoriaMenu = "Desayunos", EstadoCategoriaMenu = true, BodegaId = 2 },
                 new CategoriaMenu { CodigoCategoriaMenu = "005", DescripcionCategoriaMenu = "Pastas", EstadoCategoriaMenu = true, BodegaId = 2 },
                 new CategoriaMenu { CodigoCategoriaMenu = "006", DescripcionCategoriaMenu = "Bebidas", EstadoCategoriaMenu = true, BodegaId = 1 });
-            context.SaveChanges();           
+            context.SaveChanges();
+
+            context.Mesas.AddOrUpdate(c => c.CodigoMesa,
+                new Mesa { CodigoMesa = "001", DescripcionMesa = "Mesa 1", EstadoMesa = true },
+                new Mesa { CodigoMesa = "002", DescripcionMesa = "Mesa 2", EstadoMesa = true },
+                new Mesa { CodigoMesa = "003", DescripcionMesa = "Mesa 3", EstadoMesa = true },
+                new Mesa { CodigoMesa = "004", DescripcionMesa = "Mesa 4", EstadoMesa = true },
+                new Mesa { CodigoMesa = "005", DescripcionMesa = "Mesa 5", EstadoMesa = true },
+                new Mesa { CodigoMesa = "006", DescripcionMesa = "Mesa 6", EstadoMesa = true });
+            context.SaveChanges();
         }
     }
 }

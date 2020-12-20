@@ -79,6 +79,10 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        $(document).ready(function () {
+            window.history.pushState('page2', 'Title', '/Account/Login');//QUITAMOS CUALQUIER MENSAJE DE LA URL
+        });
+
         function mostrarPassword() {
             var cambio = document.getElementById("txtPassword");
             if (cambio.type == "password") {

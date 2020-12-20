@@ -11,8 +11,8 @@
     $("#descuentoPago").mask('###00%', { reverse: true });
 
     $("#propinaPago").mask("0,000.00", { reverse: true });
-    $("#pagar").mask("0,000.00", { reverse: true });
-    $("#rec").mask("0,000.00", { reverse: true });
+    $("#pagar").mask("000,000.00", { reverse: true });
+    $("#rec").mask("000,000.00", { reverse: true });
 
     cargarNo();
 
@@ -61,13 +61,17 @@ function guardarPago() {
     /*List<int> OrdenesIds, int ClienteId, int NoFactura, double FechaPago, bool Diplomatico, int DescuentoPago,
     double Propina, double Cambio, int MonedaPropina, int EvidenciaId, string DetallePago*/
 
-    var pagoDol = parseFloat($("#footDol").html().split("$ ")[1]);
-    var pagoCord = parseFloat($("#footCord").html().split("C$ ")[1]);
+    //var pagoDol = parseFloat($("#footDol").html().split("$ ")[1]);
+    //var pagoCord = parseFloat($("#footCord").html().split("C$ ")[1]);
 
-    var calcDol = parseFloat($("#totalDol").html().split("$ ")[1]);
-    var calcCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
+    //var calcDol = parseFloat($("#totalDol").html().split("$ ")[1]);
+    //var calcCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
 
-    if ((pagoDol == 0 || pagoDol != calcDol) && (pagoCord == 0 || pagoCord != calcCord)) {
+    var restoCord = parseFloat($("#restoCord").attr("name"));
+    var restoDol = parseFloat($("#restoDol").attr("name"));
+
+    //if ((pagoDol == 0 || pagoDol != calcDol) && (pagoCord == 0 || pagoCord != calcCord)) {
+    if (restoCord != 0 && restoDol != 0) {//SI FALTA PAGAR O ESTA EN NEGATIVO
         Alert("Error", "Complete correctamente la forma de pago de la factura", "error");
     } else {
         //OBTENER LOS PARAMETROS
@@ -493,6 +497,7 @@ function totalesOrdenes(diplomatico) {
     $("#subTotalOrden").html("$ " + parseFloat(totalOrd).toFixed(2));
     $("#ivaOrden").html(IVA == 0 ? "N/A" : "$ " + parseFloat(IVA).toFixed(2));
     $("#totalOrden").html("$ " + parseFloat(Total).toFixed(2));
+    $("#restoDol").html("Faltan: $ " + parseFloat(Total).toFixed(2));
 
     CalcularCambios(totalOrd, IVA, Total);
 }
@@ -538,6 +543,7 @@ function CalcularCambios(subtotalOrd, IVA, Total) {
     //$("#descCord").html("C$ 0");
     //$("#propCord").html("C$ 0");
     $("#totalCord").html("C$ " + totalCord.toFixed(2));
+    $("#restoCord").html("Faltan: C$ " + totalCord.toFixed(2));
 }
 
 //REALIZA LOS CALCULOS DE DESCUENTO PROPINA Y TOTAL
@@ -622,6 +628,13 @@ function calcularPagos() {
 
     $("#totalCord").html("C$ " + totalCord.toFixed(2));
     $("#totalDol").html("$ " + totalDol.toFixed(2));
+
+    //$("#restoCord").html("Faltan: C$ " + totalCord.toFixed(2));
+    //$("#restoCord").attr("name", totalCord.toFixed(2));
+    //$("#restoDol").html("Faltan: $ " + totalDol.toFixed(2));
+    //$("#restoDol").attr("name", totalDol.toFixed(2));
+
+    calcularResto();
 }
 
 //FUNCION PARA CONVERTIR DE DESCUENTO
@@ -717,8 +730,8 @@ function validado() {
                 agregar = '<tr class="even pointer">' +
                     '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
                     '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
-                    '<td class="" >' + digitoMoneda + parseFloat(pagar).toFixed(2) + '</td>' +
-                    '<td class="" >' + digitoMoneda + parseFloat(recibido).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(replacePagar).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(replaceRecibido).toFixed(2) + '</td>' +
                     '<td class="" >' + digitoMoneda + parseFloat(entregar).toFixed(2) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
                     '<a class="btn btn-danger" onclick = "deletePago(this);" id="boton"> <i class="fa fa-trash"></i></a></td>' +
@@ -728,12 +741,12 @@ function validado() {
             if (pagar == "") {
                 Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
             } else {
-                recibido = pagar;
+                recibido = replacePagar;
 
                 agregar = '<tr class="even pointer">' +
                     '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +
                     '<td class="" val="' + monedaOption + '">' + moneda + '</td>' +
-                    '<td class="" >' + digitoMoneda + parseFloat(pagar).toFixed(2) + '</td>' +
+                    '<td class="" >' + digitoMoneda + parseFloat(replacePagar).toFixed(2) + '</td>' +
                     '<td class="" >' + digitoMoneda + parseFloat(recibido).toFixed(2) + '</td>' +
                     '<td class="" >' + digitoMoneda + parseFloat(entregar).toFixed(2) + '</td>' +
                     '<td class=" last"><a class="btn btn-primary" id="boton" onclick="editPago(this);"><i class="fa fa-edit"></i></a>' +
@@ -750,7 +763,24 @@ function validado() {
 
         calcularPagosFact();
         tablaPago();
+        calcularResto();
     }
+}
+
+function calcularResto() {
+    var totalDol = $("#totalDol").html().split("$ ")[1];
+    var totalCord = $("#totalCord").html().split("C$ ")[1];
+
+    var totalPagDol = $("#footDol").html().split("$ ")[1];
+    var totalPagCord = $("#footCord").html().split("C$ ")[1];
+
+    var restoCord = parseFloat(totalCord) - parseFloat(totalPagCord);
+    var restoDol = parseFloat(totalDol) - parseFloat(totalPagDol);
+
+    $("#restoCord").html("Faltan: C$ " + restoCord.toFixed(2));
+    $("#restoCord").attr("name", restoCord.toFixed(2));
+    $("#restoDol").html("Faltan: $ " + restoDol.toFixed(2));
+    $("#restoDol").attr("name", restoDol.toFixed(2));
 }
 
 //CALCULO LOS TOTALES DE PAGO
@@ -802,6 +832,7 @@ function deletePago(row) {
 
     calcularPagosFact();
     tablaPago();
+    calcularResto();
 }//FIN FUNCTION
 
 //FUNCION PARA EDITAR PAGO

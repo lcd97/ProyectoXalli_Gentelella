@@ -130,7 +130,6 @@ function mostrarExistencia(id) {
     });
 }
 
-
 //FUNCION PARA CALCULAR EL TOTAL GENERAL DE LA TABLA
 function CalcularTotal() {
     //CALCULAR EL TOTAL

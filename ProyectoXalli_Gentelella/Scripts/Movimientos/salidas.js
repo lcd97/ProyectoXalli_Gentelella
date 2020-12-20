@@ -41,6 +41,14 @@ function categoryList() {
     });
 }
 
+$("#filtro").on("keyup", function () {
+    var value = $(this).val().toLowerCase().trim();
+
+    $(".items").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);//SI ES DIFERENTE A -1 ES QUE ENCONTRO
+    });
+});
+
 //AGREGAR LA OPCION DONDE IRA EL PLACEHOLDER DEL SELECT 2
 $(".js-example-basic-single").prepend("<option value='-1' readonly></option>");
 
@@ -118,7 +126,7 @@ $("#categoria").change(function () {
     if (categoriaId != "") {
         $.ajax({
             type: "GET",
-            url: "/Ordenes/MenuByCategoria/" + categoriaId,
+            url: "/Ordenes/BebidasInventariado/" + categoriaId,
             dataType: "JSON",
             success: function (data) {
                 //SI NO HAY ELEMENTOS
@@ -142,7 +150,7 @@ $("#categoria").change(function () {
                         agregarMenu += '<div class="col-md-4 items" id="' + data[i].Id + '">' +//SE LE ASIGNA UN IDENTIFICADOR PARA REALIZAR EL CRUD Y ACTUALIZAR VISTA
                             '<div class="thumbnail">' +
                             '<div class="image view view-first">' +
-                            '<img style="width: 100%; height:100%; display: block;" src="' + data[i].Imagen + '"alt="' + data[i].DescripcionPlatillo + '" />' +
+                            '<img style="width: 100%; height:100%; display: block;" src="' + data[i].Imagen + '"alt="' + data[i].Platillo + '" />' +
                             '<div class="mask no-caption">' +
                             '<div class="tools tools-bottom">' +
                             '<a onclick=detalleSalidas("/Ordenes/DetalleSalida/",' + data[i].Id + ')><i class="fa fa-plus"></i></a>' +
@@ -184,6 +192,24 @@ function detalleSalidas(url, id) {
 
     CargarSmallParcial(url);
     cargarDet(id);
+    mostrarExistencia(id);
+}
+
+
+//FUNCION PARA MOSTRAR LA EXISTENCIA
+function mostrarExistencia(id) {
+    $.ajax({
+        type: "GET",
+        url: "/Ordenes/existencia/",
+        data: { id },
+        dataType: "JSON",
+        success: function (data) {
+
+            var agregar = '<small val="' + data.existencia + '">Existencia: ' + data.mensaje + '</small>';
+
+            $("#existencia").html(agregar);
+        }
+    });
 }
 
 //CARGAR LOS DATOS DEL PLATILLO A LA MODAL
@@ -202,6 +228,26 @@ function cargarDet(id) {
 
 //AGREGA EL PLATILLO SELECCIONADO A LA TABLA
 function addDetails() {
+    var cantidad = $("#cantidadOrden").val(), existencia = $("#existencia small").attr("val");
+
+    if (cantidad <= 0) {
+        Alert("Error", "Ingrese una cantidad a ordenar", "error");
+    } else if (existencia == -1) {
+        Alert("Error", "La bebida no esta disponible para agregar", "error");
+    } else if (existencia == -2) {
+        agregarDetalle();
+    } else if (existencia > 0) {
+        if (parseInt(cantidad) <= parseInt(existencia)) {
+            agregarDetalle();
+        } else {
+            Alert("Error", "La cantidad no puede ser mayor a la existencia", "error");
+        }
+    } if (existencia == 0) {
+        Alert("Error", "Este producto no tiene existencias", "error");
+    }
+}//FIN FUNCTION
+
+function agregarDetalle() {
     //SE ELIMINA LA FILA DE INICIO
     $("#noProd").remove();
 
@@ -248,8 +294,7 @@ function addDetails() {
     }
 
     $("body").removeClass("modal-open");
-
-}//FIN FUNCTION
+}
 
 //ELIMINA TODOS LOS ELEMENTOS DENTRO DE UN DIV
 function deleteRows() {
@@ -260,9 +305,6 @@ function deleteRows() {
     while (element.firstChild) {
         element.removeChild(element.firstChild);
     }//FIN CICLO
-
-    ////ELIMINAR LA PAGINACION
-    //$('#paginar').remove();
 }
 
 //FUNCION PARA ALMACENAR LA ORDEN
@@ -319,4 +361,41 @@ function guardarSalidas() {
     } else {
         Alert("Error", "No se encontraron registros para realizar salidas", "error");
     }
+}//FIN FUNCTION
+
+//FUNCION PARA EDITAR UN PRODUCTO DE LA TABLA
+function editPlatillo(indice) {
+    //EVENTO ONCLICK DEL BOTON EDITAR
+    $("#table_body").on("click", "#boton", function () {
+        //OBTENER LOS VALORES A UTILIZAR
+        var id = $(this).parents("tr").find("td").eq(0);
+        var cantidad = $(this).parents("tr").find("td").eq(1).html();
+
+        $("#smallModal").modal("show"); //MUESTRA LA MODAL
+        $("#vParcial").html("");//LIMPIA LA MODAL POR DATOS PRECARGADOS
+
+        $.ajax({
+            type: "GET", //TIPO DE ACCION
+            url: "/Ordenes/DetalleSalida", //URL DEL METODO A USAR
+            success: function (parcial) {
+                $("#vParcial").html(parcial);//CARGA LA PARCIAL CON ELEMENTOS QUE CONTEGA
+                cargarDet(id.attr("value"));
+                $("#cantidadOrden").val(cantidad);
+                mostrarExistencia(id.attr("value"));
+            }//FIN SUCCESS
+        });//FIN AJAX        
+
+        indice.closest("tr").remove();//ELIMINAR LA FILA
+        tablaVacia();
+    });
+}//FIN FUNCTION
+
+//FUNCION PARA ELIMINAR UNA FILA SELECCIONADA DE LA TABLA
+function deletePlatillo(row) {
+    //SE BUSCA LA POSICION DE LA FILA SELECCIONADA PARA ELIMINARLA
+    var indice = row.parentNode.parentNode.rowIndex;
+    document.getElementById('productTable').deleteRow(indice);
+
+
+    tablaVacia();
 }//FIN FUNCTION

@@ -499,6 +499,7 @@
     <Content Include="Scripts\Movimientos\activacion.js" />
     <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
     <Content Include="Scripts\Movimientos\facturaciones.js" />
+    <Content Include="Scripts\Movimientos\layout.js" />
     <Content Include="Scripts\Movimientos\preparacion.js" />
     <Content Include="Scripts\Movimientos\editOrden.js" />
     <Content Include="Scripts\Movimientos\entradas.js" />

@@ -13,6 +13,7 @@ namespace ProyectoXalli_Gentelella.Controllers {
     public class ManageController : Controller {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private string mensaje = "";
 
         public ManageController() {
         }
@@ -200,7 +201,7 @@ namespace ProyectoXalli_Gentelella.Controllers {
 
             //SI SE CAMBIO CORRECTAMENTE
             if (result.Succeeded) {
-                TempData["completado"] = "Cambio de contraseña exitoso. Vuelva a ingresar";
+                //TempData["completado"] = "Cambio de contraseña exitoso. Vuelva a ingresar";
 
                 ////BUSCAMOS EL USUARIO
                 //var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -212,12 +213,14 @@ namespace ProyectoXalli_Gentelella.Controllers {
                 //}
                 //CERRAMOS LA SESION PARA QUE VUELVA A INGRESAR
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                return RedirectToAction("login", "Account");
-
+                //return RedirectToAction("login", "Account");
+                mensaje = "Cambio de contraseña exitoso. Vuelva a ingresar";
                 //return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+            } else {
+                mensaje = "Error al actualizar contraseña";
             }
 
-            return Json(new { success = false, message = "Error al actualizar" }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = result.Succeeded, message = mensaje }, JsonRequestBehavior.AllowGet);
 
             //AddErrors(result);
             //return View(model);
