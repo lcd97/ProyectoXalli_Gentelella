@@ -22,9 +22,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             int dia = DateTime.Now.Day;
             int mes = DateTime.Now.Month;
             int anio = DateTime.Now.Year;
-            var cambio = 34.94;
+            //var cambio = 34.94;
 
-            //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
         }

@@ -147,29 +147,25 @@
         }
     });
 
-    ////BUSQUEDA DE CLIENTE EN CASO DE QUE ESTE REGISTRADO
-    //$("#numero").blur(function () {
-    //    //AGARRAR EL VALOR DE CEDULA
-    //    var cedula = $(this).val().toUpperCase();
+    //BUSQUEDA DE EMPLEADO QUE NO ESTE REGISTRADO
+    $("#numero").blur(function () {
+        var dni = $(this).val().trim();//OBTENEMOS LA CEDULA DEL COLABORADOR
 
-    //    //SI ES DIFERENTE A VACIO
-    //    if (cedula != "") {
-    //        $.ajax({
-    //            type: "GET",
-    //            dataType: "JSON",
-    //            url: "/Clientes/BuscarDato/",
-    //            data: { cedula },
-    //            succes: function (data) {
-    //                if (data != null) {
-    //                    alert("dashdyahj");
-    //                    alert(data.Nombre + " " + data.Apellido);
-
-    //                    $("#nombre").val(data.Nombre);
-    //                    $("#apellido").val(data.Apellido);
-    //                    $("#ruc").val(data.RUC);
-    //                }
-    //            }
-    //        });
-    //    }
-    //});
+        if (dni != "") {
+            $.ajax({
+                type: "GET",
+                url: "/Clientes/BuscarDatos/",
+                data: {
+                    cliente: dni
+                },
+                success: function (data) {
+                    if (data.length != 0) {
+                        $("#nombre").val(data.Nombre);
+                        $("#apellido").val(data.Apellido);
+                        $("#ruc").val(data.RUC);
+                    }
+                }
+            });
+        }
+    });
 </script>

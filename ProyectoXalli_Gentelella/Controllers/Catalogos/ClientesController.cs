@@ -325,6 +325,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(dato, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult buscarDatos(string cliente) {
+            var dato = (from obj in db.Datos
+                        where obj.Cedula == cliente
+                        select new {
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
+        }
+
         // POST: Proveedor/Delete/5
         [HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]

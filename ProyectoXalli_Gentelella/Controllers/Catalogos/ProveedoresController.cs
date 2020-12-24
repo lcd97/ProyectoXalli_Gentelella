@@ -354,6 +354,19 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return View(proveedor);
         }
 
+        public ActionResult buscarProv(string proveedor) {
+            var dato = (from obj in db.Datos
+                        where obj.Cedula == proveedor
+                        select new {
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
+        }
+
+
         /// <summary>
         /// METODO RETORNA DETALLE DE PROVEEDOR
         /// </summary>
