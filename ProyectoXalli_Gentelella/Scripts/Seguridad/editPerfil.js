@@ -31,7 +31,7 @@
                 $("#generalData").append(general);
 
 
-                barChart(data.colaborador.Role, data.dataProfile.ColaboradorId);
+                barChart(data.colaborador.Role, data.dataProfile.ColaboradorId);                
             }
         }
     });//FIN AJAX
@@ -153,30 +153,55 @@ function barChart(role, mesero) {
 
 function editProfile() {
     var colaboradorId = $("#cedula").attr("val");
-    var roleId = $("#roleId").attr("val");
-    var nombre = $("#nombre").val();
-    var apellido = $("#apellido").val();
-    var correo = $("#correo").val();
-    var ruc = $("#ruc").val();
+    var roleId = $("#roleId").attr("val").trim();
+    var nombre = $("#nombre").val().trim();
+    var apellido = $("#apellido").val().trim();
+    var correo = $("#correo").val().trim();
+    var ruc = $("#ruc").val().trim();
 
     var datos = "colaboradorId=" + colaboradorId + "&userId=" + roleId + "&nombreCol=" + nombre + "&apellidoCol=" + apellido + "&correo=" + correo + "&ruc=" + ruc;
     //alert(datos);
 
-    $.ajax({
-        type: "POST",
-        url: "/Account/EditProfile/",
-        dataType: "JSON",
-        data: datos,
-        success: function (data) {
-            if (data.success) {
-                AlertTimer("Completado", data.message, "success");
-                $("#nombreCol").html(data.Nombre);
-            } else {
-                Alert("Error", data.message, "error");
+    if (validarVacios()) {
+        $.ajax({
+            type: "POST",
+            url: "/Account/EditProfile/",
+            dataType: "JSON",
+            data: datos,
+            success: function (data) {
+                if (data.success) {
+                    AlertTimer("Completado", data.message, "success");
+                    $("#nombreCol").html(data.Nombre);
+                } else {
+                    Alert("Error", data.message, "error");
+                }
             }
-        }
-    });
+        });
+    } else {
+        Alert("Error", "Campos nombre y apellido se encuentran vacios", "error");
+    }
+
 }
+
+//MASCARA PARA EL NUMERO RUC
+$("#ruc").mask("A00CDEF000000B", {
+    translation: {
+        'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        /*
+         FORMATO DE RUC - PRIMERA LETRA
+         PERSONA JURIDICA : J
+         PERSONA NATURAL SIN CEDULA : N
+         PERSONA NATURAL CON CEDULA : NUMERO DE CEDULA ( 0 - 6 )
+         PERSONA RESIDENTE : R
+         PERSONA NO RESIDENTE : E
+         */
+    }
+});
 
 //FUNCION PARA HACER EL CRUD A BODEGA POR MEDIO DEL MODAL (RECIBE UN FORM = FORMULARIO)
 function SubmitFormPassword(form) {
@@ -206,3 +231,13 @@ function SubmitFormPassword(form) {
     }//FIN DEL IF FORM VALID
     return false; //EVITA SALIRSE DEL METODO ACTUAL
 }//FIN FUNCTION
+
+function validarVacios() {
+    var nom = $("#nombre").val().trim();
+    var ape = $("#apellido").val().trim();
+
+    if (nom != "" && ape != "") {
+        return true;
+    } else
+        return false;
+}

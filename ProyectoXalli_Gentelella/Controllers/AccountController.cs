@@ -99,6 +99,13 @@ namespace ProyectoXalli_Gentelella.Controllers {
         [HttpPost]
         public ActionResult EditProfile(int colaboradorId, string userId, string nombreCol, string apellidoCol, string correo, string ruc) {
 
+            if (ruc != "") {
+                if (ruc.Length != 14) {
+                    mensaje = "El número RUC debe ser de 14 dígitos";
+                    return Json(new { success = false, message = mensaje }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
             //BUSCAMOS EL OBJETO DEL COLABORADOR
             IdentityResult result = new IdentityResult();
             Mesero mesero = db.Meseros.DefaultIfEmpty(null).FirstOrDefault(m => m.Id == colaboradorId);

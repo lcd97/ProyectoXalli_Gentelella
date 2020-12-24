@@ -122,18 +122,18 @@ function saveSeller() {
     //VARIABLES DE LA TABLA PROVEEDOR
     var NombreComercial = "", Telefono = "", RUC, Local, RetenedorIR = "", NombreProveedor = "", ApellidoProveedor = "", CedulaProveedor = "";
     //ASIGNANDO VALORES GENERALES
-    Telefono = $("#telefono").val();
-    RUC = $("#ruc").val().toUpperCase();
+    Telefono = $("#telefono").val().trim();
+    RUC = $("#ruc").val().toUpperCase().trim();
     RetenedorIR = $(".ir").is(":checked");
 
     Local = $('.btn-group > .btn.active').attr("value");
     //ASIGNANDO VALORES SEGUN EL TIPO DE PROVEEDOR
     if (Local == "true") {
-        NombreProveedor = $("#nombre").val();
-        ApellidoProveedor = $("#apellido").val();
-        CedulaProveedor = $("#cedula").val();
+        NombreProveedor = $("#nombre").val().trim();
+        ApellidoProveedor = $("#apellido").val().trim();
+        CedulaProveedor = $("#cedula").val().trim();
     } else {
-        NombreComercial = $("#nombre").val();
+        NombreComercial = $("#nombre").val().trim();
     }//FIN IF-ELSE    
 
     if (validado(Local) === true) {
@@ -170,13 +170,13 @@ function saveSeller() {
 function validado(Local) {
     //SI EL PROVEEDOR ES LOCAL
     if (Local == "true") {
-        if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#cedula").val() != "" && $("#telefono").val() != "") {
+        if ($("#nombre").val().trim() != "" && $("#apellido").val().trim() != "" && $("#cedula").val().trim() != "" && $("#telefono").val().trim() != "") {
             return true;
         } else {
             return false;
         }
     } else {//SI EL PROVEEDOR ES UN COMERCIO
-        if ($("#nombre").val() != "" && $("#ruc").val() != "" && $("#telefono").val() != "") {
+        if ($("#nombre").val().trim() != "" && $("#ruc").val().trim() != "" && $("#telefono").val().trim() != "") {
             return true;
         } else {
             return false;
@@ -187,31 +187,31 @@ function validado(Local) {
 //FUNCION PARA HACER EL CRUD A PRODUCTO POR MEDIO DEL MODAL (RECIBE UN FORM = FORMULARIO)
 function SubmitForm(form) {
     $.validator.unobtrusive.parse(form);
-    //if ($(form).valid()) {
-    $.ajax({
-        type: "POST", //TIPO DE ACCION
-        url: form.action, //ACCION O METODO A REALIZAR
-        data: $(form).serialize(), //SERIALIZACION DE LOS DATOS A ENVIAR
-        success: function (data) {
-            if (data.success) {//SI SE REALIZO CORRECTAMENTE
-                //AGREGAR EL REGISTRO AL SELECT 2
-                var agregar = '<option value="' + data.Id + '">' + data.Producto + '</option>';
-                $("#producto").append(agregar);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST", //TIPO DE ACCION
+            url: form.action, //ACCION O METODO A REALIZAR
+            data: $(form).serialize(), //SERIALIZACION DE LOS DATOS A ENVIAR
+            success: function (data) {
+                if (data.success) {//SI SE REALIZO CORRECTAMENTE
+                    //AGREGAR EL REGISTRO AL SELECT 2
+                    var agregar = '<option value="' + data.Id + '">' + data.Producto + '</option>';
+                    $("#producto").append(agregar);
 
-                //CERRAR MODAL
-                $("#small-modal").modal("hide"); //CERRAR MODAL
-                AlertTimer("Completado", data.message, "success");
-            }//FIN IF
-            else
-                //MANDAR EL ERROR DEL CONTROLADOR
-                Alert("Error", data.message, "error");
-        },//FIN SUCCESS
-        error: function () {
-            //AQUI MANDAR EL MENSAJE DE ERROR
-            Alert("Error al almacenarlo", "Intentelo de nuevo", "error");
-        }//FIN ERROR
-    });//FIN AJAX
-    //}//FIN DEL IF FORM VALID
+                    //CERRAR MODAL
+                    $("#small-modal").modal("hide"); //CERRAR MODAL
+                    AlertTimer("Completado", data.message, "success");
+                }//FIN IF
+                else
+                    //MANDAR EL ERROR DEL CONTROLADOR
+                    Alert("Error", data.message, "error");
+            },//FIN SUCCESS
+            error: function () {
+                //AQUI MANDAR EL MENSAJE DE ERROR
+                Alert("Error al almacenarlo", "Intentelo de nuevo", "error");
+            }//FIN ERROR
+        });//FIN AJAX
+    }//FIN DEL IF FORM VALID
     return false; //EVITA SALIRSE DEL METODO ACTUAL
 }//FIN FUNCTION
 
@@ -360,24 +360,28 @@ function saveInventario() {
         $("#table_body tr").each(function () {
 
             var row = $(this);
-            var item = {};
 
-            if (row.length > 0) {
-                data = true;
-            } else {
-                data = false;
+            //SI LA LINEA QUE ESTA ES DIFERENTE A LA DE LETRERO
+            if (row.attr("id") !== "noProd") {
+                var item = {};
+
+                if (row.length > 0) {
+                    data = true;
+                } else {
+                    data = false;
+                }
+
+                item["Id"] = 0;
+                item["ProductoId"] = row.find("td").eq(0).attr("value");
+                var precio = row.find("td").eq(1).html();
+                var getPrice = precio.split("C$ ");
+                item["PrecioEntrada"] = getPrice[1];
+                item["CantidadEntrada"] = row.find("td").eq(2).html();
+                item["Entrada"] = null;
+                item["Producto"] = null;
+
+                detalleEntrada.push(item);
             }
-
-            item["Id"] = 0;
-            item["ProductoId"] = row.find("td").eq(0).attr("value");
-            var precio = row.find("td").eq(1).html();
-            var getPrice = precio.split("C$ ");
-            item["PrecioEntrada"] = getPrice[1];
-            item["CantidadEntrada"] = row.find("td").eq(2).html();
-            item["Entrada"] = null;
-            item["Producto"] = null;
-
-            detalleEntrada.push(item);
         });
 
         //alert(JSON.stringify(detalleEntrada));
