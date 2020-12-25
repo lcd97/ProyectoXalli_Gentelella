@@ -65,9 +65,9 @@
 
                 <div class="form-group">
                     @*<div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
-                        @Html.Editor("Cantidad", new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Actual", id = "cantProd", @disabled = "disabled" } })
-                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                    </div>*@
+                            @Html.Editor("Cantidad", new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Actual", id = "cantProd", @disabled = "disabled" } })
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        </div>*@
 
                     <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                         @Html.EditorFor(model => model.CantidadMinProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Mín.", id = "cantMin" } })
@@ -100,25 +100,31 @@
 
         $("#cantMin").mask('000.00', { reverse: true });
         $("#cantMax").mask('000.00', { reverse: true });
-
-        var elem = document.querySelector('.js-switch');
-        var init = new Switchery(elem);
-
-        $("#cantPrd").val("1");
-
-
-        //CARGA EL CODIGO DE BODEGA
-        $.ajax({
-            type: "GET",
-            url: "/Productos/SearchCode",
-            success: function (data) {
-                $("#codigoProd").val(data);
+        $("#cantPrd").mask('A0.00', {
+            translation: {
+                'A': { pattern: /[1-9]/ },
+                reverse: true
             }
         });
 
-        var agregar = '<option value="-1" selected>Seleccione</option>';
-        $("#categoria").prepend(agregar);
-        $("#um").prepend(agregar);
+    var elem = document.querySelector('.js-switch');
+    var init = new Switchery(elem);
+
+    $("#cantPrd").val("1");
+
+
+    //CARGA EL CODIGO DE BODEGA
+    $.ajax({
+        type: "GET",
+        url: "/Productos/SearchCode",
+        success: function (data) {
+            $("#codigoProd").val(data);
+        }
+    });
+
+    var agregar = '<option value="-1" selected>Seleccione</option>';
+    $("#categoria").prepend(agregar);
+    $("#um").prepend(agregar);
     });
 
     //INICIALIZAR EL SELECT2
