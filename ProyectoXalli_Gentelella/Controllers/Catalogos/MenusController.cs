@@ -411,6 +411,10 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                     }
                                 }
 
+                                if (addIt.Count == 0 && deleteIt.Count == 0) {
+                                    completado = true;
+                                }
+
                                 mensaje = completado ? "Modificado correctamente" : "Error al modificar";
                             }
 

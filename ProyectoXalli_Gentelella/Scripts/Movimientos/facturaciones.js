@@ -840,18 +840,24 @@ function editPago(row) {
     //EVENTO ONCLICK DEL BOTON EDITAR
     $("#tablePagos").on("click", "#boton", function () {
         //OBTENER LOS VALORES A UTILIZAR
-        var pago = $(this).parents("tr").find("td").eq(0).html();
+        var pago = $(this).parents("tr").find("td").eq(0).attr("val");
         var moneda = $(this).parents("tr").find("td").eq(1).html();
         var pagar = $(this).parents("tr").find("td").eq(2).html();
         var recibido = $(this).parents("tr").find("td").eq(3).html();
         var entregado = $(this).parents("tr").find("td").eq(4).html();
 
-        ////alert(pago + " " + moneda + " " + pagar + " " + recibido + " " + entregado);
-        //$("#producto").val(prod);
-        //$('#producto').trigger('change'); // Notify any JS components that the value changed
+        $("#metPago").val(pago);
+        $('#metPago').trigger('change'); // Notify any JS components that the value changed
 
-        $("#rec").val(recibido.split("$ ")[1]);
-        $("#pagar").val(pagar.split("$ ")[1]);
+        //efectivo 1
+        //tarjeta 2
+
+        if (pago == "1") {
+            $("#rec").val(recibido.split("$ ")[1]);
+            $("#pagar").val(pagar.split("$ ")[1]);
+        } else {
+            $("#pagar").val(pagar.split("$ ")[1]);
+        }
 
         deletePago(row);
         tablaPago();
@@ -864,6 +870,9 @@ $("#metPago").on("change", function () {
 });
 
 function metodoPagoCB() {
+    $("#pagar").val("");
+    $("#rec").val("");
+
     var metodoPago = $("#metPago").find("option:selected").text();
 
     if (metodoPago.toUpperCase() == "EFECTIVO") {

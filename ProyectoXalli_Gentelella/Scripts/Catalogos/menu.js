@@ -182,23 +182,23 @@ function editMenuItem() {
 }//FIN FUNCTION
 
 //MODIFICAR EL DIV DEL ELEMENTO DEL MENU
-function modificarItem(/*id*/) {
-    //$.ajax({
-    //    type: "GET",
-    //    url: "/Menus/getMenuItem/" + id,
-    //    success: function (data) {
-    //        //ASIGNAR NUEVOS VALORES EN LA VISTA
-    //        $("#" + id).find("strong").text(data.menu.Platillo);
-    //$("#" + menuId).find("img").attr("src", "");
-    //        $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
-    //        $("#" + id).find("img").attr("src", data.menu.Ruta);
-    //    },
-    //    error: function () {
-    //        Alert("Error al modificar", "Recargue la página", "error");
-    //    }
-    //});//FIN AJAX      
+function modificarItem(id) {
+    $.ajax({
+        type: "GET",
+        url: "/Menus/getMenuItem/" + id,
+        success: function (data) {
+            //ASIGNAR NUEVOS VALORES EN LA VISTA
+            $("#" + id).find("strong").text(data.menu.Platillo);
+            $("#" + id).find("img").attr("src", "");
+            $("#" + id).find("p:last-child").text("$ " + formatoPrecio(data.menu.Precio));
+            $("#" + id).find("img").attr("src", data.menu.Ruta);
+        },
+        error: function () {
+            Alert("Error al modificar", "Recargue la página", "error");
+        }
+    });//FIN AJAX      
 
-    location.reload();
+    //location.reload();
 }//FIN FUNCTION
 
 //AGREGAR UN CAMPO MAS AL INDEX
