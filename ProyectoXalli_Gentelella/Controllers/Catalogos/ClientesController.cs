@@ -139,11 +139,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                     } else {
                         //SI SOLO EXISTE LOS DATOS DE LA PERSONA                    
                         //SI EL NUMERO RUC NO ESTA NULO
-                        if (RUC != "") {
-                            dato.RUC = RUC;
-                            //SE ACTUALIZA EL CAMPO
-                            db.Entry(dato).State = EntityState.Modified;
-                        }
+                        dato.PNombre = Nombre;
+                        dato.PApellido = Apellido;
+                        dato.RUC = RUC != "" ? RUC : null;
+                        //SE ACTUALIZA EL CAMPO
+                        db.Entry(dato).State = EntityState.Modified;
 
                         Cliente client = new Cliente();
 

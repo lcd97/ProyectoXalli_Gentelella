@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ProyectoXalli_Gentelella.Controllers.Catalogos
-{
+namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
     [Authorize]
-    public class ProveedoresController : Controller
-    {
+    public class ProveedoresController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
@@ -90,7 +88,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                 return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
             }
 
-
             using (var transact = db.Database.BeginTransaction()) {
                 try {
                     //DEPENDE DEL TIPO DE PROVEEDOR SE ALMACENA LOS DATOS
@@ -141,6 +138,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                         {
                             //SI NO EXISTE EL PROVEEDOR
                             if (validando == null) {
+                                //MODIFICANDO DATOS DE PROVEEDOR
+                                Validacion.PNombre = NombreProveedor;
+                                Validacion.PApellido = ApellidoProveedor;
+                                //SI SE INGRESO UN NUMERO RUC-ALMACENAR
+                                Validacion.RUC = RUC != "" ? RUC : null;
+
+                                db.Entry(Validacion).State = EntityState.Modified;
+
                                 //AGREGAR PROVEEDOR
                                 proveedor.Telefono = Telefono;
                                 proveedor.EstadoProveedor = true;
@@ -365,7 +370,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
 
             return Json(dato, JsonRequestBehavior.AllowGet);
         }
-
 
         /// <summary>
         /// METODO RETORNA DETALLE DE PROVEEDOR
