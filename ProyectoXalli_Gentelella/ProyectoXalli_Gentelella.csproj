@@ -617,6 +617,7 @@
     <Content Include="Views\Mesas\Index.cshtml" />
     <Content Include="Views\Mesas\Create.cshtml" />
     <Content Include="Views\Mesas\Edit.cshtml" />
+    <Content Include="Views\Account\ResetByAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
