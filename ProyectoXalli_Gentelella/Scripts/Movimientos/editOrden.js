@@ -50,9 +50,9 @@
                 //GENERAR FILA DEL PRODUCTO A LA TABLA
                 agregar += '<tr class="even pointer">';
                 agregar += '<td class="" value ="' + data.Details[i].PlatilloId + '">' + data.Details[i].Platillo + '</td>';
-                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + (data.Details[i].PrecioUnitario) + '</td>';
+                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + formatoPrecio(data.Details[i].PrecioUnitario.toString()) + '</td>';
                 agregar += '<td class="" Style ="text-align: center;">' + data.Details[i].Cantidad + '</td>';
-                agregar += '<td class="" >' + "$ " + calculo + '</td>';
+                agregar += '<td class="" >' + "$ " + formatoPrecio(calculo.toString()) + '</td>';
                 agregar += '<td class="" value ="true"><span class="label ' + labelColor + ' pull-right">' + estado + '</span></td>';
                 agregar += '<td class=" last"><a disabled class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                 agregar += '<a disabled class="btn btn-danger btn-xs"> <i class="fa fa-trash"></i></a></td>';

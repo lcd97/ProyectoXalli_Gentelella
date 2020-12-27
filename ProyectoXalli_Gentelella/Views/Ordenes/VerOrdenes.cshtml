@@ -3,12 +3,6 @@
     ViewBag.Title = "Ordenes";
 }
 
-@if (Context.User.IsInRole("Mesero")) {
-    <input val="true" id="rol" type="hidden" />
-} else {
-    <input val="false" id="rol" type="hidden" />
-}
-
 <h1 value="@ViewBag.Message" id="mensaje" hidden></h1>
 
 <!--TABLA DE ORDENES-->
@@ -25,9 +19,9 @@
         </div>
         <div class="x_content">
             <table class="table table-hover">
-                <thead>
+                <thead id="hOrdenes">
                 </thead>
-                <tbody></tbody>
+                <tbody id="bOrdenes"></tbody>
             </table>
 
         </div>
