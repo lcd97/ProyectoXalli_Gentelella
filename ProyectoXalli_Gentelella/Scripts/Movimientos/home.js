@@ -280,7 +280,7 @@ function lineChart() {
                 var itemV = data[i].TotalVentas;
 
                 fecha.push(itemF);
-                ventas.push(itemV);
+                ventas.push(formatoPrecio(itemV.toString()));
             }
 
             var lineData = {

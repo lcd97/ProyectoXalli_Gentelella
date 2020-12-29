@@ -195,7 +195,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
             List<OrdenesPorMes> ordenes = new List<OrdenesPorMes>();
             var mes = DateTime.Now.Month;//OBTENGO EL MES ACTUAL
             var anio = DateTime.Now.Year;//OBTENGO EL AÑO ACTUAL
-            DateTimeFormatInfo mfi = new DateTimeFormatInfo();
+            DateTimeFormatInfo mfi = new CultureInfo("es-ES", false).DateTimeFormat;
 
             double recOrd = 0, porcOrdenes = 0, porcVentas = 0, recVenta = 0;
 
@@ -219,8 +219,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 //((Valor Reciente / Valor Anterior) – 1) x 100 --> CALCULA EL CRECIMIENTO
 
                 //ORDENES ATENDIDAS EN ESTE MES (CANTIDAD Y PORCENTAJE CON RESPECTO AL MES ANTERIOR)
-                recOrd = consulta.Where(w => w.Orden.FechaOrden.Month == mes && w.Orden.MeseroId == MeseroId).Count();
-                var pasOrd = consulta.Where(w => w.Orden.FechaOrden.Month == (mes - 1)).Count();
+                recOrd = db.Ordenes.Where(w => w.FechaOrden.Month == mes && w.MeseroId == MeseroId).Count();
+                var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1) && w.MeseroId == MeseroId).Count();
                 porcOrdenes = pasOrd == 0 ? 100 : ((recOrd / pasOrd) - 1) * 100;
 
                 //VENTAS TOTALES DEL MES (CANTIDAD Y PORCENTAJE CON RESPECTO AL MES ANTERIOR)
@@ -244,6 +244,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
 
                     ordenes.Add(item);//AGREGO A LA LISTA FINAL
                 }
+
+                recOrd = db.Ordenes.Where(w => w.FechaOrden.Month == mes).Count();
+                var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1)).Count();
+                porcOrdenes = pasOrd == 0 ? 100 : ((recOrd / pasOrd) - 1) * 100;
+
+                recVenta = ordenes[(mes - 1)].TotalVentas;
+                var pasVenta = ordenes[(mes - 1) - 1].TotalVentas;
+                porcVentas = pasVenta == 0 ? 100 : ((recVenta / pasVenta) - 1) * 100;
             } else {
                 List<OrdenesBodega> ordenesBodegas = new List<OrdenesBodega>();
 

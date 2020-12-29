@@ -31,7 +31,7 @@
                 $("#generalData").append(general);
 
 
-                barChart(data.colaborador.Role, data.dataProfile.ColaboradorId);                
+                barChart(data.colaborador.Role, data.dataProfile.ColaboradorId);
             }
         }
     });//FIN AJAX
@@ -49,26 +49,36 @@ function barChart(role, mesero) {
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
             if (data.porcOrdenes > 0) {
-                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcOrdenes + '%</i> más que el mes pasado';
+                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> más que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             } else {
-                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcOrdenes + '%</i> menos que el mes pasado';
+                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> menos que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             }
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
             if (data.porcVentas > 0) {
-                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcVentas + '%</i> más que el mes pasado';
+                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> más que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             } else {
-                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcVentas + '%</i> menos que el mes pasado';
+                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> menos que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             }
 
             $("#ordMes").html(data.recOrd);
-            $("#ventaMes").html(data.recVenta);
+            $("#ventaMes").html(formatoPrecio(data.recVenta.toString()));
 
             if (data.bodegas) {//SI LA CONSULTA ES POR BODEGAS
+
+                //var dashBar = '<i class="fa fa-usd"></i> Ventas totales del mes en bar';
+                //var dashCocina = '<i class="fa fa-usd"></i> Ventas totales del mes en cocina';
+
+                //$("#txtMesBar").html(dashBar);
+                //$("#txtMesCocina").html(dashCocina);
+
+                $("#dashboard").remove();
+                document.getElementById("barStattics").className = "col-md-12 col-sm-12 col-xs-12";
+
                 //CREO LOS ARREGLOS PARA ALMACENAR LOS REGISTROS
                 var fecha = new Array();
                 var cocina = new Array();
@@ -77,8 +87,8 @@ function barChart(role, mesero) {
                 //RECORRO
                 for (var i = 0; i < data.ordenes.length; i++) {
                     var itemFecha = data.ordenes[i].Fecha;
-                    var itemVentaCocina = data.ordenes[i].TVCocina;
-                    var itemVentaBar = data.ordenes[i].TVBar;
+                    var itemVentaCocina = formatoPrecio(data.ordenes[i].TVCocina.toString());
+                    var itemVentaBar = formatoPrecio(data.ordenes[i].TVBar.toString());
 
                     fecha.push(itemFecha);
                     cocina.push(itemVentaCocina);
@@ -112,7 +122,7 @@ function barChart(role, mesero) {
 
                 for (var j = 0; j < data.ordenes.length; j++) {
                     var itemF = data.ordenes[j].Fecha;
-                    var itemV = data.ordenes[j].TotalVentas;
+                    var itemV = formatoPrecio(data.ordenes[j].TotalVentas.toString());
 
                     fechaVenta.push(itemF);
                     ventas.push(itemV);
