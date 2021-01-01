@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    var EmpleadoId = 0;
     var loginId = $("#session").val();
 
     //if ($("#rol").attr("val") == "true") {
@@ -67,7 +66,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
         url: "/Ordenes/Ordenes/",
         data: { empleadoId: EmpleadoId, EmpleadoRol: EmpleadoRole },
         success: function (data) {
-            if (data.length == 0) {
+            if (data.length == 0 || data == null) {
                 var agregar = '<h2 id="txt" style="text-align:center;">Ordenes vacías</h2>';//AGREGA LETRERO
                 $("#x_content").append(agregar);
             } else {
@@ -89,7 +88,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
                         theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
 
                         tbodyFin = '<td>' + data[i].Mesero + '</td>' +
-                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId) + '</td>' +
+                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId, huesped) + '</td>' +
                             '</tr>';
                     }
                     else {
@@ -150,4 +149,23 @@ function RedirectToComanda(OrderId) {
 
     var url = "/Ordenes/Comanda?OrderId=" + OrderId;
     window.location.href = url;
+}
+
+//CARGA LOS LINKS DE LOS BOTONES DE LOS ROLES DIFERENTE A MESEROS
+function cargarLinks(EmpleadoRole, Id, huesped) {
+    var links = "";
+
+    if (EmpleadoRole == "Bartender" || EmpleadoRole == "Cocinero") {
+        var empleado = EmpleadoRole == "Bartender" ? 1 : 2;
+        links = '<button type="button" onclick="RedirectToPrep(' + Id + ',' + empleado + ')" class="btn btn-primary btn-sm">Ver Orden</button>';
+    } else {
+        //SI ES ADMIN
+        links = '<div class="btn-group">' +
+            '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
+            'Acción   <span class="caret"></span>' +
+            '</button>' + buttonComanda(huesped, Id) +
+            '</div>';
+    }
+
+    return links;
 }

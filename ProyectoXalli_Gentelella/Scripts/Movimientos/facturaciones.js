@@ -33,6 +33,7 @@
 
     if (mensaje != "") {
         AlertTimer("Completado", mensaje, "success");
+        $("#change").attr("src", "/images/Small_Logo.png");
     }
 
     window.history.pushState('page2', 'Title', '/Facturaciones');
@@ -714,7 +715,7 @@ function validado() {
     var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";//PARA AGREGAR EL DIGITO DE PAGO   
 
     //SI EL MONTO A PAGAR ES MAYOR AL RECIBIDO MANDAR ERROR
-    if (parseFloat(pagar) > parseFloat(recibido)) {
+    if (parseFloat(replacePagar) > parseFloat(replaceRecibido)) {
         Alert("Error", "El monto a pagar no puede ser mayor que el monto recibido", "error");
     } else {
         if (metPago.toUpperCase() == "EFECTIVO") {

@@ -33,31 +33,31 @@
                 <div data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
-                        <div class="col-md-1 col-sm-2 col-xs-6">
+                        <div class="col-md-1 col-sm-4 col-xs-6">
                             <label>Código</label>
                             <input id="codigoOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-3 col-sm-3 col-xs-6 xdisplay_inputx form-group has-feedback">
+                        <div class="col-md-3 col-sm-4 col-xs-6 xdisplay_inputx form-group has-feedback">
                             <label>Fecha</label>
                             <input type="text" class="form-control has-feedback-left" id="fechaOrden">
                             <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                         </div>
 
 
-                        <div class="col-md-3 col-sm-3 col-xs-6 xdisplay_inputx form-group has-feedback">
+                        <div class="col-md-3 col-sm-4 col-xs-6 xdisplay_inputx form-group has-feedback">
                             <label>Hora</label>
                             <input type="text" class="form-control has-feedback-left" id='Hora' disabled>
                             <span class="fa fa-clock-o form-control-feedback left" aria-hidden="true"></span>
                         </div>
 
 
-                        <div class="col-md-3 col-sm-4 col-xs-6">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
                             <label class="col-md-4 col-sm-4 col-xs-4">Mesero</label>
                             <input id="mesero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-2 col-sm-4 col-xs-6">
+                        <div class="col-md-2 col-sm-6 col-xs-12">
                             <label class="col-md-4 col-sm-4 col-xs-4">Mesa</label>
                             @*<select id="mesa" class="js-example-basic-single form-control" style="width:100%">
                                 </select>*@
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-md-1 col-sm-2 col-xs-12">
+                        <div class="col-md-1 col-sm-2 col-xs-6">
                             <label class="col-md-12 col-sm-12 col-xs-12" id="titleCliente">Visitante</label>
                             <input type="checkbox" class="js-switch" checked id="tipoCliente" onclick="Check()" />
                         </div>
@@ -81,17 +81,17 @@
                             <button type="button" onclick="CargarParcial('/Clientes/Create/')" class="btn btn-primary" data-toggle="tooltip" id="agregarCliente" title="Buscar el cliente" disabled><i class="fa fa-plus"></i></button>
                         </div>
 
-                        <div class="col-md-3 col-sm-5 col-xs-7">
+                        <div class="col-md-3 col-sm-5 col-xs-6">
                             <label>Cliente</label>
                             <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-3 col-sm-3 col-xs-5">
+                        <div class="col-md-3 col-sm-6 col-xs-7">
                             <label>Número RUC</label>
                             <input id="rucOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
                         </div>
 
-                        <div class="col-md-1 col-sm-6 col-xs-6" style="margin-top: 25px !important;">
+                        <div class="col-md-1 col-sm-6 col-xs-5" style="margin-top: 25px !important;">
                             <button type="button" id="btnGuardarOrden" onclick="guardarOrden()" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Guarda la entrada">Terminar</button>
                         </div>
                     </div>
