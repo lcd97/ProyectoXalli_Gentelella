@@ -74,8 +74,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                         join mes in db.Mesas.ToList() on obj.MesaId equals mes.Id
                          where obj.EstadoOrden == 2 && c.Id == cliente//TODAS LAS ORDENES SIN FACTURAR E INACTIVAS
-                         group new { obj, d, det } by new { obj.Id, obj.CodigoOrden, obj.FechaOrden, d.PNombre, d.PApellido } into grouped
+                         group new { obj, d, det, mes } by new { obj.Id, obj.CodigoOrden, obj.FechaOrden, d.PNombre, d.PApellido, mes.DescripcionMesa } into grouped
                          select new {
                              OrdenId = grouped.Key.Id,
                              CodigoOrden = grouped.Key.CodigoOrden,
@@ -86,7 +87,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                        join a in db.Datos on m.DatoId equals a.Id
                                        where grouped.Key.Id == o.Id
                                        select a.PNombre + " " + a.PApellido).FirstOrDefault(),
-                             SubTotal = grouped.Sum(s => s.det.CantidadOrden * s.det.PrecioOrden)
+                             SubTotal = grouped.Sum(s => s.det.CantidadOrden * s.det.PrecioOrden),
+                             Mesa = grouped.Key.DescripcionMesa
                          }).ToList();
 
             return Json(new { orden, ClienteId }, JsonRequestBehavior.AllowGet);

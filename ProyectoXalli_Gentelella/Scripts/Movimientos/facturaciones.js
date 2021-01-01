@@ -42,7 +42,7 @@ function tablaVacio() {
     var tbody = $("#tableInicio #bodyOrden");//OBTENEMOS EL CONTENIDO DE LA TABLA
     //SI NO HAY DATA
     if (tbody.children().length === 0) {
-        var agregar = '<tr class="even pointer" id="noProd"><td colspan="5" style="text-align: center;">SIN REGISTROS DE PAGOS</td></tr>';
+        var agregar = '<tr class="even pointer" id="noProd"><td colspan="6" style="text-align: center;">SIN REGISTROS DE PAGOS</td></tr>';
         $("#bodyOrden").append(agregar);
     }
 }
@@ -317,14 +317,14 @@ function buscarOrden() {
 
                 $(".buttonNext").removeClass("buttonDisabled");
 
-                var clase = "checkbox";
+                var type = "checkbox";
                 var agColumnas = '';
 
                 if (data.ClienteId == 0) {
-                    clase = "radio";
+                    type = "radio";
                     agColumnas = '<th class="" id="celdaChk"></th>';
                 } else {
-                    agColumnas = '<th class="" id="celdaChk"><input type="' + clase + '" class="flat" id="check-all"></th>';
+                    agColumnas = '<th class="" id="celdaChk"><label class="' + type + '"><input type="' + type + '" id="check-all" onclick="checkAll()"><span class="check"></span></label></th>';
                 }
 
                 $("#flatButton").prepend(agColumnas);
@@ -332,10 +332,11 @@ function buscarOrden() {
                 for (var i = 0; i < data.orden.length; i++) {
                     agregar += '<tr class="even pointer">' +
                         '<td class="a-center">' +
-                        '<input val="' + data.orden[i].OrdenId + '" id="seleccion" type="' + clase + '" class="flat" name="table_records">' +
+                        '<label class="' + type + '"><input val="' + data.orden[i].OrdenId + '" id="seleccion" type="' + type + '" class="chkChildren" onclick="checkChild(this)" name="' + type + '"><span class="check"></span></label>' +
                         '</td>' +
                         '<td class=" ">' + cargarCodigo(data.orden[i].CodigoOrden) + '</td>' +
                         '<td class=" ">' + data.orden[i].FechaOrden + '</td>' +
+                        '<td class=" ">' + data.orden[i].Mesa + '</td>' +
                         '<td class=" ">' + data.orden[i].Cliente + '</td>' +
                         '<td class=" ">' + data.orden[i].Mesero + '</td>' +
                         '<td class="a-right a-right ">$ ' + formatoPrecio((data.orden[i].SubTotal).toString()) + '</td>' +
@@ -344,12 +345,7 @@ function buscarOrden() {
             }
 
             $("#bodyOrden").html(agregar);
-            //INICIALIZA EL CHECKBOX DE ESTADO
-            $('input.flat').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-        }//FIN SUCCESS
+        }
     });
 }
 
@@ -879,5 +875,37 @@ function metodoPagoCB() {
         $("#rec").removeAttr("disabled");
     } else {
         $("#rec").attr("disabled", true);
+    }
+}
+
+//FUNCION PARA SELECCIONAR TODOS LOS CHECKBOX
+function checkAll() {
+
+    if ($('#check-all').is(':checked')) {
+        $('.chkChildren').prop('checked', true);
+    }
+    else {
+        $('.chkChildren').prop('checked', false);
+    }
+}
+
+//FUNCION PARA SELECCIONAR Y DESELECCIONAR CHECKBOX
+function checkChild(element) {
+
+    //SI EL ELEMENTO SELECCIONADO NO ESTA CHECKEADO
+    if (element.checked == false) {
+        //SI LA OPCION DE CHECKEADO TODO
+        if ($('#check-all').is(':checked')) {
+            $('#check-all').prop('checked', false);
+        }
+    } else {
+        var checkboxs = $("input[name='checkbox']");
+        var completos = checkboxs.length === checkboxs.filter(":checked").length;
+
+        if (completos) {
+            $('#check-all').prop('checked', true);
+        } else {
+            $('#check-all').prop('checked', false);
+        }
     }
 }
