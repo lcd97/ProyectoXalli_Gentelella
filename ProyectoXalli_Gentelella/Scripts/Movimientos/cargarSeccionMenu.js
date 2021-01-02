@@ -60,7 +60,7 @@ $("#categoria").change(function () {
                             '<p>' +
                             '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].Platillo + '">' + data[i].Platillo + '</strong>' +
                             '</p>' +
-                            '<p> $ ' + data[i].Precio + '</p>' +
+                            '<p> $ ' + formatoPrecio(data[i].Precio.toString()) + '</p>' +
                             '</div>' +
                             '</div >' +
                             '</div >';
@@ -105,7 +105,7 @@ function cargarDetalle(id) {
         type: "GET", //TIPO DE ACCION
         url: "/Menus/getMenuItem/" + id, //URL DEL METODO A USAR
         success: function (data) {
-            $("#precioOrden").val("$ " + data.menu.Precio);
+            $("#precioOrden").val("$ " + formatoPrecio(data.menu.Precio.toString()));
             $("#platillo").val(data.menu.Platillo);
             $("#platillo").attr("name", data.menu.PlatilloId);
 
