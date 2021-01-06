@@ -1,0 +1,35 @@
+﻿@using ReportViewerForMvc;
+
+@{
+    ViewBag.Title = "Factura";
+}
+
+<style>
+    iframe {
+        width: 100% !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Visualización de factura</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-12">
+                    @if (ViewBag.datos > 0) {
+                        @Html.ReportViewer(ViewBag.rpt as Microsoft.Reporting.WebForms.ReportViewer)
+                    } else {
+                        <div>
+                            <i class="fa fa-folder-open big-icon text-warning"></i><br />
+                            <h3 class="font-bold">NO HAY DATOS QUE MOSTRAR</h3>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

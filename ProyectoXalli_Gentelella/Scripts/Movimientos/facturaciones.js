@@ -32,8 +32,11 @@
     var mensaje = $("#mensaje").attr("value");
 
     if (mensaje != "") {
+        var id = $("#ordenId").attr("value");
+
         AlertTimer("Completado", mensaje, "success");
         $("#change").attr("src", "/images/Small_Logo.png");
+        window.open("/Facturas/GenerarFactura/" + id, '_blank');
     }
 
     window.history.pushState('page2', 'Title', '/Facturaciones');
@@ -139,7 +142,7 @@ function guardarPago() {
             },
             success: function (data) {
                 if (data.success) {
-                    var url = "/Facturaciones/Index/?mensaje=" + data.message;
+                    var url = "/Facturaciones/Index/?mensaje=" + data.message + "&ordenId=" + data.ordenId;
                     window.location.href = url;
                 } else {
                     Alert("Error", data.message, "error");

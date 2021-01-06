@@ -45,8 +45,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
         // GET: Facturaciones
-        public ActionResult Index(string mensaje = "") {
+        public ActionResult Index(string mensaje = "", string ordenId = "") {
             ViewBag.Message = mensaje;//MENSAJE DE RECARGO
+            ViewBag.OrdenId = ordenId;
 
             ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
             ViewBag.MonedaId = new SelectList(db.Monedas, "Id", "DescripcionMoneda");
@@ -324,6 +325,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         [HttpPost]
         public ActionResult Create(string OrdenesIds, int ClienteId, int NoFactura, DateTime FechaPago, bool Diplomatico, int DescuentoPago, double Propina, double Cambio, int MonedaPropina, int EvidenciaId, string DetallePago) {
+            int ordenId = 0;
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
@@ -418,14 +420,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     }
 
                     transact.Commit();
-
+                    ordenId = pago.Id;
                 } catch (Exception) {
                     mensaje = "Error al almacenar el pago";
                     transact.Rollback();
                 }//FIN TRY-CATCH
             }//FIN USING
 
-            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje, ordenId }, JsonRequestBehavior.AllowGet);
         }
 
         public void ModificarOrdenes(int ClienteId, int OrdenId, bool Finalizado) {
