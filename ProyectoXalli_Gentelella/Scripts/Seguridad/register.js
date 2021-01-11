@@ -193,8 +193,8 @@ function generatePasswordRand() {
 }
 
 function crearAcceso() {
-    var nombres = $("#nombre").val(), apellidos = $("#apellido").val(), cedula = $("#cedula").val().toUpperCase(), inss = $("#inss").val(),
-        ruc = $("#ruc").val().toUpperCase(), hentrada = $("#entrada").val(), hsalida = $("#salida").val();
+    var nombres = $("#nombre").val().trim(), apellidos = $("#apellido").val().trim(), cedula = $("#cedula").val().toUpperCase().trim(), inss = $("#inss").val().trim(),
+        ruc = $("#ruc").val().toUpperCase().trim(), hentrada = $("#entrada").val().trim(), hsalida = $("#salida").val().trim();
 
     if (validarRol() == true) {
         $.ajax({
@@ -207,8 +207,11 @@ function crearAcceso() {
             dataType: "JSON",
             success: function (data) {
                 //alert(data.meseroId);
+                if (data.success) {
+                    Acceso(data.meseroId);
+                } else
+                    Alert("Error", data.message, "error");
 
-                Acceso(data.meseroId);
             },
             error: function () {
                 Alert("Error", "Revisar", "error");
@@ -263,7 +266,7 @@ function Acceso(meseroId) {
 }
 
 function validarRol() {
-    if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#entrada").val() != "" && $("#salida").val() != "" && $("#cedula").val() != "" && $("#inss").val() && $("#role").val() !="") {
+    if ($("#nombre").val() != "" && $("#apellido").val() != "" && $("#entrada").val() != "" && $("#salida").val() != "" && $("#cedula").val() != "" && $("#inss").val() && $("#role").val() != "") {
         return true;
     } else
         return false;

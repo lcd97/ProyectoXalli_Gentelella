@@ -26,10 +26,10 @@ function saveCustomer() {
                     $("#small-modal").modal("hide"); //CERRAR MODAL
                     AlertTimer("Completado", data.message, "success");
                 } else
-                    Alert("Error al almacenar", data.message, "error");//MENSAJE DE ERROR
+                    Alert("Error", data.message, "error");//MENSAJE DE ERROR
             },
             error: function () {
-                Alert("Error al almacenar", "Intentelo de nuevo", "error");
+                Alert("Error", "Intentelo de nuevo", "error");
             }
         });//FIN AJAX
     } else {

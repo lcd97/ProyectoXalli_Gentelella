@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Facturas";
+}
+
+
+@Styles.Render("~/Content/datatableCSS")
+<link href="~/Content/daterangepicker.css" rel="stylesheet" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="clearfix"></div>
+            <div class="x_title">
+                <h2>Búsqueda por cliente o fechas</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="form-group">
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <label>Buscar facturas por</label>
+                        <select class="js-example-basic-single select2_group form-control" id="busqueda">
+                            <option value="1">Seleccione una opción</option>
+                            <option value="2">Buscar por cliente</option>
+                            <option value="3">Buscar por fechas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="tipoBusq">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Facturas</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="Table" class="table table-bordered table-hover" style="width:100% !important">
+                    <thead>
+                        <tr>
+                            <th>No. Factura</th>
+                            <th>Fecha facturada</th>
+                            <th>Cliente</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/daterangepicker.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/Reportes/facturas.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+}

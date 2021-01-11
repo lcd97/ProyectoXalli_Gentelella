@@ -9,11 +9,13 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+    [Authorize]
     public class MonedasController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
+        [Authorize(Roles = "Admin")]
         // GET: Monedas
         public ActionResult Index() {
             return View();

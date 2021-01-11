@@ -43,15 +43,18 @@
                 var calculo = data.Details[i].PrecioUnitario * data.Details[i].Cantidad;
                 //precioTotal += calculo;
 
-                var estado = data.Details[i].Estado == true ? "Finalizado" : "Pendiente";
+                var estadoOrden = data.Details[i].Estado;
+                var estado = estadoOrden ? "Atendido" : "Ordenado";
+                var labelColor = estadoOrden ? "label-success" : "label-primary";
+                var nota = data.Details[i].Nota == null ? "" : data.Details[i].Nota;
 
                 //GENERAR FILA DEL PRODUCTO A LA TABLA
                 agregar += '<tr class="even pointer">';
                 agregar += '<td class="" value ="' + data.Details[i].PlatilloId + '">' + data.Details[i].Platillo + '</td>';
-                agregar += '<td class="" value = "' + data.Details[i].Nota + '">' + "$ " + (data.Details[i].PrecioUnitario) + '</td>';
+                agregar += '<td class="" value = "' + nota + '">' + "$ " + formatoPrecio(data.Details[i].PrecioUnitario.toString()) + '</td>';
                 agregar += '<td class="" Style ="text-align: center;">' + data.Details[i].Cantidad + '</td>';
-                agregar += '<td class="" >' + "$ " + (calculo) + '</td>';
-                agregar += '<td class="" value ="true"><span class="label label-success pull-right">' + estado + '</span></td>';
+                agregar += '<td class="" >' + "$ " + formatoPrecio(calculo.toString()) + '</td>';
+                agregar += '<td class="" value ="true"><span class="label ' + labelColor + ' pull-right">' + estado + '</span></td>';
                 agregar += '<td class=" last"><a disabled class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
                 agregar += '<a disabled class="btn btn-danger btn-xs"> <i class="fa fa-trash"></i></a></td>';
                 agregar += '</tr>';
@@ -239,25 +242,24 @@ function editarOrden(terminar) {
 
     //ALMACEMAR ELEMENTOS DE LA TABLA
     $("#table_body tr").each(function () {
-
         var row = $(this);
         var item = {};
 
-        var precio = row.find("td").eq(1).html();
-        var getPrice = precio.split("$ ");
-
-        item["Id"] = 0;
-        item["CantidadOrden"] = row.find("td").eq(2).html();
-        item["PrecioOrden"] = getPrice[1];
-        item["NotaDetalleOrden"] = row.find("td").eq(1).attr("value");
-        item["MenuId"] = row.find("td").eq(0).attr("value");
-        item["OrdenId"] = 0;
-        item["EstadoDetalleOrden"] = row.find("td").eq(4).attr("value");
-
-        OrdenDetails.push(item);
-
         //SI EXISTEN ELEMENTOS NUEVOS A LA ORDEN
         if (row.find("td").eq(4).attr("value") == "false") {
+            var precio = row.find("td").eq(1).html();
+            var getPrice = precio.split("$ ");
+
+            item["Id"] = 0;
+            item["CantidadOrden"] = row.find("td").eq(2).html();
+            item["PrecioOrden"] = getPrice[1];
+            item["NotaDetalleOrden"] = row.find("td").eq(1).attr("value");
+            item["MenuId"] = row.find("td").eq(0).attr("value");
+            item["OrdenId"] = 0;
+            item["EstadoDetalleOrden"] = row.find("td").eq(4).attr("value");
+
+            OrdenDetails.push(item);
+
             itemsNuevos = true;
         }
     });

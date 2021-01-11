@@ -129,19 +129,21 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
         url: "/Ordenes/Ordenes/",
         data: { empleadoId: EmpleadoId, EmpleadoRol: EmpleadoRole },
         success: function (data) {
-            if (data.length == 0) {
+            if (data.length == 0 || data == null) {
                 var agregar = '<h2 id="txt" style="text-align:center;">Ordenes vacías</h2>';//AGREGA LETRERO
                 $("#x_content").append(agregar);
             } else {
                 //CREA EL ENCABEZADO DE LA TABLA DE ORDENES
                 var thead = '<tr> <th>No. Orden</th> <th>No. Mesa</th> <th>Hora ordenada</th> <th>Cliente</th>';
                 var theadFin = "";
+                var huesped = "";
 
                 //CREA EL TBODY DE LA TABLA ORDENES
                 var tbodyFin = "";
                 var tbody = "";
 
                 for (var i = 0; i < Object.keys(data).length; i++) {
+                    huesped = data[i].Cliente != "N/A" ? true : false;
 
                     tbody = '<tr><td scope="row">' + cargarCodigo(data[i].CodigoOrden) + '</td><td>' + data[i].Mesa + '</td><td>' + data[i].HoraOrden + '</td><td>' + data[i].Cliente + '</td>';
 
@@ -149,7 +151,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
                         theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
 
                         tbodyFin = '<td>' + data[i].Mesero + '</td>' +
-                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId) + '</td>' +
+                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId, huesped) + '</td>' +
                             '</tr>';
                     }
                     else {
@@ -158,15 +160,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
                             '<div class="btn-group">' +
                             '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
                             'Acción   <span class="caret"></span>' +
-                            '</button>' +
-                            '<ul role="menu" class="dropdown-menu">' +
-                            '<li>' +
-                            '<a id="buttonOrder" onclick="RedirectToEdit(' + data[i].OrdenId + ')">Ver orden</a>' +
-                            '</li>' +
-                            '<li>' +
-                            '<a onclick="RedirectToComanda(' + data[i].OrdenId + ')">Mostrar comanda</a>' +
-                            '</li>' +
-                            '</ul>' +
+                            '</button>' + buttonComanda(huesped, data[i].OrdenId) +
                             '</div>' +
                             '</td>' +
                             '</tr>';
@@ -182,8 +176,45 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
     });//FIN AJAX
 }//FIN FUNCTION
 
+function buttonComanda(huesped, ordenId) {
+    var link = "";
+
+    if (huesped) {
+        link = '<ul role="menu" class="dropdown-menu">' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToEdit(' + ordenId + ')">Ver orden</a>' +
+            '</li>' +
+            '<li>' +
+            '<a onclick="RedirectToComanda(' + ordenId + ')">Mostrar comanda</a>' +
+            '</li>' +
+            '</ul>';
+    } else {
+        link = '<ul role="menu" class="dropdown-menu">' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToEdit(' + ordenId + ')">Ver orden</a>' +
+            '</li>' +
+            '</ul>';
+    }
+
+    return link;
+}
+
+//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
+function RedirectToEdit(OrderId) {
+
+    var url = "/Ordenes/Edit?OrderId=" + OrderId;
+    window.location.href = url;
+}
+
+//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
+function RedirectToComanda(OrderId) {
+
+    var url = "/Ordenes/Comanda?OrderId=" + OrderId;
+    window.location.href = url;
+}
+
 //CARGA LOS LINKS DE LOS BOTONES DE LOS ROLES DIFERENTE A MESEROS
-function cargarLinks(EmpleadoRole, Id) {
+function cargarLinks(EmpleadoRole, Id, huesped) {
     var links = "";
 
     if (EmpleadoRole == "Bartender" || EmpleadoRole == "Cocinero") {
@@ -194,15 +225,7 @@ function cargarLinks(EmpleadoRole, Id) {
         links = '<div class="btn-group">' +
             '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
             'Acción   <span class="caret"></span>' +
-            '</button>' +
-            '<ul role="menu" class="dropdown-menu">' +
-            '<li>' +
-            '<a id="buttonOrder" onclick="RedirectToEdit(' + Id + ')">Ver orden</a>' +
-            '</li>' +
-            '<li>' +
-            '<a onclick="RedirectToComanda(' + Id + ')">Mostrar comanda</a>' +
-            '</li>' +
-            '</ul>' +
+            '</button>' + buttonComanda(huesped, Id) +
             '</div>';
     }
 
@@ -224,19 +247,6 @@ function cargarCodigo(data) {
     }
 
     return code;
-}
-
-//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
-function RedirectToEdit(OrderId) {
-
-    var url = "/Ordenes/Edit?OrderId=" + OrderId;
-    window.location.href = url;
-}
-
-//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
-function RedirectToComanda(OrderId) {
-    var url = "/Ordenes/Comanda?OrderId=" + OrderId;
-    window.location.href = url;
 }
 
 //FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
@@ -263,7 +273,7 @@ function lineChart() {
                 var itemV = data[i].TotalVentas;
 
                 fecha.push(itemF);
-                ventas.push(itemV);
+                ventas.push(itemV.toFixed(2));
             }
 
             var lineData = {

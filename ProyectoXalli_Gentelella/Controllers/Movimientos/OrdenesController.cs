@@ -42,7 +42,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
 
-        [Authorize(Roles = "Admin, Mesero")]
+        [Authorize(Roles = "Admin, Mesero, Bartender")]
         // GET: Ordenes
         public ActionResult Index() {
             ViewBag.MesasId = new SelectList(ListaMesas(), "Id", "Descripcion");
@@ -213,8 +213,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
                     if (buscarP == null) {
                         datoDefault.Cedula = "000-000000-0000X";
-                        datoDefault.PNombre = "Default";
-                        datoDefault.PApellido = "User";
+                        datoDefault.PNombre = "DEFAULT";
+                        datoDefault.PApellido = "USER";
 
                         db.Datos.Add(datoDefault);
                         db.SaveChanges();
@@ -387,8 +387,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                         //SI NO EXISTE LA PLANTILLA, SE MANDA A CREAR
                         if (buscarP == null) {
                             datoDefault.Cedula = "000-000000-0000X";
-                            datoDefault.PNombre = "Default";
-                            datoDefault.PApellido = "User";
+                            datoDefault.PNombre = "DEFAULT";
+                            datoDefault.PApellido = "USER";
 
                             db.Datos.Add(datoDefault);
                             db.SaveChanges();
@@ -641,6 +641,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(orden, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin, Mesero, Bartender")]
         /// <summary>
         /// MUESTRA LA VISTA PARA AGREGAR NUEVOS ITEMS DEL MENU
         /// </summary>

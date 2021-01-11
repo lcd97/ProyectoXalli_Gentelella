@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Entrada" targetNamespace="http://tempuri.org/Entrada.xsd" xmlns:mstns="http://tempuri.org/Entrada.xsd" xmlns="http://tempuri.org/Entrada.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Entrada" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Entrada" msprop:Generator_UserDSName="Entrada">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EncabezadoEnt" msprop:Generator_TableClassName="EncabezadoEntDataTable" msprop:Generator_TableVarName="tableEncabezadoEnt" msprop:Generator_TablePropName="EncabezadoEnt" msprop:Generator_RowDeletingName="EncabezadoEntRowDeleting" msprop:Generator_RowChangingName="EncabezadoEntRowChanging" msprop:Generator_RowEvHandlerName="EncabezadoEntRowChangeEventHandler" msprop:Generator_RowDeletedName="EncabezadoEntRowDeleted" msprop:Generator_UserTableName="EncabezadoEnt" msprop:Generator_RowChangedName="EncabezadoEntRowChanged" msprop:Generator_RowEvArgName="EncabezadoEntRowChangeEvent" msprop:Generator_RowClassName="EncabezadoEntRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CodigoEntrada" msprop:Generator_ColumnVarNameInTable="columnCodigoEntrada" msprop:Generator_ColumnPropNameInRow="CodigoEntrada" msprop:Generator_ColumnPropNameInTable="CodigoEntradaColumn" msprop:Generator_UserColumnName="CodigoEntrada" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaEntrada" msprop:Generator_ColumnVarNameInTable="columnFechaEntrada" msprop:Generator_ColumnPropNameInRow="FechaEntrada" msprop:Generator_ColumnPropNameInTable="FechaEntradaColumn" msprop:Generator_UserColumnName="FechaEntrada" type="xs:string" minOccurs="0" />
+              <xs:element name="Bodega" msprop:Generator_ColumnVarNameInTable="columnBodega" msprop:Generator_ColumnPropNameInRow="Bodega" msprop:Generator_ColumnPropNameInTable="BodegaColumn" msprop:Generator_UserColumnName="Bodega" type="xs:string" minOccurs="0" />
+              <xs:element name="Proveedor" msprop:Generator_ColumnVarNameInTable="columnProveedor" msprop:Generator_ColumnPropNameInRow="Proveedor" msprop:Generator_ColumnPropNameInTable="ProveedorColumn" msprop:Generator_UserColumnName="Proveedor" type="xs:string" minOccurs="0" />
+              <xs:element name="TipoEntrada" msprop:Generator_ColumnVarNameInTable="columnTipoEntrada" msprop:Generator_ColumnPropNameInRow="TipoEntrada" msprop:Generator_ColumnPropNameInTable="TipoEntradaColumn" msprop:Generator_UserColumnName="TipoEntrada" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DetalleEnt" msprop:Generator_TableClassName="DetalleEntDataTable" msprop:Generator_TableVarName="tableDetalleEnt" msprop:Generator_TablePropName="DetalleEnt" msprop:Generator_RowDeletingName="DetalleEntRowDeleting" msprop:Generator_RowChangingName="DetalleEntRowChanging" msprop:Generator_RowEvHandlerName="DetalleEntRowChangeEventHandler" msprop:Generator_RowDeletedName="DetalleEntRowDeleted" msprop:Generator_UserTableName="DetalleEnt" msprop:Generator_RowChangedName="DetalleEntRowChanged" msprop:Generator_RowEvArgName="DetalleEntRowChangeEvent" msprop:Generator_RowClassName="DetalleEntRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CantidadEntrada" msprop:Generator_ColumnVarNameInTable="columnCantidadEntrada" msprop:Generator_ColumnPropNameInRow="CantidadEntrada" msprop:Generator_ColumnPropNameInTable="CantidadEntradaColumn" msprop:Generator_UserColumnName="CantidadEntrada" type="xs:double" minOccurs="0" />
+              <xs:element name="PrecioEntrada" msprop:Generator_ColumnVarNameInTable="columnPrecioEntrada" msprop:Generator_ColumnPropNameInRow="PrecioEntrada" msprop:Generator_ColumnPropNameInTable="PrecioEntradaColumn" msprop:Generator_UserColumnName="PrecioEntrada" type="xs:double" minOccurs="0" />
+              <xs:element name="Producto" msprop:Generator_ColumnVarNameInTable="columnProducto" msprop:Generator_ColumnPropNameInRow="Producto" msprop:Generator_ColumnPropNameInTable="ProductoColumn" msprop:Generator_UserColumnName="Producto" type="xs:string" minOccurs="0" />
+              <xs:element name="SubTotal" msprop:Generator_ColumnVarNameInTable="columnSubTotal" msprop:Generator_ColumnPropNameInRow="SubTotal" msprop:Generator_ColumnPropNameInTable="SubTotalColumn" msprop:Generator_UserColumnName="SubTotal" type="xs:double" minOccurs="0" />
+              <xs:element name="UnidadMedida" msprop:Generator_ColumnVarNameInTable="columnUnidadMedida" msprop:Generator_ColumnPropNameInRow="UnidadMedida" msprop:Generator_ColumnPropNameInTable="UnidadMedidaColumn" msprop:Generator_UserColumnName="UnidadMedida" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CalculosEnt" msprop:Generator_TableClassName="CalculosEntDataTable" msprop:Generator_TableVarName="tableCalculosEnt" msprop:Generator_TablePropName="CalculosEnt" msprop:Generator_RowDeletingName="CalculosEntRowDeleting" msprop:Generator_RowChangingName="CalculosEntRowChanging" msprop:Generator_RowEvHandlerName="CalculosEntRowChangeEventHandler" msprop:Generator_RowDeletedName="CalculosEntRowDeleted" msprop:Generator_UserTableName="CalculosEnt" msprop:Generator_RowChangedName="CalculosEntRowChanged" msprop:Generator_RowEvArgName="CalculosEntRowChangeEvent" msprop:Generator_RowClassName="CalculosEntRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TotalEntrada" msprop:Generator_ColumnVarNameInTable="columnTotalEntrada" msprop:Generator_ColumnPropNameInRow="TotalEntrada" msprop:Generator_ColumnPropNameInTable="TotalEntradaColumn" msprop:Generator_UserColumnName="TotalEntrada" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

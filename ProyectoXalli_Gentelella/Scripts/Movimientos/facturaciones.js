@@ -32,7 +32,11 @@
     var mensaje = $("#mensaje").attr("value");
 
     if (mensaje != "") {
+        var id = $("#ordenId").attr("value");
+
         AlertTimer("Completado", mensaje, "success");
+        $("#change").attr("src", "/images/Small_Logo.png");
+        window.open("/Facturas/GenerarFactura/" + id, '_blank');
     }
 
     window.history.pushState('page2', 'Title', '/Facturaciones');
@@ -42,7 +46,7 @@ function tablaVacio() {
     var tbody = $("#tableInicio #bodyOrden");//OBTENEMOS EL CONTENIDO DE LA TABLA
     //SI NO HAY DATA
     if (tbody.children().length === 0) {
-        var agregar = '<tr class="even pointer" id="noProd"><td colspan="5" style="text-align: center;">SIN REGISTROS DE PAGOS</td></tr>';
+        var agregar = '<tr class="even pointer" id="noProd"><td colspan="6" style="text-align: center;">SIN REGISTROS DE PAGOS</td></tr>';
         $("#bodyOrden").append(agregar);
     }
 }
@@ -138,7 +142,7 @@ function guardarPago() {
             },
             success: function (data) {
                 if (data.success) {
-                    var url = "/Facturaciones/Index/?mensaje=" + data.message;
+                    var url = "/Facturaciones/Index/?mensaje=" + data.message + "&ordenId=" + data.ordenId;
                     window.location.href = url;
                 } else {
                     Alert("Error", data.message, "error");
@@ -317,14 +321,14 @@ function buscarOrden() {
 
                 $(".buttonNext").removeClass("buttonDisabled");
 
-                var clase = "checkbox";
+                var type = "checkbox";
                 var agColumnas = '';
 
                 if (data.ClienteId == 0) {
-                    clase = "radio";
+                    type = "radio";
                     agColumnas = '<th class="" id="celdaChk"></th>';
                 } else {
-                    agColumnas = '<th class="" id="celdaChk"><input type="' + clase + '" class="flat" id="check-all"></th>';
+                    agColumnas = '<th class="" id="celdaChk"><label class="' + type + '"><input type="' + type + '" id="check-all" onclick="checkAll()"><span class="check"></span></label></th>';
                 }
 
                 $("#flatButton").prepend(agColumnas);
@@ -332,10 +336,11 @@ function buscarOrden() {
                 for (var i = 0; i < data.orden.length; i++) {
                     agregar += '<tr class="even pointer">' +
                         '<td class="a-center">' +
-                        '<input val="' + data.orden[i].OrdenId + '" id="seleccion" type="' + clase + '" class="flat" name="table_records">' +
+                        '<label class="' + type + '"><input val="' + data.orden[i].OrdenId + '" id="seleccion" type="' + type + '" class="chkChildren" onclick="checkChild(this)" name="' + type + '"><span class="check"></span></label>' +
                         '</td>' +
                         '<td class=" ">' + cargarCodigo(data.orden[i].CodigoOrden) + '</td>' +
                         '<td class=" ">' + data.orden[i].FechaOrden + '</td>' +
+                        '<td class=" ">' + data.orden[i].Mesa + '</td>' +
                         '<td class=" ">' + data.orden[i].Cliente + '</td>' +
                         '<td class=" ">' + data.orden[i].Mesero + '</td>' +
                         '<td class="a-right a-right ">$ ' + formatoPrecio((data.orden[i].SubTotal).toString()) + '</td>' +
@@ -344,12 +349,7 @@ function buscarOrden() {
             }
 
             $("#bodyOrden").html(agregar);
-            //INICIALIZA EL CHECKBOX DE ESTADO
-            $('input.flat').iCheck({
-                checkboxClass: 'icheckbox_flat-green',
-                radioClass: 'iradio_flat-green'
-            });
-        }//FIN SUCCESS
+        }
     });
 }
 
@@ -718,7 +718,7 @@ function validado() {
     var digitoMoneda = moneda == "Córdobas" ? "C$ " : "$ ";//PARA AGREGAR EL DIGITO DE PAGO   
 
     //SI EL MONTO A PAGAR ES MAYOR AL RECIBIDO MANDAR ERROR
-    if (parseFloat(pagar) > parseFloat(recibido)) {
+    if (parseFloat(replacePagar) > parseFloat(replaceRecibido)) {
         Alert("Error", "El monto a pagar no puede ser mayor que el monto recibido", "error");
     } else {
         if (metPago.toUpperCase() == "EFECTIVO") {
@@ -840,18 +840,24 @@ function editPago(row) {
     //EVENTO ONCLICK DEL BOTON EDITAR
     $("#tablePagos").on("click", "#boton", function () {
         //OBTENER LOS VALORES A UTILIZAR
-        var pago = $(this).parents("tr").find("td").eq(0).html();
+        var pago = $(this).parents("tr").find("td").eq(0).attr("val");
         var moneda = $(this).parents("tr").find("td").eq(1).html();
         var pagar = $(this).parents("tr").find("td").eq(2).html();
         var recibido = $(this).parents("tr").find("td").eq(3).html();
         var entregado = $(this).parents("tr").find("td").eq(4).html();
 
-        ////alert(pago + " " + moneda + " " + pagar + " " + recibido + " " + entregado);
-        //$("#producto").val(prod);
-        //$('#producto').trigger('change'); // Notify any JS components that the value changed
+        $("#metPago").val(pago);
+        $('#metPago').trigger('change'); // Notify any JS components that the value changed
 
-        $("#rec").val(recibido.split("$ ")[1]);
-        $("#pagar").val(pagar.split("$ ")[1]);
+        //efectivo 1
+        //tarjeta 2
+
+        if (pago == "1") {
+            $("#rec").val(recibido.split("$ ")[1]);
+            $("#pagar").val(pagar.split("$ ")[1]);
+        } else {
+            $("#pagar").val(pagar.split("$ ")[1]);
+        }
 
         deletePago(row);
         tablaPago();
@@ -864,11 +870,46 @@ $("#metPago").on("change", function () {
 });
 
 function metodoPagoCB() {
+    $("#pagar").val("");
+    $("#rec").val("");
+
     var metodoPago = $("#metPago").find("option:selected").text();
 
     if (metodoPago.toUpperCase() == "EFECTIVO") {
         $("#rec").removeAttr("disabled");
     } else {
         $("#rec").attr("disabled", true);
+    }
+}
+
+//FUNCION PARA SELECCIONAR TODOS LOS CHECKBOX
+function checkAll() {
+
+    if ($('#check-all').is(':checked')) {
+        $('.chkChildren').prop('checked', true);
+    }
+    else {
+        $('.chkChildren').prop('checked', false);
+    }
+}
+
+//FUNCION PARA SELECCIONAR Y DESELECCIONAR CHECKBOX
+function checkChild(element) {
+
+    //SI EL ELEMENTO SELECCIONADO NO ESTA CHECKEADO
+    if (element.checked == false) {
+        //SI LA OPCION DE CHECKEADO TODO
+        if ($('#check-all').is(':checked')) {
+            $('#check-all').prop('checked', false);
+        }
+    } else {
+        var checkboxs = $("input[name='checkbox']");
+        var completos = checkboxs.length === checkboxs.filter(":checked").length;
+
+        if (completos) {
+            $('#check-all').prop('checked', true);
+        } else {
+            $('#check-all').prop('checked', false);
+        }
     }
 }

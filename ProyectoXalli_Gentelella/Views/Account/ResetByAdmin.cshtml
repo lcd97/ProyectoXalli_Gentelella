@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Catálogo";
+}
+
+@Styles.Render("~/Content/datatableCSS")
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Resetear contraseña</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <table id="Table" class="table table-bordered table-hover" style="width:100% !important">
+                    <thead>
+                        <tr>
+                            <th>Nombre de usuario</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+
+    <script>
+        $("#small-modal").draggable({
+            handle: ".modal-header"
+        });
+
+        //LLENANDO EL DATATABLE CRUD
+        $(document).ready(function () {
+            //DEFINIENDO EL DATATABLE
+            $("#Table").DataTable({
+                ajax: {
+                    url: "/Account/GetData", //URL DE LA UBICACION DEL METODO
+                    type: "GET", //TIPO DE ACCION
+                    dataType: "JSON" //TIPO DE DATO A RECIBIR O ENVIAR
+                },
+                //DEFINIENDO LAS COLUMNAS A LLENAR
+                columns: [
+                    { data: "UserName" },
+                    { data: "Role" },
+                    {
+                        data: "Desactivado", "render": function (data) {
+                            if (data) {//SI ESTA DESACTIVADO
+                                return "<a class='label label-success'>Activo</a>"
+                            } else {
+                                return "<a class='label label-warning'>Inactivo</a>"
+                            }
+                        }
+                    },
+                    {
+                        data: "Id", "render": function (data) {
+                            return "<a class='btn btn-primary' onclick=changePassAdmin('" + data + "')><i class='fa fa-pencil'></i> Cambiar</a>"
+                        }
+                    }
+                ],//FIN DE COLUMNAS
+                //IDIOMA DE DATATABLE
+                "language": {
+
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }//FIN IDIOMA DATATABLE
+            });//FIN DECLARACION DEL DATATABLE
+        });//FIN FUNCTION
+
+        function changePassAdmin(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Account/changePassReset/",
+                data: { userId: id },
+                success: function (data) {
+                    if (data.success) {
+                        Alert("Completado", data.message, "success");
+                    } else {
+                        Alert("Error", data.message, "error");
+                    }
+                }
+            });
+        }
+
+    </script>
+}

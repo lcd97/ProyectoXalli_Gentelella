@@ -52,7 +52,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                 mensaje = "Seleccione la bodega que corresponda a esta categoría";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
             }
-            
+
             //BUSCAR QUE EXISTA UNA CATEGORIA CON ESA DESCRIPCION
             CategoriaMenu bod = db.CategoriasMenu.DefaultIfEmpty(null).FirstOrDefault(b => b.DescripcionCategoriaMenu.ToUpper().Trim() == CategoriaMenu.DescripcionCategoriaMenu.ToUpper().Trim());
 

@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
+    [Authorize]
     public class FacturacionesController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
@@ -22,9 +23,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             int dia = DateTime.Now.Day;
             int mes = DateTime.Now.Month;
             int anio = DateTime.Now.Year;
-            var cambio = 34.94;
+            //var cambio = 34.94;
 
-            //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
         }
@@ -44,9 +45,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(codigo, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         // GET: Facturaciones
-        public ActionResult Index(string mensaje = "") {
+        public ActionResult Index(string mensaje = "", string ordenId = "") {
             ViewBag.Message = mensaje;//MENSAJE DE RECARGO
+            ViewBag.OrdenId = ordenId;
 
             ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
             ViewBag.MonedaId = new SelectList(db.Monedas, "Id", "DescripcionMoneda");
@@ -74,8 +77,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          join c in db.Clientes.ToList() on obj.ClienteId equals c.Id
                          join d in db.Datos.ToList() on c.DatoId equals d.Id
                          join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                         join mes in db.Mesas.ToList() on obj.MesaId equals mes.Id
                          where obj.EstadoOrden == 2 && c.Id == cliente//TODAS LAS ORDENES SIN FACTURAR E INACTIVAS
-                         group new { obj, d, det } by new { obj.Id, obj.CodigoOrden, obj.FechaOrden, d.PNombre, d.PApellido } into grouped
+                         group new { obj, d, det, mes } by new { obj.Id, obj.CodigoOrden, obj.FechaOrden, d.PNombre, d.PApellido, mes.DescripcionMesa } into grouped
                          select new {
                              OrdenId = grouped.Key.Id,
                              CodigoOrden = grouped.Key.CodigoOrden,
@@ -86,7 +90,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                        join a in db.Datos on m.DatoId equals a.Id
                                        where grouped.Key.Id == o.Id
                                        select a.PNombre + " " + a.PApellido).FirstOrDefault(),
-                             SubTotal = grouped.Sum(s => s.det.CantidadOrden * s.det.PrecioOrden)
+                             SubTotal = grouped.Sum(s => s.det.CantidadOrden * s.det.PrecioOrden),
+                             Mesa = grouped.Key.DescripcionMesa
                          }).ToList();
 
             return Json(new { orden, ClienteId }, JsonRequestBehavior.AllowGet);
@@ -169,6 +174,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return ordCliente;
         }
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         /// <summary>
         /// CARGA LA VISTA PARA AGREGAR UN CLIENTE DIPLOMATICO
         /// </summary>
@@ -322,6 +328,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
 
         [HttpPost]
         public ActionResult Create(string OrdenesIds, int ClienteId, int NoFactura, DateTime FechaPago, bool Diplomatico, int DescuentoPago, double Propina, double Cambio, int MonedaPropina, int EvidenciaId, string DetallePago) {
+            int ordenId = 0;
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
@@ -416,14 +423,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     }
 
                     transact.Commit();
-
+                    ordenId = pago.Id;
                 } catch (Exception) {
                     mensaje = "Error al almacenar el pago";
                     transact.Rollback();
                 }//FIN TRY-CATCH
             }//FIN USING
 
-            return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = completado, message = mensaje, ordenId }, JsonRequestBehavior.AllowGet);
         }
 
         public void ModificarOrdenes(int ClienteId, int OrdenId, bool Finalizado) {

@@ -53,7 +53,7 @@
 
                     <div class="col-md-3 col-sm-3 col-xs-6">
                         @Html.Label("Cantidad", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                        @Html.EditorFor(model => model.PresentacionProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.EditorFor(model => model.PresentacionProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @id = "cantPrd", @maxlength = 50, @autocomplete = "off" } })
                         @Html.ValidationMessageFor(model => model.PresentacionProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
 
@@ -68,11 +68,11 @@
 
                 <div class="form-group">
                     @*<div class="form-group has-feedback col-md-4 col-sm-4 col-xs-4">
-                        @Html.Label("Cantidad Actual", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                        @Html.Editor("Cantidad", new { htmlAttributes = new { @class = "form-control has-feedback-left", @Value = "Sin entradas", id = "cantProd", @disabled = "disabled" } })
-                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                        @Html.ValidationMessageFor(model => model.UnidadMedidaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
-                    </div>*@
+                            @Html.Label("Cantidad Actual", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
+                            @Html.Editor("Cantidad", new { htmlAttributes = new { @class = "form-control has-feedback-left", @Value = "Sin entradas", id = "cantProd", @disabled = "disabled" } })
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            @Html.ValidationMessageFor(model => model.UnidadMedidaId, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
+                        </div>*@
 
                     <div class="form-group has-feedback col-md-6 col-sm-6 col-xs-6">
                         @Html.Label("Cantidad Mínima", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
@@ -195,4 +195,12 @@
             }
         }
     });
+
+    $("#cantPrd").mask('A0.00', {
+        translation: {
+            'A': { pattern: /[1-9]/ },
+            reverse: true
+        }
+    });
+
 </script>

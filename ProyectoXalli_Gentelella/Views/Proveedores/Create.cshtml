@@ -158,6 +158,28 @@
         });
     });
 
+    //BUSQUEDA DE EMPLEADO QUE NO ESTE REGISTRADO
+    $("#cedula").blur(function () {
+        var dni = $(this).val().trim();//OBTENEMOS LA CEDULA DEL COLABORADOR
+
+        if (dni != "") {
+            $.ajax({
+                type: "GET",
+                url: "/Proveedores/BuscarProv/",
+                data: {
+                    proveedor: dni
+                },
+                success: function (data) {
+                    if (data.length != 0) {
+                        $("#nombre").val(data.Nombre);
+                        $("#apellido").val(data.Apellido);
+                        $("#ruc").val(data.RUC);
+                    }
+                }
+            });
+        }
+    });
+
     //AGREGAR EL TIPO DE FORMATO DE LOS CAMPOS
     $(document).ready(function () {
         //MASCARA PARA NUMERO TELEFONICO

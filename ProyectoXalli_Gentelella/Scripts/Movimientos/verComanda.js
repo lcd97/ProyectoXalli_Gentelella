@@ -38,16 +38,16 @@
                 //AGREGAR EL DETALLE DE LA ORDEN
                 agregarDetail += '<tr>' +
                     '<td>' + data.Details[i].Cantidad + '</td>' +
-                    '<td> $' + data.Details[i].PrecioUnitario + '</td>' +
+                    '<td> $ ' + data.Details[i].PrecioUnitario.toFixed(2) + '</td>' +
                     '<td>' + data.Details[i].Platillo + '</td>' +
-                    '<td> $' + subtotal + '</td>' +
+                    '<td> $ ' + subtotal.toFixed(2) + '</td>' +
                     '</tr>';
             }
 
             $("#tbComanda").append(agregarDetail);
             CalcularTotales();
         }
-    });   
+    });
 });
 
 //CALCULA EL TOTAL DE LA TABLA
@@ -65,9 +65,9 @@ function CalcularTotales() {
     var iva = subTotal * 0.15;
     var totalFinal = subTotal + iva;
 
-    $("#subTotal").html("$" + subTotal);
-    $("#IVA").html("$" + iva);
-    $("#Total").html("$" + totalFinal);
+    $("#subTotal").html("$ " + subTotal.toFixed(2));
+    $("#IVA").html("$ " + iva.toFixed(2));
+    $("#Total").html("$ " + totalFinal.toFixed(2));
 }
 
 //CREA EL FORMATO DEL CODIGO

@@ -2,11 +2,14 @@
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ProyectoXalli_Gentelella.Models;
@@ -98,6 +101,13 @@ namespace ProyectoXalli_Gentelella.Controllers {
 
         [HttpPost]
         public ActionResult EditProfile(int colaboradorId, string userId, string nombreCol, string apellidoCol, string correo, string ruc) {
+
+            if (ruc != "") {
+                if (ruc.Length != 14) {
+                    mensaje = "El número RUC debe ser de 14 dígitos";
+                    return Json(new { success = false, message = mensaje }, JsonRequestBehavior.AllowGet);
+                }
+            }
 
             //BUSCAMOS EL OBJETO DEL COLABORADOR
             IdentityResult result = new IdentityResult();
@@ -317,28 +327,111 @@ namespace ProyectoXalli_Gentelella.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id))) {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/) {
                     // No revelar que el usuario no existe o que no está confirmado
                     return View("ForgotPasswordConfirmation");
                 }
 
                 // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                 // Enviar correo electrónico con este vínculo
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                var body= "Restablecer contraseña\nPara restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>";
+                sendEmail(model.Email, body);
+
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             return View(model);
         }
 
+        public void sendEmail(string Email, string body) {
+            string emailHotel = "proyectoshotel2020@gmail.com";
+            string passwordHotel = "bxqalmibjgxzjqux";
+            //string passwordHotel = "Calabazas#sin.Nombre2020";
+
+            try {
+                MailMessage correo = new MailMessage();
+                correo.From = new MailAddress(emailHotel);
+                correo.To.Add(Email);
+                correo.Subject = "Cambio de contraseña Xalli Hotel";
+                correo.Body = body;
+                correo.IsBodyHtml = true;
+                correo.Priority = MailPriority.Normal;
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(emailHotel, passwordHotel);
+
+                smtp.Send(correo);
+
+                mensaje = "Correo enviado correctamente";
+
+            } catch (Exception ex) {
+                mensaje = ex.Message;
+            }
+        }
+
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation() {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> changePassReset(string userId) {
+            string pass = "xalli2021";
+            IdentityResult resultado = new IdentityResult();
+
+            var usuario = await UserManager.FindByIdAsync(userId);
+
+            if (usuario != null) {
+
+                if (!string.IsNullOrEmpty(pass)) {
+                    IdentityResult validacionClave = await UserManager.PasswordValidator.ValidateAsync(pass);
+
+                    if (validacionClave.Succeeded) {
+                        usuario.PasswordHash = UserManager.PasswordHasher.HashPassword(pass);
+                        resultado = await UserManager.UpdateAsync(usuario);
+                        if (resultado.Succeeded) {
+                            mensaje = "Cambio exitoso. Nueva clave: " + pass;
+                        } else {
+                            mensaje = "Error al modificar. Intentelo de nuevo";
+                        }
+                    }
+                } else {
+                    mensaje = "La clave no puede estar vacia.";
+                }
+            } else {
+                mensaje = "Usuario no encontrado";
+            }
+
+            return Json(new { success = resultado.Succeeded, message = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetData() {
+            var result = (from tb1 in context.Users
+                          from tb2 in tb1.Roles
+                          join tb3 in context.Roles on tb2.RoleId equals tb3.Id
+                          where tb1.PeopleId != 0
+                          orderby tb1.UserName, tb3.Name
+                          select new {
+                              Id = tb1.Id,
+                              Role = tb3.Name,
+                              UserName = tb1.UserName,
+                              Desactivado = tb1.LockoutEnabled
+                          }).ToList();
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ResetByAdmin() {
             return View();
         }
 
@@ -358,7 +451,7 @@ namespace ProyectoXalli_Gentelella.Controllers {
             if (!ModelState.IsValid) {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByNameAsync(model.UserName);
             if (user == null) {
                 // No revelar que el usuario no existe
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -367,7 +460,7 @@ namespace ProyectoXalli_Gentelella.Controllers {
             if (result.Succeeded) {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            AddErrors(result);
+            //AddErrors(result);
             return View();
         }
 

@@ -400,29 +400,29 @@ function validandoCliente() {
         return false;
 }//FIN FUNCTION
 
-$("#identificacion").keyup(function () {
-    $("#btnGuardarOrden").removeAttr("disabled");//ACTIVANDO EL BOTON
-    var iden = $(this).val();
+//$("#identificacion").keyup(function () {
+//    $("#btnGuardarOrden").removeAttr("disabled");//ACTIVANDO EL BOTON
+//    var iden = $(this).val();
 
-    if (iden.length == 1) {
-        if ($.isNumeric(iden[0])) {
+//    if (iden.length == 1) {
+//        if ($.isNumeric(iden[0])) {
 
-            $(this).attr("maxlength", 16);
-            $(this).mask("A00-000000-0000B", {
-                translation: {
-                    'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
-                    'B': { pattern: /[A-Za-z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
-                }
-            });
-        } else {
-            $(this).attr("maxlength", 10);
-            $(this).mask("AAA0000000", {
-                translation: {
-                    'A': { pattern: /[a-zA-Z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
-                }
-            });
-        }
-    } else if (iden.length == 0) {
-        $(this).unmask();
-    }
-});
+//            $(this).attr("maxlength", 16);
+//            $(this).mask("A00-000000-0000B", {
+//                translation: {
+//                    'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+//                    'B': { pattern: /[A-Za-z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+//                }
+//            });
+//        } else {
+//            $(this).attr("maxlength", 10);
+//            $(this).mask("AAA0000000", {
+//                translation: {
+//                    'A': { pattern: /[a-zA-Z]/ }//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+//                }
+//            });
+//        }
+//    } else if (iden.length == 0) {
+//        $(this).unmask();
+//    }
+//});

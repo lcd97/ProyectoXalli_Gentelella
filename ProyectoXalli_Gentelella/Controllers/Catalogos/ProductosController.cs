@@ -44,7 +44,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = productos }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Cocinero")]
         // GET: Productos/Create
         public ActionResult Create() {
             ViewBag.CategoriaId = new SelectList(db.CategoriasProducto, "Id", "DescripcionCategoria");
@@ -106,6 +106,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                         }
 
                         var errors = ModelState.Values.SelectMany(v => v.Errors);
+
+                        mensaje = "Verifique los campos a ingresar";
                     }
 
                     transact.Commit();
@@ -177,6 +179,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                 cad += (error);
                             }
                         }
+
+                        mensaje = "Verifique los campos a ingresar";
                     }
 
                     transact.Commit();

@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ProyectoXalli_Gentelella.Controllers.Catalogos
-{
+namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
     [Authorize]
-    public class ProveedoresController : Controller
-    {
+    public class ProveedoresController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
@@ -43,7 +41,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             return Json(new { data = proveedores }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Cocinero")]
         // GET: Productos/Create
         public ActionResult Create() {
             return View();
@@ -89,7 +87,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                 mensaje = "El número RUC ya se encuentra registrado";
                 return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
             }
-
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
@@ -141,6 +138,14 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
                         {
                             //SI NO EXISTE EL PROVEEDOR
                             if (validando == null) {
+                                //MODIFICANDO DATOS DE PROVEEDOR
+                                Validacion.PNombre = NombreProveedor;
+                                Validacion.PApellido = ApellidoProveedor;
+                                //SI SE INGRESO UN NUMERO RUC-ALMACENAR
+                                Validacion.RUC = RUC != "" ? RUC : null;
+
+                                db.Entry(Validacion).State = EntityState.Modified;
+
                                 //AGREGAR PROVEEDOR
                                 proveedor.Telefono = Telefono;
                                 proveedor.EstadoProveedor = true;
@@ -352,6 +357,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos
             }
 
             return View(proveedor);
+        }
+
+        public ActionResult buscarProv(string proveedor) {
+            var dato = (from obj in db.Datos
+                        where obj.Cedula == proveedor
+                        select new {
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

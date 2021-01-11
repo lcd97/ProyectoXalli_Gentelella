@@ -49,26 +49,36 @@ function barChart(role, mesero) {
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
             if (data.porcOrdenes > 0) {
-                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcOrdenes + '%</i> más que el mes pasado';
+                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> más que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             } else {
-                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcOrdenes + '%</i> menos que el mes pasado';
+                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> menos que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             }
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
             if (data.porcVentas > 0) {
-                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcVentas + '%</i> más que el mes pasado';
+                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> más que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             } else {
-                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + data.porcVentas + '%</i> menos que el mes pasado';
+                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> menos que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             }
 
             $("#ordMes").html(data.recOrd);
-            $("#ventaMes").html(data.recVenta);
+            $("#ventaMes").html(formatoPrecio(data.recVenta.toString()));
 
             if (data.bodegas) {//SI LA CONSULTA ES POR BODEGAS
+
+                //var dashBar = '<i class="fa fa-usd"></i> Ventas totales del mes en bar';
+                //var dashCocina = '<i class="fa fa-usd"></i> Ventas totales del mes en cocina';
+
+                //$("#txtMesBar").html(dashBar);
+                //$("#txtMesCocina").html(dashCocina);
+
+                $("#dashboard").remove();
+                document.getElementById("barStattics").className = "col-md-12 col-sm-12 col-xs-12";
+
                 //CREO LOS ARREGLOS PARA ALMACENAR LOS REGISTROS
                 var fecha = new Array();
                 var cocina = new Array();
@@ -77,8 +87,8 @@ function barChart(role, mesero) {
                 //RECORRO
                 for (var i = 0; i < data.ordenes.length; i++) {
                     var itemFecha = data.ordenes[i].Fecha;
-                    var itemVentaCocina = data.ordenes[i].TVCocina;
-                    var itemVentaBar = data.ordenes[i].TVBar;
+                    var itemVentaCocina = formatoPrecio(data.ordenes[i].TVCocina.toString());
+                    var itemVentaBar = formatoPrecio(data.ordenes[i].TVBar.toString());
 
                     fecha.push(itemFecha);
                     cocina.push(itemVentaCocina);
@@ -112,7 +122,7 @@ function barChart(role, mesero) {
 
                 for (var j = 0; j < data.ordenes.length; j++) {
                     var itemF = data.ordenes[j].Fecha;
-                    var itemV = data.ordenes[j].TotalVentas;
+                    var itemV = formatoPrecio(data.ordenes[j].TotalVentas.toString());
 
                     fechaVenta.push(itemF);
                     ventas.push(itemV);
@@ -153,30 +163,55 @@ function barChart(role, mesero) {
 
 function editProfile() {
     var colaboradorId = $("#cedula").attr("val");
-    var roleId = $("#roleId").attr("val");
-    var nombre = $("#nombre").val();
-    var apellido = $("#apellido").val();
-    var correo = $("#correo").val();
-    var ruc = $("#ruc").val();
+    var roleId = $("#roleId").attr("val").trim();
+    var nombre = $("#nombre").val().trim();
+    var apellido = $("#apellido").val().trim();
+    var correo = $("#correo").val().trim();
+    var ruc = $("#ruc").val().trim();
 
     var datos = "colaboradorId=" + colaboradorId + "&userId=" + roleId + "&nombreCol=" + nombre + "&apellidoCol=" + apellido + "&correo=" + correo + "&ruc=" + ruc;
     //alert(datos);
 
-    $.ajax({
-        type: "POST",
-        url: "/Account/EditProfile/",
-        dataType: "JSON",
-        data: datos,
-        success: function (data) {
-            if (data.success) {
-                AlertTimer("Completado", data.message, "success");
-                $("#nombreCol").html(data.Nombre);
-            } else {
-                Alert("Error", data.message, "error");
+    if (validarVacios()) {
+        $.ajax({
+            type: "POST",
+            url: "/Account/EditProfile/",
+            dataType: "JSON",
+            data: datos,
+            success: function (data) {
+                if (data.success) {
+                    AlertTimer("Completado", data.message, "success");
+                    $("#nombreCol").html(data.Nombre);
+                } else {
+                    Alert("Error", data.message, "error");
+                }
             }
-        }
-    });
+        });
+    } else {
+        Alert("Error", "Campos nombre y apellido se encuentran vacios", "error");
+    }
+
 }
+
+//MASCARA PARA EL NUMERO RUC
+$("#ruc").mask("A00CDEF000000B", {
+    translation: {
+        'A': { pattern: /[0-6]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'B': { pattern: /[A-Za-z]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'C': { pattern: /[0-3]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'D': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'E': { pattern: /[0-1]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        'F': { pattern: /[0-9]/ },//MODIFICAR EL ULTIMO DIGITO A SOLO LETRA
+        /*
+         FORMATO DE RUC - PRIMERA LETRA
+         PERSONA JURIDICA : J
+         PERSONA NATURAL SIN CEDULA : N
+         PERSONA NATURAL CON CEDULA : NUMERO DE CEDULA ( 0 - 6 )
+         PERSONA RESIDENTE : R
+         PERSONA NO RESIDENTE : E
+         */
+    }
+});
 
 //FUNCION PARA HACER EL CRUD A BODEGA POR MEDIO DEL MODAL (RECIBE UN FORM = FORMULARIO)
 function SubmitFormPassword(form) {
@@ -206,3 +241,13 @@ function SubmitFormPassword(form) {
     }//FIN DEL IF FORM VALID
     return false; //EVITA SALIRSE DEL METODO ACTUAL
 }//FIN FUNCTION
+
+function validarVacios() {
+    var nom = $("#nombre").val().trim();
+    var ape = $("#apellido").val().trim();
+
+    if (nom != "" && ape != "") {
+        return true;
+    } else
+        return false;
+}

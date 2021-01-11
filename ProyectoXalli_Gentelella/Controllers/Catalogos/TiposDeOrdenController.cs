@@ -10,6 +10,8 @@ using System.Web.Mvc;
 using ProyectoXalli_Gentelella.Models;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+
+    [Authorize]
     public class TiposDeOrdenController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;

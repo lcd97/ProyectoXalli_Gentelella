@@ -40,7 +40,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin, Mesero")]
+        [Authorize(Roles = "Admin, Mesero, Bartender, Cocinero, Recepcionista")]
         /// <summary>
         /// RETORNA LA VISTA CREATE
         /// </summary>
@@ -139,11 +139,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                     } else {
                         //SI SOLO EXISTE LOS DATOS DE LA PERSONA                    
                         //SI EL NUMERO RUC NO ESTA NULO
-                        if (RUC != "") {
-                            dato.RUC = RUC;
-                            //SE ACTUALIZA EL CAMPO
-                            db.Entry(dato).State = EntityState.Modified;
-                        }
+                        dato.PNombre = Nombre;
+                        dato.PApellido = Apellido;
+                        dato.RUC = RUC != "" ? RUC : null;
+                        //SE ACTUALIZA EL CAMPO
+                        db.Entry(dato).State = EntityState.Modified;
 
                         Cliente client = new Cliente();
 
@@ -173,7 +173,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje, clienteId }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Mesero, Bartender, Cocinero, Recepcionista")]
         /// <summary>
         /// DEVULVE LA VISTA EDITAR DEL CLIENTE
         /// </summary>
@@ -319,6 +319,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             Apellido = obj.PApellido,
                             Telefono = c.TelefonoCliente,
                             Email = c.EmailCliente,
+                            RUC = obj.RUC
+                        }).FirstOrDefault();
+
+            return Json(dato, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult buscarDatos(string cliente) {
+            var dato = (from obj in db.Datos
+                        where obj.Cedula == cliente
+                        select new {
+                            Nombre = obj.PNombre,
+                            Apellido = obj.PApellido,
                             RUC = obj.RUC
                         }).FirstOrDefault();
 

@@ -14,7 +14,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         bool completado = false;
         string mensaje = "";
 
-        [Authorize(Roles = "Admin, Cocinero, Recepcionista")]
+        [Authorize(Roles = "Admin, Cocinero")]
         /// <summary>
         /// MUESTRA INDEX DE ENTRADAS RESTAURANTE
         /// </summary>

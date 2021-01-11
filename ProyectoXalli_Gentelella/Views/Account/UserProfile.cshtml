@@ -50,7 +50,7 @@
             <div class="x_content">
                 <div class="col-md-12">
                     <div class="panel-body">
-                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                        <div class="" role="tabpanel" data-example-id="togglable-tabs" data-parsley-validate id="validar">
                             <ul id="myTab1" class="nav nav-tabs bar_tabs right" role="tablist">
                                 <li role="presentation" class="active">
                                     <a href="#tab_content11" id="home-tabb" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Información personal</a>
@@ -66,17 +66,17 @@
                                         <div class="form-group">
                                             <div class="col-md-4 col-sm-4 col-xs-4">
                                                 <label>Cédula</label>
-                                                <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly style="text-transform:uppercase;">
+                                                <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="16" autocomplete="off" readonly style="text-transform:uppercase;">
                                             </div>
 
                                             <div class="col-md-4 col-sm-4 col-xs-4">
                                                 <label>INSS</label>
-                                                <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" readonly>
+                                                <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" readonly>
                                             </div>
 
                                             <div class="col-md-4 col-sm-4 col-xs-4">
                                                 <label>RUC</label>
-                                                <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                                                <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" style="text-transform:uppercase;">
                                             </div>
                                         </div>
 
@@ -93,7 +93,7 @@
 
                                             <div class="col-md-4 col-sm-4 col-xs-4">
                                                 <label>Correo</label>
-                                                <input id="correo" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                                                <input id="correo" class="form-control col-md-2 col-sm-2 col-xs-2" type="email" maxlength="50" autocomplete="off" required>
                                             </div>
                                         </div>
 
@@ -145,23 +145,23 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" id="tab_content22" aria-labelledby="profile-tab">
                                     <div data-parsley-validate class="form-horizontal form-label-left">
-                                        <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <div class="col-md-8 col-sm-6 col-xs-12" id="barStattics">
                                             <div class="x_panel">
                                                 <div class="x_content">
                                                     <canvas id="barChart"></canvas>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" id="dashboard">
                                             <div class="row tile_count">
                                                 <div class="col-md-12 col-sm-4 col-xs-6 tile_stats_count">
-                                                    <span class="count_top"><i class="fa fa-fire"></i> Ordenes atendidas del mes</span>
+                                                    <span class="count_top" id="txtMesCocina"><i class="fa fa-fire"></i> Ordenes atendidas del mes</span>
                                                     <div class="count" id="ordMes"></div>
                                                     <span class="count_bottom" id="cbOrd"></span>
                                                 </div>
 
                                                 <div class="col-md-12 col-sm-4 col-xs-6 tile_stats_count">
-                                                    <span class="count_top"><i class="fa fa-usd"></i> Ventas totales del mes</span>
+                                                    <span class="count_top" id="txtMesBar"><i class="fa fa-usd"></i> Ventas totales del mes</span>
                                                     <div class="count" id="ventaMes"></div>
                                                     <span class="count_bottom" id="cbVenta"></span>
                                                 </div>
@@ -183,6 +183,8 @@
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script src="~/Scripts/parsley.js"></script>
     <script src="~/Scripts/Operaciones/ventanas.js"></script>
     <script src="~/Scripts/Seguridad/editPerfil.js"></script>
     <script src="~/Scripts/Chart.min.js"></script>

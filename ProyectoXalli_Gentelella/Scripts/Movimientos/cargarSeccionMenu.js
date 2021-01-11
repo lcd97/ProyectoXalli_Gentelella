@@ -48,7 +48,7 @@ $("#categoria").change(function () {
                         agregarMenu += '<div class="col-md-4 items" id="' + data[i].Id + '">' +//SE LE ASIGNA UN IDENTIFICADOR PARA REALIZAR EL CRUD Y ACTUALIZAR VISTA
                             '<div class="thumbnail">' +
                             '<div class="image view view-first">' +
-                            '<img style="width: 100%; height:100%; display: block;" src="' + data[i].Imagen + '"alt="' + data[i].DescripcionPlatillo + '" />' +
+                            '<img style="width: 100%; height:100%; display: block;" src="' + data[i].Imagen + '"alt="' + data[i].Platillo + '" />' +
                             '<div class="mask no-caption">' +
                             '<div class="tools tools-bottom">' +
                             '<a onclick=detallePedido("/Ordenes/DetalleOrden/",' + data[i].Id + ')><i class="fa fa-plus"></i></a>' +
@@ -60,7 +60,7 @@ $("#categoria").change(function () {
                             '<p>' +
                             '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].Platillo + '">' + data[i].Platillo + '</strong>' +
                             '</p>' +
-                            '<p> $ ' + data[i].Precio + '</p>' +
+                            '<p> $ ' + formatoPrecio(data[i].Precio.toString()) + '</p>' +
                             '</div>' +
                             '</div >' +
                             '</div >';
@@ -105,7 +105,7 @@ function cargarDetalle(id) {
         type: "GET", //TIPO DE ACCION
         url: "/Menus/getMenuItem/" + id, //URL DEL METODO A USAR
         success: function (data) {
-            $("#precioOrden").val("$ " + data.menu.Precio);
+            $("#precioOrden").val("$ " + formatoPrecio(data.menu.Precio.toString()));
             $("#platillo").val(data.menu.Platillo);
             $("#platillo").attr("name", data.menu.PlatilloId);
 

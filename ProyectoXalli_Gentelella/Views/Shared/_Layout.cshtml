@@ -163,15 +163,16 @@
                                 <li>
                                     <a><i class="fa fa-file-excel-o"></i>Consultas<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="@Url.Action("Index", "Bodegas")">Clientes Frecuentes</a></li>
-                                        <li><a href="@Url.Action("Index", "Categorias")">Estadísticas de Pago</a></li>
+                                        <li><a href="@Url.Action("Index", "Ingresos")">Ver entradas</a></li>
+                                        <li><a href="@Url.Action("Index", "Facturas")">Ver facturas</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a><i class="fa fa-line-chart"></i>Reportes<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="pages/forms/general.html">Producto más vendido</a></li>
-                                        <li><a href="pages/forms/advanced.html">Mesero más productivo</a></li>
+                                        <li><a href="">Productos sin existencias</a></li>
+                                        <li><a href="">Productos más utilizados</a></li>
+                                        <li><a href="">Mesero estrella</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -185,7 +186,7 @@
                                     <a><i class="fa fa-users"></i>Asignar/Editar<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="@Url.Action("Register", "Account")">Crear acceso</a></li>
-                                        @*<li><a href="@Url.Action("Register", "Account")">Asignar rol</a></li>*@
+                                        <li><a href="@Url.Action("ResetByAdmin", "Account")">Resetear contraseña</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -237,10 +238,6 @@
 
 
                                 <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-envelope-o"></i>
-                                        <span class="badge bg-green">6</span>
-                                    </a>
                                     <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                                         <li>
                                             <a>
