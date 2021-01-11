@@ -129,7 +129,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
         url: "/Ordenes/Ordenes/",
         data: { empleadoId: EmpleadoId, EmpleadoRol: EmpleadoRole },
         success: function (data) {
-            if (data.length == 0) {
+            if (data.length == 0 || data == null) {
                 var agregar = '<h2 id="txt" style="text-align:center;">Ordenes vacías</h2>';//AGREGA LETRERO
                 $("#x_content").append(agregar);
             } else {
@@ -151,7 +151,7 @@ function CrearTabla(EmpleadoId, EmpleadoRole) {
                         theadFin = '<th>Mesero</th> <th>Acciones</th> </tr>';
 
                         tbodyFin = '<td>' + data[i].Mesero + '</td>' +
-                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId) + '</td>' +
+                            '<td>' + cargarLinks(EmpleadoRole, data[i].OrdenId, huesped) + '</td>' +
                             '</tr>';
                     }
                     else {
@@ -199,8 +199,22 @@ function buttonComanda(huesped, ordenId) {
     return link;
 }
 
+//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
+function RedirectToEdit(OrderId) {
+
+    var url = "/Ordenes/Edit?OrderId=" + OrderId;
+    window.location.href = url;
+}
+
+//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
+function RedirectToComanda(OrderId) {
+
+    var url = "/Ordenes/Comanda?OrderId=" + OrderId;
+    window.location.href = url;
+}
+
 //CARGA LOS LINKS DE LOS BOTONES DE LOS ROLES DIFERENTE A MESEROS
-function cargarLinks(EmpleadoRole, Id) {
+function cargarLinks(EmpleadoRole, Id, huesped) {
     var links = "";
 
     if (EmpleadoRole == "Bartender" || EmpleadoRole == "Cocinero") {
@@ -211,15 +225,7 @@ function cargarLinks(EmpleadoRole, Id) {
         links = '<div class="btn-group">' +
             '<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">' +
             'Acción   <span class="caret"></span>' +
-            '</button>' +
-            '<ul role="menu" class="dropdown-menu">' +
-            '<li>' +
-            '<a id="buttonOrder" onclick="RedirectToEdit(' + Id + ')">Ver orden</a>' +
-            '</li>' +
-            '<li>' +
-            '<a onclick="RedirectToComanda(' + Id + ')">Mostrar comanda</a>' +
-            '</li>' +
-            '</ul>' +
+            '</button>' + buttonComanda(huesped, Id) +
             '</div>';
     }
 
@@ -241,19 +247,6 @@ function cargarCodigo(data) {
     }
 
     return code;
-}
-
-//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
-function RedirectToEdit(OrderId) {
-
-    var url = "/Ordenes/Edit?OrderId=" + OrderId;
-    window.location.href = url;
-}
-
-//FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
-function RedirectToComanda(OrderId) {
-    var url = "/Ordenes/Comanda?OrderId=" + OrderId;
-    window.location.href = url;
 }
 
 //FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS

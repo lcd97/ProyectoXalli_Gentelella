@@ -7,9 +7,11 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Reportes {
+    [Authorize]
     public class IngresosController : Controller {
         private DBControl db = new DBControl();
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         // GET: Ingresos
         public ActionResult Index() {
             ViewBag.BodegaId = new SelectList(db.Bodegas, "Id", "DescripcionBodega");

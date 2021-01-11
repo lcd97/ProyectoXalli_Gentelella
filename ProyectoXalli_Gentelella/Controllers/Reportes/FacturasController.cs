@@ -7,9 +7,11 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Reportes {
+    [Authorize]
     public class FacturasController : Controller {
         private DBControl db = new DBControl();
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         // GET: Reportes
         public ActionResult Index() {
             return View();
