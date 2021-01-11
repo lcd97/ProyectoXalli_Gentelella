@@ -8,10 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
+    [Authorize]
     public class BusquedasController : Controller {
 
         private DBControl db = new DBControl();
 
+        [Authorize(Roles = "Admin, Mesero, Recepcionista, Barman")]
         // GET: Busquedas
         public ActionResult BuscarCliente() {
             return View();

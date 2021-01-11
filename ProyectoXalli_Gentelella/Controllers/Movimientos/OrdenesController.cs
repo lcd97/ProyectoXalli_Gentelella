@@ -42,7 +42,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         }
 
 
-        [Authorize(Roles = "Admin, Mesero")]
+        [Authorize(Roles = "Admin, Mesero, Bartender")]
         // GET: Ordenes
         public ActionResult Index() {
             ViewBag.MesasId = new SelectList(ListaMesas(), "Id", "Descripcion");
@@ -641,6 +641,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(orden, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin, Mesero, Bartender")]
         /// <summary>
         /// MUESTRA LA VISTA PARA AGREGAR NUEVOS ITEMS DEL MENU
         /// </summary>

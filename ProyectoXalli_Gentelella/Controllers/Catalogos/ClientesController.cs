@@ -40,7 +40,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin, Mesero")]
+        [Authorize(Roles = "Admin, Mesero, Bartender, Cocinero, Recepcionista")]
         /// <summary>
         /// RETORNA LA VISTA CREATE
         /// </summary>
@@ -173,7 +173,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { success = completado, message = mensaje, clienteId }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Mesero, Bartender, Cocinero, Recepcionista")]
         /// <summary>
         /// DEVULVE LA VISTA EDITAR DEL CLIENTE
         /// </summary>

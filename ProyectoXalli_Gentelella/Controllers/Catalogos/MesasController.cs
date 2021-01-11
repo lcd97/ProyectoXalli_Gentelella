@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 using System.Net;
 
 namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
+    [Authorize]
     public class MesasController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
         private string mensaje = "";
 
-
+        [Authorize(Roles = "Admin")]
         // GET: Mesas
         public ActionResult Index() {
             return View();

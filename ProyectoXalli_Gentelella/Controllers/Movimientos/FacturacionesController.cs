@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 
 namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
+    [Authorize]
     public class FacturacionesController : Controller {
         private DBControl db = new DBControl();
         private bool completado = false;
@@ -44,6 +45,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(codigo, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         // GET: Facturaciones
         public ActionResult Index(string mensaje = "", string ordenId = "") {
             ViewBag.Message = mensaje;//MENSAJE DE RECARGO
@@ -172,6 +174,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return ordCliente;
         }
 
+        [Authorize(Roles = "Admin, Recepcionista")]
         /// <summary>
         /// CARGA LA VISTA PARA AGREGAR UN CLIENTE DIPLOMATICO
         /// </summary>

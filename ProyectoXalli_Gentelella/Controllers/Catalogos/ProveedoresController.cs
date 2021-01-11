@@ -41,7 +41,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             return Json(new { data = proveedores }, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Cocinero")]
         // GET: Productos/Create
         public ActionResult Create() {
             return View();
