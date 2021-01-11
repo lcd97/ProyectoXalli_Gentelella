@@ -148,68 +148,74 @@ $("#busqueda").on("change", function () {
 function buscarEnt() {
     var filtro = $("#busqueda").val();
     var bodega = $("#bod").val();
+    var completo = false;
 
     if (bodega == "") {
         Alert("Error", "Seleccione una bodega", "error");
     } else {
-
-        $("#Table").dataTable().fnDestroy();
         //OBTENER FILTRO    
         var proveedor = "", fechaInit = "", fechaFin = "";
 
         if (filtro == "2") {
             //BUSQUEDA POR CLIENTE
             proveedor = $("#proveedor").val();
+            completo = proveedor == "" ? false : true;
         } else if (filtro == "3") {
             //BUSQUEDA POR FECHAS
             var split = $("#daterange").val().split(' ');
             fechaInit = split[0];
             fechaFin = split[2];
+            completo = true;
         }
 
+        if (completo) {
+            $("#Table").dataTable().fnDestroy();
 
-        $("#Table").DataTable({
-            ajax: {
-                url: "/Ingresos/CargarEntradas/", //URL DE LA UBICACION DEL METODO
-                type: "GET", //TIPO DE ACCION
-                data: { proveedorId: proveedor, fechaInic: fechaInit, fechaFin: fechaFin, bodega: bodega },
-                dataType: "JSON" //TIPO DE DATO A RECIBIR O ENVIAR
-            },
-            //DEFINIENDO LAS COLUMNAS A LLENAR
-            columns: [
-                { data: "Codigo" },
-                { data: "Fecha" },
-                { data: "Proveedor" },
-                {   //DEFINIENDO LOS BOTONES PARA EDITAR Y ELIMINAR POR MEDIO DE JS
-                    data: "Id", "render": function (data) {
-                        return "<a class='btn btn-success' onclick='cargarPDF(" + data + ")'><i class='fa fa-file-pdf-o'></i> Ver</a>";
+            $("#Table").DataTable({
+                ajax: {
+                    url: "/Ingresos/CargarEntradas/", //URL DE LA UBICACION DEL METODO
+                    type: "GET", //TIPO DE ACCION
+                    data: { proveedorId: proveedor, fechaInic: fechaInit, fechaFin: fechaFin, bodega: bodega },
+                    dataType: "JSON" //TIPO DE DATO A RECIBIR O ENVIAR
+                },
+                //DEFINIENDO LAS COLUMNAS A LLENAR
+                columns: [
+                    { data: "Codigo" },
+                    { data: "Fecha" },
+                    { data: "Proveedor" },
+                    {   //DEFINIENDO LOS BOTONES PARA EDITAR Y ELIMINAR POR MEDIO DE JS
+                        data: "Id", "render": function (data) {
+                            return "<a class='btn btn-success' onclick='cargarPDF(" + data + ")'><i class='fa fa-file-pdf-o'></i> Ver</a>";
+                        }
                     }
-                }
-            ],//FIN DE COLUMNAS
-            //IDIOMA DE DATATABLE
-            "language": {
+                ],//FIN DE COLUMNAS
+                //IDIOMA DE DATATABLE
+                "language": {
 
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "No se encontraron registros",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "No se encontraron registros",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
 
-                "oPaginate": {
-                    "sFirst": "Primero",
-                    "sLast": "Último",
-                    "sNext": "Siguiente",
-                    "sPrevious": "Anterior"
-                }
-            }//FIN IDIOMA DATATABLE
-        });//FIN DECLARACION DEL DATATABLE
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                }//FIN IDIOMA DATATABLE
+            });//FIN DECLARACION DEL DATATABLE
+        } else {
+            Alert("Error", "Seleccione el filtro de busqueda", "error");
+        }
     }
 }
 
