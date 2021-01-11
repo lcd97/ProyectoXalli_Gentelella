@@ -1574,7 +1574,7 @@ if (typeof NProgress != 'undefined') {
 		};
 	   
 	   
-	   /* DATERANGEPICKER */
+	   /* DATERANGEPICKER AQUI ESTUVE YO
 	   
 		function init_daterangepicker() {
 
@@ -1783,7 +1783,7 @@ if (typeof NProgress != 'undefined') {
 			});
 	
 		}
-	   
+	   */
 	   /* SMART WIZARD */
 		
 		function init_SmartWizard() {
@@ -5024,10 +5024,10 @@ if (typeof NProgress != 'undefined') {
 		init_ColorPicker();
 		init_TagsInput();
 		//init_parsley();aqui estuve yo
-		init_daterangepicker();
-		init_daterangepicker_right();
-		init_daterangepicker_single_call();
-		init_daterangepicker_reservation();
+		//init_daterangepicker();
+		//init_daterangepicker_right();
+		//init_daterangepicker_single_call();
+		//init_daterangepicker_reservation();
 		init_SmartWizard();
 		init_EasyPieChart();
 		init_charts();

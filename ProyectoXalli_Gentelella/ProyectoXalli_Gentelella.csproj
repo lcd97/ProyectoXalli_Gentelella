@@ -347,6 +347,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.min.css" />
     <Content Include="Content\datatable\dataTables.bootstrap.css" />
+    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
@@ -520,6 +521,7 @@
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\datatable\dataTables.bootstrap.js" />
     <Content Include="Scripts\datatable\jquery.dataTables.js" />
+    <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\fastclick.js" />
     <Content Include="Scripts\icheck.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -557,6 +559,7 @@
     <Content Include="Scripts\Operaciones\ventanas.js" />
     <Content Include="Scripts\pagination.js" />
     <Content Include="Scripts\parsley.js" />
+    <Content Include="Scripts\Reportes\reportes.js" />
     <Content Include="Scripts\Seguridad\editPerfil.js" />
     <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
@@ -670,6 +673,7 @@
     <Content Include="Views\Mesas\Edit.cshtml" />
     <Content Include="Views\Account\ResetByAdmin.cshtml" />
     <Content Include="Views\Facturas\GenerarFactura.cshtml" />
+    <Content Include="Views\Facturas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -710,7 +714,7 @@
     <EmbeddedResource Include="Migrations\202012061727568_CampoInventariado.resx">
       <DependentUpon>202012061727568_CampoInventariado.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Facturas.rdlc" />
+    <Content Include="Reports\Facturas.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

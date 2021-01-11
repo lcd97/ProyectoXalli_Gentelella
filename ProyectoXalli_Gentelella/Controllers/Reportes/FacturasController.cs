@@ -20,7 +20,17 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             var calculos = Calcular(Id, datos);
             var encabe = GetEncabezado(Id, datos);
 
-            ReportViewer rtp = new ReportViewer();            rtp.ProcessingMode = ProcessingMode.Local;            rtp.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"Reports/Facturas.rdlc";            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Factura", datos));            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Calculos", calculos));            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_EncabezadoFact", encabe));            rtp.SizeToReportContent = true;            rtp.ShowPrintButton = true;            rtp.ShowZoomControl = true;            ViewBag.rpt = rtp;            ViewBag.datos = datos.Count;
+            ReportViewer rtp = new ReportViewer();
+            rtp.ProcessingMode = ProcessingMode.Local;
+            rtp.LocalReport.ReportPath = Request.MapPath(Request.ApplicationPath) + @"Reports/Facturas.rdlc";
+            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Factura", datos));
+            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Calculos", calculos));
+            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_EncabezadoFact", encabe));
+            rtp.SizeToReportContent = true;
+            rtp.ShowPrintButton = true;
+            rtp.ShowZoomControl = true;
+            ViewBag.rpt = rtp;
+            ViewBag.datos = datos.Count;
 
             return View();
         }
@@ -102,6 +112,49 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             public int Cantidad { get; set; }
             public string Menu { get; set; }
             public double SubTotal { get; set; }
+        }
+
+        public ActionResult cargarFacturas(int ClienteId = -1, string fechaInic = "", string fechaFin = "") {
+            var filtro = (dynamic)null;
+
+            var fact = (from pago in db.Pagos.ToList()
+                        join ordPag in db.OrdenesPago.ToList() on pago.Id equals ordPag.PagoId
+                        join ord in db.Ordenes.ToList() on ordPag.OrdenId equals ord.Id
+                        join client in db.Clientes.ToList() on ord.ClienteId equals client.Id
+                        join dato in db.Datos.ToList() on client.DatoId equals dato.Id
+                        select new {
+                            Id = pago.Id,
+                            FechaFact = pago.FechaPago.ToShortDateString(),
+                            NumFact = formatoNum(pago.NumeroPago),
+                            ClienteId = client.Id,
+                            Cliente = dato.PNombre.ToUpper() != "DEFAULT" ? dato.PNombre + " " + dato.PApellido : "Visitante"
+                        }).Distinct().ToList();
+
+            //APLICAR FILTROS
+            if (ClienteId != -1) {
+                filtro = fact.Where(w => w.ClienteId == ClienteId);
+            } else if (fechaInic != "") {
+                filtro = fact.Where(w => DateTime.Parse(w.FechaFact) >= DateTime.Parse(fechaInic) && DateTime.Parse(w.FechaFact) <= DateTime.Parse(fechaFin));
+            }
+
+            return Json(new { data = filtro }, JsonRequestBehavior.AllowGet);
+        }
+
+        public string formatoNum(int numero) {
+            string NumeroFact = "";
+
+            // FORMATEANDO EL CODIGO
+            if (numero < 10) {
+                NumeroFact = "000" + numero;
+            } else if (numero >= 10 || numero < 100) {
+                NumeroFact = "00" + numero;
+            } else if (numero >= 100 || numero < 1000) {
+                NumeroFact = "0" + numero;
+            } else {
+                NumeroFact = numero.ToString();
+            }
+
+            return NumeroFact;
         }
     }
 }
