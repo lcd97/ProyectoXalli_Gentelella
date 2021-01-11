@@ -35,6 +35,9 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
             //validanado photo no sea null
             if (photo != null || Request.Files[0].ContentLength > 0)
             {
+
+
+                
                 using (var transact = db.Database.BeginTransaction())
                 {
                     try
@@ -55,6 +58,7 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
                         {
                             //Crear la ruta y guardar la imagen
                             path = Path.Combine(Server.MapPath("~/images/Comanda"), photo.FileName);
+
                             photo.SaveAs(path);
 
                             Imagen imagen = new Imagen();
@@ -160,13 +164,45 @@ namespace ProyectoXalli_Gentelella.Areas.API.Controllers
             return Json(resultadoWS,JsonRequestBehavior.AllowGet);
         }
 
-                protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void rotarimg(HttpPostedFileBase photo)
+        {
+            byte[] imageData = new byte[photo.ContentLength];
+            photo.InputStream.Read(imageData, 0, photo.ContentLength);
+
+            MemoryStream ms = new MemoryStream(imageData);
+            Image originalImage = Image.FromStream(ms);
+
+            if (originalImage.PropertyIdList.Contains(0x0112))
+            {
+                int rotationValue = originalImage.GetPropertyItem(0x0112).Value[0];
+                switch (rotationValue)
+                {
+                    case 1: // landscape, do nothing
+                        break;
+
+                    case 8: // rotated 90 right
+                            // de-rotate:
+                        originalImage.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
+                        break;
+
+                    case 3: // bottoms up
+                        originalImage.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
+                        break;
+
+                    case 6: // rotated 90 left
+                        originalImage.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
+                        break;
+                }   
+            }
         }
 
      

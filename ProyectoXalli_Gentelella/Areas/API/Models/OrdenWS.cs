@@ -10,6 +10,8 @@ namespace MenuAPI.Areas.API.Models
         public int id { get; set; }
         public int codigo { get; set; }
         public DateTime fechaorden { get; set; }
+
+        public string horaorden { get; set; }
         public DateTime tiempoorden { get; set; }
         public int estado { get; set; }
         public int meseroid { get; set; }

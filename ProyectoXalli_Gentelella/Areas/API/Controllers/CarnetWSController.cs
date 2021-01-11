@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ProyectoXalli_Gentelella.Areas.API.Controllers
 {
+    [BasicAuthentication]
     public class CarnetWSController : Controller
     {
         //conexion con la db
