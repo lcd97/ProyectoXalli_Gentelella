@@ -267,6 +267,7 @@
     <Compile Include="Controllers\Movimientos\FacturacionesController.cs" />
     <Compile Include="Controllers\Movimientos\OrdenesController.cs" />
     <Compile Include="Controllers\Reportes\FacturasController.cs" />
+    <Compile Include="Controllers\Reportes\IngresosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -316,6 +317,11 @@
     <Compile Include="Models\TipoDePago.cs" />
     <Compile Include="Models\UnidadDeMedida.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\DataSets\Entrada.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entrada.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Reports\DataSets\Factura.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -502,6 +508,17 @@
     <Content Include="Reports\DataSets\Factura.xsc">
       <DependentUpon>Factura.xsd</DependentUpon>
     </Content>
+    <Content Include="Reports\DataSets\Entrada.xsc">
+      <DependentUpon>Entrada.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DataSets\Entrada.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Entrada.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DataSets\Entrada.xss">
+      <DependentUpon>Entrada.xsd</DependentUpon>
+    </Content>
     <None Include="Reports\DataSets\Factura.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -559,7 +576,8 @@
     <Content Include="Scripts\Operaciones\ventanas.js" />
     <Content Include="Scripts\pagination.js" />
     <Content Include="Scripts\parsley.js" />
-    <Content Include="Scripts\Reportes\reportes.js" />
+    <Content Include="Scripts\Reportes\entradaReport.js" />
+    <Content Include="Scripts\Reportes\facturas.js" />
     <Content Include="Scripts\Seguridad\editPerfil.js" />
     <Content Include="Scripts\Seguridad\register.js" />
     <Content Include="Scripts\select2.full.min.js" />
@@ -674,6 +692,8 @@
     <Content Include="Views\Account\ResetByAdmin.cshtml" />
     <Content Include="Views\Facturas\GenerarFactura.cshtml" />
     <Content Include="Views\Facturas\Index.cshtml" />
+    <Content Include="Views\Ingresos\Index.cshtml" />
+    <Content Include="Views\Ingresos\GenerarEntrada.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -715,6 +735,7 @@
       <DependentUpon>202012061727568_CampoInventariado.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Reports\Facturas.rdlc" />
+    <EmbeddedResource Include="Reports\Entradas.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

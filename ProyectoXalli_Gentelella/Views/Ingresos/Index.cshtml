@@ -1,8 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "Facturas";
+    ViewBag.Title = "Index";
 }
-
 
 @Styles.Render("~/Content/datatableCSS")
 <link href="~/Content/daterangepicker.css" rel="stylesheet" />
@@ -13,7 +12,7 @@
         <div class="x_panel">
             <div class="clearfix"></div>
             <div class="x_title">
-                <h2>Búsqueda por cliente o fechas</h2>
+                <h2>Búsqueda por proveedor o fechas</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="pull-right">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -23,11 +22,16 @@
             </div>
             <div class="x_content">
                 <div class="form-group">
-                    <div class="col-md-12 col-xs-12 col-sm-12">
-                        <label>Buscar facturas por</label>
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <label>Bodega</label>
+                        @Html.DropDownList("BodegaId", null, "Seleccione una opción", htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "bod" })
+                    </div>
+
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <label>Buscar entradas por</label>
                         <select class="js-example-basic-single select2_group form-control" id="busqueda">
                             <option value="1">Seleccione una opción</option>
-                            <option value="2">Buscar por cliente</option>
+                            <option value="2">Buscar por proveedor</option>
                             <option value="3">Buscar por fechas</option>
                         </select>
                     </div>
@@ -43,7 +47,7 @@
 
         <div class="x_panel">
             <div class="x_title">
-                <h2>Facturas</h2>
+                <h2>Entradas</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="pull-right">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -55,9 +59,9 @@
                 <table id="Table" class="table table-bordered table-hover" style="width:100% !important">
                     <thead>
                         <tr>
-                            <th>No. Factura</th>
-                            <th>Fecha facturada</th>
-                            <th>Cliente</th>
+                            <th>No. Entrada</th>
+                            <th>Fecha Entrada</th>
+                            <th>Proveedor</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -75,9 +79,8 @@
     <script src="~/Scripts/moment-with-locales.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/daterangepicker.js"></script>
-    <script src="~/Scripts/jquery.mask.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/select2.full.min.js"></script>
-    <script src="~/Scripts/Reportes/facturas.js"></script>
+    <script src="~/Scripts/Reportes/entradaReport.js"></script>
     <script src="~/Scripts/Operaciones/ventanas.js"></script>
 }
