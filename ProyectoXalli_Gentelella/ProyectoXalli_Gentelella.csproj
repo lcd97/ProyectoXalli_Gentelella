@@ -260,6 +260,7 @@
     <Compile Include="Controllers\Catalogos\TiposDeOrdenController.cs" />
     <Compile Include="Controllers\Catalogos\TiposDePagoController.cs" />
     <Compile Include="Controllers\Catalogos\UnidadesDeMedidaController.cs" />
+    <Compile Include="Controllers\DownloadMenu\DownloadMenuController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\Movimientos\ActivacionesController.cs" />
@@ -480,6 +481,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\BlackLogo.png" />
+    <Content Include="images\downloadFile.png" />
     <Content Include="images\Menu\Insert-image.jpg" />
     <Content Include="images\picture.jpg" />
     <Content Include="images\Small_Logo.png" />
@@ -504,6 +506,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Connected Services\tipoCambioBCN\ServicioTC.wsdl" />
     <Content Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
+    <Content Include="Documents\menu.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Reports\DataSets\Factura.xsc">
       <DependentUpon>Factura.xsd</DependentUpon>
@@ -694,6 +697,7 @@
     <Content Include="Views\Facturas\Index.cshtml" />
     <Content Include="Views\Ingresos\Index.cshtml" />
     <Content Include="Views\Ingresos\GenerarEntrada.cshtml" />
+    <Content Include="Views\DownloadMenu\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Descargar Menú";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@ViewBag.Title - Xalli Hotel</title>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/custom.min.css" rel="stylesheet" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/logoXalli.ico" />
+</head>
+
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <!-- page content -->
+            <div class="col-md-12">
+                <div class="col-middle">
+                    <div class="text-center text-center">
+                        <img class="img-responsive center-block" src="~/images/downloadFile.png" style="max-width: 15%;height: 15%;" />
+                        <h1>Abriendo menú</h1>
+                        <h2>Por favor espere...</h2>
+                    </div>
+                </div>
+            </div>
+            <!-- /page content -->
+        </div>
+    </div>
+
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            window.open("/Documents/menu.pdf", '_blank');
+        });
+    </script>
+</body>
+</html>
