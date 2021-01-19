@@ -83,7 +83,7 @@ function guardarPago() {
         var clienteId = $("#nombCliente").attr("val");//CLIENTE ID
         var noFactura = ($("#factNo").html()).substr(12);//NUMERO DE FACTURA
         var fechaPago = moment().locale('es').format('L');
-        var diplomatico = $("#tipoPersona").html() == "true" ? true : false;//ES DIPLOMATICO
+        var diplomatico = $("#tipoPersona").attr("val") == "true" ? true : false;//ES DIPLOMATICO
         var descuento = ($("#txtDesc").attr("val")) != undefined ? ($("#txtDesc").attr("val")) : 0;//PORCENTAJE DE DESCUENTO
         var propina = $("#propDol").html() == "" ? 0 : $("#propDol").html().split("$ ")[1];
 

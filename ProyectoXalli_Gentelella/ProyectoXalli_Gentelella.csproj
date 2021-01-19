@@ -268,6 +268,7 @@
     <Compile Include="Controllers\Movimientos\EntradasController.cs" />
     <Compile Include="Controllers\Movimientos\FacturacionesController.cs" />
     <Compile Include="Controllers\Movimientos\OrdenesController.cs" />
+    <Compile Include="Controllers\Reportes\ExistenciasController.cs" />
     <Compile Include="Controllers\Reportes\FacturasController.cs" />
     <Compile Include="Controllers\Reportes\IngresosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -323,6 +324,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Entrada.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\DataSets\Existencias.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Existencias.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reports\DataSets\Factura.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -523,6 +529,17 @@
     <Content Include="Reports\DataSets\Entrada.xss">
       <DependentUpon>Entrada.xsd</DependentUpon>
     </Content>
+    <Content Include="Reports\DataSets\Existencias.xsc">
+      <DependentUpon>Existencias.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DataSets\Existencias.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Existencias.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DataSets\Existencias.xss">
+      <DependentUpon>Existencias.xsd</DependentUpon>
+    </Content>
     <None Include="Reports\DataSets\Factura.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -701,6 +718,7 @@
     <Content Include="Views\Ingresos\GenerarEntrada.cshtml" />
     <Content Include="Views\DownloadMenu\Index.cshtml" />
     <Content Include="Views\Comandas\Index.cshtml" />
+    <Content Include="Views\Existencias\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -743,6 +761,7 @@
     </EmbeddedResource>
     <Content Include="Reports\Facturas.rdlc" />
     <Content Include="Reports\Entradas.rdlc" />
+    <Content Include="Reports\Existencias.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
