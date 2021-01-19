@@ -737,7 +737,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                          "<a href='https://www.xallihotel.com/' style='text-decoration:none;color:#4d90fe' target='_blank'data-saferedirectreason='2' data-saferedirecturl='https://www.xallihotel.com/'>" +
                          "XALLI, OMETEPE BEACH HOTEL" +
                          "</a>." +
-                         "<br> Copyright - 2020.All Rights Reserved." +
+                         "<br> Copyright - " + DateTime.Now.Year + ". All Rights Reserved." +
                          "</td>" +
                          "</tr>" +
                          "</tbody>" +
@@ -988,13 +988,15 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                               join bod in db.Bodegas.ToList() on cat.BodegaId equals bod.Id
                               join cli in db.Clientes.ToList() on ord.ClienteId equals cli.Id
                               join dat in db.Datos.ToList() on cli.DatoId equals dat.Id
+                              join mes in db.Mesas.ToList() on ord.MesaId equals mes.Id
                               where det.OrdenId == ordenId && det.EstadoDetalleOrden == false && bod.DescripcionBodega.ToUpper() == area.ToUpper()
                               select new {
                                   Id = ord.Id,
                                   Codigo = ord.CodigoOrden,
                                   Fecha = ord.FechaOrden.ToShortDateString(),
                                   HoraOrden = ConvertHour(ord.FechaOrden.Hour, ord.FechaOrden.Minute),
-                                  Cliente = dat.PNombre != null ? dat.PNombre.Trim() + " " + dat.PApellido.Trim() : null,
+                                  Cliente = dat.PNombre.Trim().ToUpper() != "DEFAULT" ? dat.PNombre + " " + dat.PApellido : "Visitante",
+                                  Mesa = mes.DescripcionMesa,
                                   Mesero = (from o in db.Ordenes
                                             join m in db.Meseros on o.MeseroId equals m.Id
                                             join a in db.Datos on m.DatoId equals a.Id

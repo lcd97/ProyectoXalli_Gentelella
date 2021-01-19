@@ -305,8 +305,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                             waiter.EstadoMesero = Estado;
 
                             db.Entry(waiter).State = EntityState.Modified;
+                            var complete = db.SaveChanges() > 0;
 
-                            if (db.SaveChanges() > 0) {
+                            if (complete) {
                                 //BUSCAR EN LA BD DE SEGURIDAD
                                 var credenciales = context.Users.Where(w => w.PeopleId == waiter.Id).SingleOrDefault();
 
@@ -319,7 +320,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                                     credenciales.LockoutEnabled = false;
                                 }
 
-                                completado = context.SaveChanges() > 0;
+                                completado = context.SaveChanges() > 0 || complete;
                                 mensaje = completado ? "Modificado correctamente" : "Error al modificar";
                             }
                         }

@@ -63,15 +63,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         public ActionResult Create(string Nombre, string Apellido, string Documento, string RUC, string Email, string Telefono, uint? Tipo) {
             var clienteId = 0;//PARA ENVIAR EN OTRAS VISTAS
 
-            //BUSCAR QUE EL RUC INGRESADO NO EXISTA
-            var bruc = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC.Trim());
-
-            //SI EL NUMERO RUC YA SE ENCUENTRA REGISTRADO
-            if (bruc != null) {
-                mensaje = "El número RUC ya se encuentra registrado";
-                return Json(new { mensaje });
-            }
-
             //SE BUSCA DESDE LAS DOS TABLAS
             Cliente cliente = new Cliente();
             Dato dato = new Dato();
@@ -98,6 +89,15 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                     mensaje = "Ya se encuentra registrado un cliente con esa identificación";
                     return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
                 }
+            }
+
+            //BUSCAR QUE EL RUC INGRESADO NO EXISTA
+            var bruc = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC.Trim());
+
+            //SI EL NUMERO RUC YA SE ENCUENTRA REGISTRADO
+            if (bruc != null) {
+                mensaje = "El número RUC ya se encuentra registrado";
+                return Json(new { message = mensaje });
             }
 
             using (var transact = db.Database.BeginTransaction()) {

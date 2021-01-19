@@ -9,31 +9,35 @@ function saveCustomer() {
     email = $("#email").val();
     telefono = $("#telefono").val();
     tipo = $("#documento").val();
-    
+
     if (validado() == true) {
-        //FUNCION AJAX
-        $.ajax({
-            type: "POST",
-            url: "/Clientes/Create",
-            dataType: "JSON",
-            data: {
-                Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
-                Email: email, Telefono: telefono, Tipo: tipo
-            },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
-            success: function (data) {
-                if (data.success) {
-                    $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
-                    $("#small-modal").modal("hide"); //CERRAR MODAL
-                    AlertTimer("Completado", data.message, "success");
-                } else
-                    Alert("Error", data.message, "error");//MENSAJE DE ERROR
-            },
-            error: function () {
-                Alert("Error", "Intentelo de nuevo", "error");
-            }
-        });//FIN AJAX
+        if (correoValido()) {
+            //FUNCION AJAX
+            $.ajax({
+                type: "POST",
+                url: "/Clientes/Create",
+                dataType: "JSON",
+                data: {
+                    Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
+                    Email: email, Telefono: telefono, Tipo: tipo
+                },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
+                success: function (data) {
+                    if (data.success) {
+                        $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
+                        $("#small-modal").modal("hide"); //CERRAR MODAL
+                        AlertTimer("Completado", data.message, "success");
+                    } else
+                        Alert("Error", data.message, "error");//MENSAJE DE ERROR
+                },
+                error: function () {
+                    Alert("Error", "Intentelo de nuevo", "error");
+                }
+            });//FIN AJAX
+        } else {
+            Alert("Error", "Correo invalido", "error");
+        }
     } else {
-        Alert("Error", "Campos vacios","error");
+        Alert("Error", "Campos vacios", "error");
     }
 }
 
@@ -54,30 +58,45 @@ function editCustomer(Id) {
     }
 
     if (validado() === true) {
-        $.ajax({
-            type: "POST",
-            url: "/Clientes/Edit",
-            data: {
-                Id : Id, Nombre: Nombre, Apellido: Apellido, Documento: Documento, RUC: ruc, Email: Email,
-                Telefono: Telefono, TipoDocumento: tipoDocumento, Estado: Estado
-            },
-            success: function (data) {
-                if (data.success) {
-                    $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
-                    $("#small-modal").modal("hide"); //CERRAR MODAL
-                    AlertTimer("Completado", data.message, "success");
-                } else {
-                    Alert("Error", data.message, "error");
+        if (correoValido()) {
+            $.ajax({
+                type: "POST",
+                url: "/Clientes/Edit",
+                data: {
+                    Id: Id, Nombre: Nombre, Apellido: Apellido, Documento: Documento, RUC: ruc, Email: Email,
+                    Telefono: Telefono, TipoDocumento: tipoDocumento, Estado: Estado
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
+                        $("#small-modal").modal("hide"); //CERRAR MODAL
+                        AlertTimer("Completado", data.message, "success");
+                    } else {
+                        Alert("Error", data.message, "error");
+                    }
+                },
+                error: function () {
+                    Alert("Error", "Intentelo de nuevo", "error");
                 }
-            },
-            error: function () {
-                Alert("Error", "Intentelo de nuevo", "error");
-            }
-        });
+            });
+        } else {
+            Alert("Error", "Correo inválido", "error");
+        }
     } else {
         Alert("Error", "Campos vacios", "error");
     }
 }//FIN FUNCTION
+
+//VALIDO FORMATO DE CORREO
+function correoValido() {
+    var correo = $("#email").val();
+
+    if (/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(correo)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 //FUNCION PARA VALIDAR CAMPOS VACIOS
 function validado() {

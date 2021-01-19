@@ -246,6 +246,7 @@
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Busquedas\BusquedasController.cs" />
+    <Compile Include="Controllers\Busquedas\ComandasController.cs" />
     <Compile Include="Controllers\Catalogos\BodegasController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasMenuController.cs" />
     <Compile Include="Controllers\Catalogos\CategoriasProductoController.cs" />
@@ -579,6 +580,7 @@
     <Content Include="Scripts\Operaciones\ventanas.js" />
     <Content Include="Scripts\pagination.js" />
     <Content Include="Scripts\parsley.js" />
+    <Content Include="Scripts\Reportes\comandaReport.js" />
     <Content Include="Scripts\Reportes\entradaReport.js" />
     <Content Include="Scripts\Reportes\facturas.js" />
     <Content Include="Scripts\Seguridad\editPerfil.js" />
@@ -698,6 +700,7 @@
     <Content Include="Views\Ingresos\Index.cshtml" />
     <Content Include="Views\Ingresos\GenerarEntrada.cshtml" />
     <Content Include="Views\DownloadMenu\Index.cshtml" />
+    <Content Include="Views\Comandas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

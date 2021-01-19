@@ -60,6 +60,11 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,CodigoProducto,NombreProducto,MarcaProducto,PresentacionProducto,CantidadMaxProducto,CantidadMinProducto,EstadoProducto,UnidadMedidaId,CategoriaId")] Producto Producto) {
 
+            if (Producto.PresentacionProducto <= 0) {
+                mensaje = "Cantidad de producto debe ser mayor a 0";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
             if (Producto.CategoriaId == -1) {
                 mensaje = "Seleccione una categoría";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
@@ -147,6 +152,12 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,CodigoProducto,NombreProducto,MarcaProducto,PresentacionProducto,CantidadMaxProducto,CantidadMinProducto,EstadoProducto,UnidadMedidaId,CategoriaId")] Producto Producto) {
+            if (Producto.PresentacionProducto <= 0) {
+                mensaje = "Cantidad de producto debe ser mayor a 0";
+                return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
+            }
+
+
             if (Producto.CantidadMaxProducto < Producto.CantidadMinProducto) {
                 mensaje = "La cantidad mínima de producto no debe ser mayor a la cantidad máxima";
                 return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);

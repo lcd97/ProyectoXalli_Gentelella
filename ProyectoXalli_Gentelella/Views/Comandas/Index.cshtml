@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Ver comanda";
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="clearfix"></div>
+            <div class="x_title">
+                <h2>Búscar comanda</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="form-group">
+                    <div class="col-md-2 col-xs-12 col-sm-12">
+                        <label class="control-label">Código de orden:</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12 col-sm-12">
+                        <input id="codeOrden" class="form-control" type="text" maxlength="10" autocomplete="off">
+                    </div>
+                    <div class="col-md-3 col-xs-12 col-sm-12">
+                        <button class="btn btn-primary" onclick="BuscarImg()" id="buscarImg"><i class="fa fa-search"></i> Buscar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Comanda</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="pull-right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-5 col-sm-3 col-xs-3">
+                    <div class="text-center">
+                        <button class="btn btn-default" id="impComanda" onclick="window.print();" style="margin-top:25%"><i class="fa fa-print"></i> Imprimir</button>
+                        <button class="btn btn-success" id="emailComanda" onclick="enviarEmail()" style="margin-top:25%"><i class="fa fa-download"></i> Enviar a correo</button>
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-9 col-xs-9">
+                    <img class="img-preview preview-md img-responsive" id="imgComanda" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/Reportes/comandaReport.js"></script>
+}

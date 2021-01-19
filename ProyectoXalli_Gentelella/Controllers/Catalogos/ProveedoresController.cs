@@ -67,7 +67,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
             if (CedulaProveedor != "") {
                 if (CedulaProveedor.Length != 16) {
-                    mensaje = "El número de cédula debe ser de 14 dígitos";
+                    mensaje = "El número de cédula debe ser de 16 dígitos";
                     return Json(new { success = completado, message = mensaje }, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -78,15 +78,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
             int proveedorId = 0;
             string providerName = "";
             //FIN CAMPOS A USAR EN VISTA ENTRADA
-
-            //BUSCAR QUE EL NUMERO RUC NO SE REPITA
-            var buscarRUC = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC && r.RUC != null);
-
-            //SI EXISTE UN REGISTRO CON EL NUMERO RUC
-            if (buscarRUC != null) {
-                mensaje = "El número RUC ya se encuentra registrado";
-                return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
-            }
 
             using (var transact = db.Database.BeginTransaction()) {
                 try {
@@ -106,6 +97,15 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
                         //SI NO EXISTE EL OBJETO DATO
                         if (Validacion == null) {
+                            //BUSCAR QUE EL NUMERO RUC NO SE REPITA
+                            var buscarRUC = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC && r.RUC != null);
+
+                            //SI EXISTE UN REGISTRO CON EL NUMERO RUC
+                            if (buscarRUC != null) {
+                                mensaje = "El número RUC ya se encuentra registrado";
+                                return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
+                            }
+
                             //SE GUARDAN DATOS DEL PROVEEDOR LOCAL
                             dato.Cedula = CedulaProveedor.ToUpper();
                             dato.PNombre = NombreProveedor;
@@ -171,6 +171,15 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
 
                     }//FIN LOCAL
                     else if (!Local) {
+                        //BUSCAR QUE EL NUMERO RUC NO SE REPITA
+                        var buscarRUC = db.Datos.DefaultIfEmpty(null).FirstOrDefault(r => r.RUC == RUC && r.RUC != null);
+
+                        //SI EXISTE UN REGISTRO CON EL NUMERO RUC
+                        if (buscarRUC != null) {
+                            mensaje = "El número RUC ya se encuentra registrado";
+                            return Json(new { success = completado, message = mensaje, Id = proveedorId, Proveedor = providerName }, JsonRequestBehavior.AllowGet);
+                        }
+
                         //VALIDANDO QUE EL PROVEEDOR NO EXISTA
                         Proveedor proValidacion = db.Proveedores.DefaultIfEmpty(null).FirstOrDefault(d => d.NombreComercial.ToUpper().Trim() == NombreComercial.ToUpper().Trim() || d.Dato.RUC == RUC);
 

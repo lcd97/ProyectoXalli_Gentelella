@@ -69,32 +69,36 @@ function validar(nuevo) {
     var precio = $("#precio").val();
     var ingredients = $("#ingredientes").val();
 
-    //SI ES VERDADERO
-    if (nuevo == true) {
-        if (code !== "" && a !== "" && precio !== "") {
-            if (img != null) {
+    if (precio <= 0) {
+        Alert("Error", "El precio debe ser mayor a 0", "error");
+    } else {
+        //SI ES VERDADERO
+        if (nuevo == true) {
+            if (code !== "" && a !== "" && precio !== "") {
+                if (img != null) {
+                    if (ingredients == null || ingredients == "null" || ingredients == "") {
+                        Alert("Error", "Campos vacios", "error");
+                    } else {
+                        saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+                    }
+                } else {
+                    Alert("Error", "Adjunte una imagen", "error");
+                }//FIN VALIDACION IMAGEN
+            } else {
+                Alert("Error", "Campos vacios", "error");
+            }//FIN IF-ELSE VALIDACIONES
+        } else {
+            if (code !== "" && a !== "" && precio !== "") {
                 if (ingredients == null || ingredients == "null" || ingredients == "") {
                     Alert("Error", "Campos vacios", "error");
                 } else {
-                    saveMenuItem();//METODO PARA ALMACENAR UN NUEVO ELEMENTO
+                    editMenuItem();//METODO PARA EDITAR UN ELEMENTO
                 }
             } else {
-                Alert("Error", "Adjunte una imagen", "error");
-            }//FIN VALIDACION IMAGEN
-        } else {
-            Alert("Error", "Campos vacios", "error");
-        }//FIN IF-ELSE VALIDACIONES
-    } else {
-        if (code !== "" && a !== "" && precio !== "") {
-            if (ingredients == null || ingredients == "null" || ingredients == "") {
                 Alert("Error", "Campos vacios", "error");
-            } else {
-                editMenuItem();//METODO PARA EDITAR UN ELEMENTO
-            }
-        } else {
-            Alert("Error", "Campos vacios", "error");
-        }//FIN VALIDACIONES IF-ELSE
-    }//FIN IF-ELSE NUEVO
+            }//FIN VALIDACIONES IF-ELSE
+        }//FIN IF-ELSE NUEVO
+    }//FIN IF VALIDACION PRECIO
 }//FIN FUNCTION
 
 //FUNCION PARA ALMACENAR PLATILLO DEL MENU

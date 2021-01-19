@@ -15,7 +15,8 @@
             $("#fecha").html(data.encabezado.Fecha);
             $("#hora").html(data.encabezado.HoraOrden);
             $("#mesero").html(data.encabezado.Mesero);
-            $("#cliente").html(data.encabezado.Cliente == "Default User" ? "N/A" : data.encabezado.Cliente);
+            $("#cliente").html(data.encabezado.Cliente);
+            $("#mesa").html(data.encabezado.Mesa);
 
             var agregar = "";
 

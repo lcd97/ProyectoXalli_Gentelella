@@ -50,7 +50,7 @@
 
                     <div class="col-md-3 col-sm-3 col-xs-6">
                         @Html.Label("Cantidad", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                        @Html.EditorFor(model => model.PresentacionProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @id = "cantPrd", @maxlength = 50, @autocomplete = "off" } })
+                        @Html.EditorFor(model => model.PresentacionProducto, new { htmlAttributes = new { @class = "form-control col-md-12 col-sm-12 col-xs-12", @id = "cantPrd", @maxlength = 10, @autocomplete = "off" } })
                         @Html.ValidationMessageFor(model => model.PresentacionProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
 
@@ -70,13 +70,13 @@
                         </div>*@
 
                     <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                        @Html.EditorFor(model => model.CantidadMinProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Mín.", id = "cantMin" } })
+                        @Html.EditorFor(model => model.CantidadMinProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 10, @autocomplete = "off", @placeholder = "Cant. Mín.", id = "cantMin" } })
                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                         @Html.ValidationMessageFor(model => model.CantidadMinProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
 
                     <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                        @Html.EditorFor(model => model.CantidadMaxProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 50, @autocomplete = "off", @placeholder = "Cant. Máx.", id = "cantMax" } })
+                        @Html.EditorFor(model => model.CantidadMaxProducto, new { htmlAttributes = new { @class = "form-control has-feedback-left", @maxlength = 10, @autocomplete = "off", @placeholder = "Cant. Máx.", id = "cantMax" } })
                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                         @Html.ValidationMessageFor(model => model.CantidadMaxProducto, "", new { @class = "text-danger col-md-12 col-sm-12 col-xs-12" })
                     </div>
@@ -98,11 +98,8 @@
     //JS INICIALIZACION DE SWITCHERY - CHECKBOX
     $(document).ready(function () {
 
-        $("#cantMin").mask('000.00', { reverse: true });
-        $("#cantMax").mask('000.00', { reverse: true });
-        $("#cantPrd").mask('000.00', {
-            reverse: true
-        });
+        //$("#cantMin").mask('000.00', { reverse: true });
+        //$("#cantMax").mask('000.00', { reverse: true });
 
         var elem = document.querySelector('.js-switch');
         var init = new Switchery(elem);
