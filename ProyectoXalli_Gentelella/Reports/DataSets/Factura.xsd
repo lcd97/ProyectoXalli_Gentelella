@@ -42,6 +42,16 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="MetodoPago" msprop:Generator_TableClassName="MetodoPagoDataTable" msprop:Generator_TableVarName="tableMetodoPago" msprop:Generator_RowChangedName="MetodoPagoRowChanged" msprop:Generator_TablePropName="MetodoPago" msprop:Generator_RowDeletingName="MetodoPagoRowDeleting" msprop:Generator_RowChangingName="MetodoPagoRowChanging" msprop:Generator_RowEvHandlerName="MetodoPagoRowChangeEventHandler" msprop:Generator_RowDeletedName="MetodoPagoRowDeleted" msprop:Generator_RowClassName="MetodoPagoRow" msprop:Generator_UserTableName="MetodoPago" msprop:Generator_RowEvArgName="MetodoPagoRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TipoPago" msprop:Generator_ColumnVarNameInTable="columnTipoPago" msprop:Generator_ColumnPropNameInRow="TipoPago" msprop:Generator_ColumnPropNameInTable="TipoPagoColumn" msprop:Generator_UserColumnName="TipoPago" type="xs:string" minOccurs="0" />
+              <xs:element name="MontoRecibido" msprop:Generator_ColumnVarNameInTable="columnMontoRecibido" msprop:Generator_ColumnPropNameInRow="MontoRecibido" msprop:Generator_ColumnPropNameInTable="MontoRecibidoColumn" msprop:Generator_UserColumnName="MontoRecibido" type="xs:double" minOccurs="0" />
+              <xs:element name="MontoEntregado" msprop:Generator_ColumnVarNameInTable="columnMontoEntregado" msprop:Generator_ColumnPropNameInRow="MontoEntregado" msprop:Generator_ColumnPropNameInTable="MontoEntregadoColumn" msprop:Generator_UserColumnName="MontoEntregado" type="xs:double" minOccurs="0" />
+              <xs:element name="Divisa" msprop:Generator_ColumnVarNameInTable="columnDivisa" msprop:Generator_ColumnPropNameInRow="Divisa" msprop:Generator_ColumnPropNameInTable="DivisaColumn" msprop:Generator_UserColumnName="Divisa" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>

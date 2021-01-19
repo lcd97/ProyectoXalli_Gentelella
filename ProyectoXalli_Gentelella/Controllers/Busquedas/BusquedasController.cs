@@ -238,7 +238,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 } else {
                     var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
                         .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12 && f.Orden.MeseroId == MeseroId)
-                        .Sum(s => s.CantidadOrden * s.PrecioOrden);//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
+                        .Sum(s => (double?)s.CantidadOrden * s.PrecioOrden) ?? 0;//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
                     porcVentas = ant == 0 ? 100 : ((recVenta / ant) - 1) * 100;
                 }
             } else if (Role.ToUpper() == "RECEPCIONISTA" || Role.ToUpper() == "ADMIN") {
@@ -278,7 +278,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 } else {
                     var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
                         .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12)
-                        .Sum(s => s.CantidadOrden * s.PrecioOrden);//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
+                        .Sum(s => (double?)s.CantidadOrden * s.PrecioOrden) ?? 0;//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
                     porcVentas = ant == 0 ? 100 : ((recVenta / ant) - 1) * 100;
                 }
             } else {

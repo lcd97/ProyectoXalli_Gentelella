@@ -658,10 +658,10 @@ function agregarPago() {
     var totalPagDol = parseFloat($("#footDol").html().split("$ ")[1]);
     var totalPagCord = parseFloat($("#footCord").html().split("C$ ")[1]);
 
-    var metodoPago = $("#metPago").find("option:selected").text();
+    var metodoPago = $("#metPago").find("option:selected").text().toUpperCase();
 
     if (metodoPago == "TARJETA") {
-        validado();
+        filaPago();
     } else if (moneda.toUpperCase() == "CÓRDOBAS") {
         var totalCord = parseFloat($("#totalCord").html().split("C$ ")[1]);
         var totalC = $("#totalCord").html();
@@ -675,7 +675,7 @@ function agregarPago() {
         } else if (pagar > totalCord) {
             Alert("Error", "El monto a pagar no debe ser mayor que el total", "error");
         } else {
-            validado();
+            filaPago();
         }
     } else {
         var totalDol = parseFloat($("#totalDol").html().split("$ ")[1]);
@@ -691,13 +691,13 @@ function agregarPago() {
         } else if (pagar > totalDol) {
             Alert("Error", "El monto a pagar no debe ser mayor que el total", "error");
         } else {
-            validado();
+            filaPago();
         }
     }
 }
 
 //FUNCION PARA AGREGAR LA FORMA DE PAGO
-function validado() {
+function filaPago() {
     //OBTENGO EL METODO DE PAGO(EFECTIVO-TARJETA)
     var optionSelected = $("#metPago").find("option:selected").val();
     var agregar = "";

@@ -21,6 +21,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             var datos = ObtenerDatos(Id);//OBTENEMOS LOS DATOS
             var calculos = Calcular(Id, datos);
             var encabe = GetEncabezado(Id, datos);
+            var metodo = GetMetodo(Id);
 
             ReportViewer rtp = new ReportViewer();
             rtp.ProcessingMode = ProcessingMode.Local;
@@ -28,6 +29,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Factura", datos));
             rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Calculos", calculos));
             rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_EncabezadoFact", encabe));
+            rtp.LocalReport.DataSources.Add(new ReportDataSource("ds_Montos", metodo));
             rtp.SizeToReportContent = true;
             rtp.ShowPrintButton = true;
             rtp.ShowZoomControl = true;
@@ -35,6 +37,30 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             ViewBag.datos = datos.Count;
 
             return View();
+        }
+
+        public List<Metodo> GetMetodo(int Id) {
+            var detPago = db.DetallesDePago.Where(w => w.PagoId == Id).ToList();
+            Metodo metodo = new Metodo();
+
+            if (detPago.Count() == 1) {
+                var moneda = db.Monedas.Find(detPago[0].MonedaId);
+                var divisa = moneda.DescripcionMoneda.ToUpper() == "DÓLARES" ? "$ " : "C$";
+                var tipo = db.TiposDePago.Find(detPago[0].TipoPagoId);
+
+                metodo.MontoRecibido = detPago[0].MontoRecibido;
+                metodo.MontoEntregado = detPago[0].MontoRecibido - detPago[0].CantidadPagar;
+                metodo.TipoPago = tipo.DescripcionTipoPago.ToUpper() + " " + divisa;
+                metodo.Divisa = divisa;
+
+            } else {
+                metodo.TipoPago = "TRANSACCIONES CON PAGOS MULTIPLES";
+                metodo.MontoRecibido = 0;
+                metodo.MontoEntregado = 0;
+                metodo.Divisa = "";
+            }
+
+            return new List<Metodo> { metodo };
         }
 
         public List<Factura> ObtenerDatos(int Id) {
@@ -114,6 +140,13 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             public int Cantidad { get; set; }
             public string Menu { get; set; }
             public double SubTotal { get; set; }
+        }
+
+        public class Metodo {
+            public double MontoRecibido { get; set; }
+            public string TipoPago { get; set; }
+            public double MontoEntregado { get; set; }
+            public string Divisa { get; set; }
         }
 
         public ActionResult cargarFacturas(int ClienteId = -1, string fechaInic = "", string fechaFin = "") {

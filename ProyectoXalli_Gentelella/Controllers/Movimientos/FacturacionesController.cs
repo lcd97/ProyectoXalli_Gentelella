@@ -23,9 +23,9 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             int dia = DateTime.Now.Day;
             int mes = DateTime.Now.Month;
             int anio = DateTime.Now.Year;
-            //var cambio = 34.94;
+            var cambio = 34.94;
 
-            var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+            //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
         }
@@ -343,7 +343,6 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     pago.FechaPago = FechaPago;
                     pago.NumeroPago = NoFactura;
                     pago.Descuento = DescuentoPago;
-                    pago.IVA = 15;
                     pago.Propina = Propina;
                     pago.TipoCambio = Cambio;
                     pago.MonedaId = MonedaPropina;
@@ -351,6 +350,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                     //SI EL CLIENTE ES DIPLOMATICO
                     if (Diplomatico) {
                         pago.ImagenId = EvidenciaId;
+                        pago.IVA = 0;
 
                         //MODIFICAMOS LA/LAS ORDEN/ES DEL PAGO CAMBIANDO CLIENTE ID
                         foreach (var item in listaOrdenes) {
@@ -358,6 +358,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                             ModificarOrdenes(ClienteId, data, false);
                         }
                     } else {
+                        pago.IVA = 15;
+
                         //SI EL CLIENTE ES DIPLOMATICO
                         Imagen evidenciaCarnet = db.Imagenes.DefaultIfEmpty(null).FirstOrDefault(i => i.Ruta == "N/A");
 

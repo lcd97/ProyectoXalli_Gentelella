@@ -100,31 +100,28 @@
 
         $("#cantMin").mask('000.00', { reverse: true });
         $("#cantMax").mask('000.00', { reverse: true });
-        $("#cantPrd").mask('A0.00', {
-            translation: {
-                'A': { pattern: /[1-9]/ },
-                reverse: true
+        $("#cantPrd").mask('000.00', {
+            reverse: true
+        });
+
+        var elem = document.querySelector('.js-switch');
+        var init = new Switchery(elem);
+
+        $("#cantPrd").val("1");
+
+
+        //CARGA EL CODIGO DE BODEGA
+        $.ajax({
+            type: "GET",
+            url: "/Productos/SearchCode",
+            success: function (data) {
+                $("#codigoProd").val(data);
             }
         });
 
-    var elem = document.querySelector('.js-switch');
-    var init = new Switchery(elem);
-
-    $("#cantPrd").val("1");
-
-
-    //CARGA EL CODIGO DE BODEGA
-    $.ajax({
-        type: "GET",
-        url: "/Productos/SearchCode",
-        success: function (data) {
-            $("#codigoProd").val(data);
-        }
-    });
-
-    var agregar = '<option value="-1" selected>Seleccione</option>';
-    $("#categoria").prepend(agregar);
-    $("#um").prepend(agregar);
+        var agregar = '<option value="-1" selected>Seleccione</option>';
+        $("#categoria").prepend(agregar);
+        $("#um").prepend(agregar);
     });
 
     //INICIALIZAR EL SELECT2
