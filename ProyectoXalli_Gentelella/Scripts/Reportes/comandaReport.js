@@ -70,6 +70,8 @@ function BuscarImg() {
                     $("#imgComanda").attr("src", data.ruta);
                 } else {
                     Alert("Atención", "No existe comanda para esta orden", "info");
+                    $("#impComanda").attr("disabled", true);
+                    $("#emailComanda").attr("disabled", true);
                 }
 
 

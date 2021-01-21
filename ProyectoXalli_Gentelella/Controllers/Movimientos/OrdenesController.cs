@@ -87,7 +87,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         public ActionResult MenuByCategoria(int id) {
             var menu = from obj in db.Menus.ToList()
                        join i in db.Imagenes.ToList() on obj.ImagenId equals i.Id
-                       where obj.CategoriaMenuId == id
+                       where obj.CategoriaMenuId == id && obj.EstadoMenu == true
                        select new {
                            Id = obj.Id,
                            Platillo = obj.DescripcionMenu,

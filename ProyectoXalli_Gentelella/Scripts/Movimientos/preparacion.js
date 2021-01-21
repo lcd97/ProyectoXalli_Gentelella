@@ -24,7 +24,7 @@
                 //RECORRO EL DETALLE DE LOS ELEMENTOS
                 for (var i = 0; i < data.values.length; i++) {
                     //SI NO EXISTE NOTA PONER QUE NO HAY
-                    var nota = data.values[i].Nota == null ? "SIN NOTAS" : data.values[i].Nota;
+                    var nota = data.values[i].Nota == null ? "SIN NOTAS" : data.values[i].Nota.toUpperCase();
 
                     agregar += '<li val="' + data.values[i].IdDetalle + '">' +
                         '<h2>' + data.values[i].Cantidad + ' x ' + data.values[i].Platillo + '</h2>' +

@@ -74,7 +74,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Reportes {
             var menu = (from men in db.Menus
                         join cat in db.CategoriasMenu on men.CategoriaMenuId equals cat.Id
                         join bod in db.Bodegas on cat.BodegaId equals bod.Id
-                        where men.Inventariado == true && bod.CodigoBodega.Trim().ToUpper() == "B01"
+                        where men.Inventariado == true && bod.CodigoBodega.Trim().ToUpper() == "B01" && men.EstadoMenu == true
                         select men.Id).ToList();
 
             List<int> prod = new List<int>();

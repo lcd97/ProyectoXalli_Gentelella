@@ -166,7 +166,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
             var mes = DateTime.Now.Month;//OBTENGO EL MES ACTUAL
             var anio = DateTime.Now.Year;//OBTENGO EL AÑO ACTUAL
 
-            DateTimeFormatInfo monthName = new DateTimeFormatInfo();//FORMATO DE FECHA (ES)
+            //DateTimeFormatInfo monthName = new DateTimeFormatInfo();//FORMATO DE FECHA (ES)
+            DateTimeFormatInfo monthName = new CultureInfo("es-ES", false).DateTimeFormat;
 
             //SE REALIZA LA CONSULTA DONDE DEVUELVE REGISTROS DEL MES ACTUAL
             var consulta = db.DetallesDeOrden.Where(f => f.Orden.FechaOrden.Month == DateTime.Now.Month);
@@ -176,7 +177,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 var item = new OrdenesPorDia();
 
                 //CREO LA FECHA (31/12)
-                item.Fecha = i < 10 ? ("0" + i).ToString() + "/" + monthName.GetAbbreviatedMonthName(mes) : i + "/" + monthName.GetAbbreviatedMonthName(mes);
+                item.Fecha = i < 10 ? ("0" + i).ToString() + " " + monthName.GetAbbreviatedMonthName(mes) : i + " " + monthName.GetAbbreviatedMonthName(mes);
                 var fecha = consulta.Where(o => o.Orden.FechaOrden.Day == i);//FILTRO LOS REGISTROS POR DIAS
 
                 item.TotalVentas = fecha.Any() ? fecha.Sum(x => x.CantidadOrden * x.PrecioOrden) : 0;//SI NO EXISTE EL VALOR PONER 0 DEFAULT

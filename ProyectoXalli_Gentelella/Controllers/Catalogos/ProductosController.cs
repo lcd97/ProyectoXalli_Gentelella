@@ -34,7 +34,7 @@ namespace ProyectoXalli_Gentelella.Controllers.Catalogos {
                              select new {
                                  Id = obj.Id,
                                  NombreProducto = obj.NombreProducto + " " + obj.MarcaProducto,
-                                 UnidadMedida = obj.PresentacionProducto == 1 ? c.DescripcionUnidadMedida : obj.PresentacionProducto + " " + c.DescripcionUnidadMedida,
+                                 UnidadMedida = obj.PresentacionProducto == 1 ? c.DescripcionUnidadMedida : obj.PresentacionProducto + " " + c.AbreviaturaUM,
                                  CodigoProducto = obj.CodigoProducto,
                                  Categoria = u.DescripcionCategoria
                              }).ToList();

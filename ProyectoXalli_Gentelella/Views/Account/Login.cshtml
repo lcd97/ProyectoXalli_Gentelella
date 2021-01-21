@@ -38,7 +38,7 @@
 
                         <div class="form-group">
                             @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Nombre de Usuario" })
+                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Nombre de Usuario", @autocomplete = "off" })
                         </div>
 
                         <div class="form-group">

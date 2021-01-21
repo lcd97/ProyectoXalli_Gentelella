@@ -1,4 +1,5 @@
 ﻿function CargarCliente() {
+    $("#tableInicio").empty();
     $("#clientBody").empty();
 
     $.ajax({

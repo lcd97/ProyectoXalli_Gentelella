@@ -97,7 +97,7 @@ function Check() {
 
     } else {
         //HUESPED
-        $("#titleCliente").html("Huesped");//CAMBIAR EL TITULO DE TIPO CLIENTE
+        $("#titleCliente").html("Huésped");//CAMBIAR EL TITULO DE TIPO CLIENTE
         $("#identificacion").removeAttr("readonly");//ACTIVAR CAMPO IDENTIFICACION
         $("#buscarCliente").removeAttr("disabled");//ACTIVAR BOTON BUSCAR CLIENTE
         $("#agregarCliente").removeAttr("disabled");//ACTIVAR BOTON BUSCAR CLIENTE

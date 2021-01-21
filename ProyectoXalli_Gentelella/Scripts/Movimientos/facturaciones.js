@@ -271,7 +271,7 @@ $("#identificacion").blur(function () {
             }
         });
     } else {//SI ESTA VACIO ELIMINAR ID CLIENTE EN CASO QUE EXISTA
-        $("#nombreCliente").attr("val", "");
+        $("#nombreCliente").attr("val", "0");
         $("#nombreCliente").val("");
         $("#rucOrden").val("");
 
@@ -742,6 +742,7 @@ function filaPago() {
                 Alert("Error", "Campos vacíos. Intentelo de nuevo", "error");
             } else {
                 recibido = replacePagar;
+                entregar = 0;
 
                 agregar = '<tr class="even pointer">' +
                     '<td class="" val="' + optionSelected + '">' + metPago + '</td>' +

@@ -71,7 +71,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Codigo de producto</Value>
+                              <Value>Código de producto</Value>
                               <Style>
                                 <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>12pt</FontSize>

@@ -140,20 +140,22 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
 
         public ActionResult getComanda(int codeOrder) {
             Orden orden = db.Ordenes.Where(w => w.CodigoOrden == codeOrder).FirstOrDefault();
-            var cliente = db.Clientes.FirstOrDefault(w => w.Id == orden.ClienteId && w.EmailCliente != "defaultuser@xalli.com");
-            var dato = cliente != null ? db.Datos.DefaultIfEmpty(null).FirstOrDefault(w => w.Id == cliente.DatoId) : null;
-            var nombreCliente = dato != null ? dato.PNombre + " " + dato.PApellido : "";
-
             string ruta = "";
 
-            if (System.IO.File.Exists(Server.MapPath("~/images/Comanda/") + nombreCliente.Replace(" ", "") + orden.Id + ".png")) {
-                completado = true;
-                ruta = @"\images\Comanda\" + nombreCliente.Replace(" ", "") + orden.Id + ".png";
-            } else {
+            if (orden != null) {
+                var cliente = db.Clientes.FirstOrDefault(w => w.Id == orden.ClienteId && w.EmailCliente != "defaultuser@xalli.com");
+                var dato = cliente != null ? db.Datos.DefaultIfEmpty(null).FirstOrDefault(w => w.Id == cliente.DatoId) : null;
+                var nombreCliente = dato != null ? dato.PNombre + " " + dato.PApellido : "";
+
                 ruta = "";
+
+                if (System.IO.File.Exists(Server.MapPath("~/images/Comanda/") + nombreCliente.Replace(" ", "") + orden.Id + ".png")) {
+                    completado = true;
+                    ruta = @"\images\Comanda\" + nombreCliente.Replace(" ", "") + orden.Id + ".png";
+                } else {
+                    ruta = "";
+                }
             }
-
-
 
             return Json(new { existe = completado, ruta }, JsonRequestBehavior.AllowGet);
         }
