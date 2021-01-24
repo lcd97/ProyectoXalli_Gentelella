@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Reportes";
+    Layout = null;
+}
+
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<div class="row">
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-12 col-xs-12 col-sm-12 text-center">
+                <div class="col-md-3">
+                    <label>Buscar facturas por</label>
+                </div>
+                <div class="col-md-6">
+                    <input style="text-align:center !important;" type="text" class="form-control" id="fechaAnio">
+                </div>
+            </div>
+        </div>
+        <div class="ln_solid"></div>
+
+        <div class="form-group">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                <a onclick="CerrarModal()" class="btn btn-primary">Cerrar</a>
+                <a onclick="generarReporte()" class="btn btn-success">Generar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/moment-with-locales.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Scripts/Operaciones/ventanas.js"></script>
+
+<script>
+    $("#modal-title").html("Generar reporte");
+
+    $("#small-modal").draggable({
+        handle: ".modal-header"
+    });
+
+    //INICIALIZADOR DE DATEPICKER
+    $('#fechaAnio').datetimepicker({
+        format: 'YYYY',
+        defaultDate: new Date(),
+        locale: 'es'
+    });
+
+    function generarReporte() {
+        var anio = parseInt($("#fechaAnio").val());
+
+        var url = "/Ventas/VentasMensuales/?anio=" + anio;
+
+        window.location.href = url;
+    }
+</script>

@@ -13,7 +13,7 @@
                 <Style>
                   <FontStyle>Italic</FontStyle>
                   <FontFamily>Arial Narrow</FontFamily>
-                  <FontSize>16pt</FontSize>
+                  <FontSize>14pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
@@ -52,16 +52,56 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>7.38156cm</Width>
+              <Width>1.30937cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>7.49712cm</Width>
+              <Width>3.28052cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>10.28879cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>No.</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox2</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Gray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox4">
@@ -71,7 +111,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Código de producto</Value>
+                              <Value>Código</Value>
                               <Style>
                                 <FontFamily>Arial Narrow</FontFamily>
                                 <FontSize>12pt</FontSize>
@@ -87,9 +127,10 @@
                       <rd:DefaultName>Textbox4</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -123,9 +164,10 @@
                       <rd:DefaultName>Textbox6</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -139,6 +181,41 @@
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox5">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=RowNumber("ds_Existencia")</Value>
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Gray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="CodigoProducto">
@@ -155,13 +232,15 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>CodigoProducto</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -194,7 +273,7 @@
                       <rd:DefaultName>Producto</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -213,6 +292,7 @@
           <TablixMembers>
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -226,7 +306,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_Existencia</DataSetName>
-        <Top>3.07729cm</Top>
+        <Top>2.75979cm</Top>
         <Left>0.44662cm</Left>
         <Height>1.2cm</Height>
         <Width>14.87868cm</Width>
@@ -244,11 +324,19 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Área: Bar</Value>
+                <Value>Área: </Value>
                 <Style>
                   <FontFamily>Arial Narrow</FontFamily>
                   <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>Bar</Value>
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Normal</FontWeight>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -256,7 +344,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox11</rd:DefaultName>
-        <Top>1.84285cm</Top>
+        <Top>1.52535cm</Top>
         <Left>0.44662cm</Left>
         <Height>0.6cm</Height>
         <Width>3.74354cm</Width>
@@ -271,14 +359,50 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
+      <Textbox Name="ExecutionTime">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Globals!ExecutionTime</Value>
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                  <Format>D</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>ExecutionTime</rd:DefaultName>
+        <Top>1.52535cm</Top>
+        <Left>7.55005cm</Left>
+        <Height>0.6cm</Height>
+        <Width>7.77525cm</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
     <Height>2in</Height>
     <Style />
   </Body>
-  <Width>6.13775in</Width>
+  <Width>7.01783in</Width>
   <Page>
     <PageHeader>
-      <Height>3.58703cm</Height>
+      <Height>3.00495cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -286,9 +410,9 @@
           <Source>Embedded</Source>
           <Value>BlackLogo</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>1.47849cm</Top>
+          <Top>1.00224cm</Top>
           <Left>0.44662cm</Left>
-          <Height>1.36771cm</Height>
+          <Height>1.07667cm</Height>
           <Width>4.01354cm</Width>
           <Style>
             <Border>
@@ -331,7 +455,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>REPORTE DE EXISTENCIAS</Value>
+                  <Value>REPORTE DE EXISTENCIAS - USO INTERNO</Value>
                   <Style>
                     <FontFamily>Candara</FontFamily>
                     <FontSize>12pt</FontSize>
@@ -344,9 +468,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox1</rd:DefaultName>
-          <Top>1.00224cm</Top>
+          <Top>0.52599cm</Top>
           <Left>4.63655cm</Left>
-          <Height>2.21437cm</Height>
+          <Height>1.55292cm</Height>
           <Width>10.68875cm</Width>
           <ZIndex>1</ZIndex>
           <Style>

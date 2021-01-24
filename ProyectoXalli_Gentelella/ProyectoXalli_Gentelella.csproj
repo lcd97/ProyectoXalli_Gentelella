@@ -271,6 +271,7 @@
     <Compile Include="Controllers\Reportes\ExistenciasController.cs" />
     <Compile Include="Controllers\Reportes\FacturasController.cs" />
     <Compile Include="Controllers\Reportes\IngresosController.cs" />
+    <Compile Include="Controllers\Reportes\VentasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -334,6 +335,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Factura.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\DataSets\ventas.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ventas.xsd</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
@@ -488,34 +494,40 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\BlackLogo.png" />
-    <Content Include="images\Carnet\1.png" />
-    <Content Include="images\Carnet\14.png" />
-    <Content Include="images\Carnet\15.png" />
-    <Content Include="images\Carnet\7.png" />
-    <Content Include="images\Comanda\CruzCarmensaTorres16.png" />
-    <Content Include="images\Comanda\DanielaCorderoLeiva8.png" />
-    <Content Include="images\Comanda\DarrelLeeBushnell2.png" />
     <Content Include="images\downloadFile.png" />
-    <Content Include="images\Menu\aguapura.jpeg" />
+    <Content Include="images\Menu\2samosasdeindiahechoconpapasyespecies,servidoconunasalsadeyogurtycomino.jpg" />
+    <Content Include="images\Menu\aguaalpina1.50ltrs.jpeg" />
+    <Content Include="images\Menu\aguaalpina600ml.jpg" />
     <Content Include="images\Menu\bananaflambeadoconhelado.jpg" />
+    <Content Include="images\Menu\botellajosécuervogold1ltr.jpg" />
+    <Content Include="images\Menu\botellaronflordecañaañejo15años.jpg" />
+    <Content Include="images\Menu\botellavinosantacarolina.jpg" />
+    <Content Include="images\Menu\botellavinotrapichemalbec.jpg" />
     <Content Include="images\Menu\brochetasdepolloyvegetales.jpg" />
-    <Content Include="images\Menu\gaseosa12oz.jpg" />
-    <Content Include="images\Menu\huevo,quesoyensalada.jpg" />
+    <Content Include="images\Menu\browniechocolateconhelado.jpg" />
+    <Content Include="images\Menu\cervezaheineken.jpg" />
+    <Content Include="images\Menu\cervezatoña12onz.jpg" />
+    <Content Include="images\Menu\copadevinosantacarolina.jpg" />
+    <Content Include="images\Menu\desayunocontinental.jpg" />
+    <Content Include="images\Menu\desayunonica.jpg" />
+    <Content Include="images\Menu\filetedepargorojoalaplanchaservidoconunasalsadeajoylimon.jpg" />
+    <Content Include="images\Menu\filetedepolloconsalsajalapeñaestilonicaragüense.jpg" />
+    <Content Include="images\Menu\gaseosacoca-cola12onz.jpg" />
     <Content Include="images\Menu\huevo.png" />
-    <Content Include="images\Menu\huevos.jpg" />
     <Content Include="images\Menu\Insert-image.jpg" />
-    <Content Include="images\Menu\josecuervoespecial.jpg" />
     <Content Include="images\Menu\linguinialaromana.jpg" />
-    <Content Include="images\Menu\linguinialaromanaconpollo.png" />
     <Content Include="images\Menu\margarita.jpg" />
     <Content Include="images\Menu\mojito.jpg" />
+    <Content Include="images\Menu\pancakesyfruta.jpg" />
     <Content Include="images\Menu\pancasero.jpg" />
-    <Content Include="images\Menu\pollojalapeño.jpg" />
-    <Content Include="images\Menu\ron.jpg" />
-    <Content Include="images\Menu\tostonesconquesofrito.jpg" />
-    <Content Include="images\Menu\tostonesmixto%28quesoypollo%29.jpg" />
-    <Content Include="images\Menu\vinosantacarolina.jpg" />
-    <Content Include="images\Menu\vinotrapichemalbec.jpg" />
+    <Content Include="images\Menu\sandwichhuevo,quesocheddaryensalada.jpg" />
+    <Content Include="images\Menu\sandwichhummusyensalada.jpg" />
+    <Content Include="images\Menu\shottequilajosécuervogold.jpg" />
+    <Content Include="images\Menu\tasadecafénegro.jpg" />
+    <Content Include="images\Menu\tostonesconpollo.jpg" />
+    <Content Include="images\Menu\tostonesconqueso.jpg" />
+    <Content Include="images\Menu\tostonesmixtos%28quesoypollo%29.jpg" />
+    <Content Include="images\Menu\tragoderonflordecañaañejo15años.jpg" />
     <Content Include="images\picture.jpg" />
     <Content Include="images\Small_Logo.png" />
     <Content Include="images\user.png" />
@@ -573,6 +585,17 @@
     </None>
     <Content Include="Reports\DataSets\Factura.xss">
       <DependentUpon>Factura.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\DataSets\ventas.xsc">
+      <DependentUpon>ventas.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\DataSets\ventas.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ventas.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\DataSets\ventas.xss">
+      <DependentUpon>ventas.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Busquedas\clientesB.js" />
@@ -745,6 +768,8 @@
     <Content Include="Views\DownloadMenu\Index.cshtml" />
     <Content Include="Views\Comandas\Index.cshtml" />
     <Content Include="Views\Existencias\Index.cshtml" />
+    <Content Include="Views\Ventas\VentasMensuales.cshtml" />
+    <Content Include="Views\Ventas\SeleccionarAnio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -756,6 +781,8 @@
     <Folder Include="Areas\API\Views\MesaWS\" />
     <Folder Include="Areas\API\Views\ReportesWS\" />
     <Folder Include="Areas\API\Views\Shared\" />
+    <Folder Include="images\Carnet\" />
+    <Folder Include="images\Comanda\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -786,6 +813,7 @@
     <Content Include="Reports\Facturas.rdlc" />
     <Content Include="Reports\Entradas.rdlc" />
     <Content Include="Reports\Existencias.rdlc" />
+    <Content Include="Reports\Ventas.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

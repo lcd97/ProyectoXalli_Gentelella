@@ -172,6 +172,7 @@
                                     <a><i class="fa fa-line-chart"></i>Reportes<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="@Url.Action("Index", "Existencias")">Productos sin existencias</a></li>
+                                        <li><a onclick="CargarParcial('/Ventas/SeleccionarAnio/')">Ventas por mes</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -308,6 +309,8 @@
                 <div class="">
                     @RenderBody()
                     @Html.Partial("_loading")
+                    @Html.Partial("_small-modal")
+                    @Html.Partial("_xsModal")
                 </div>
 
             </div>

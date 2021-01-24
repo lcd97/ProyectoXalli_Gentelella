@@ -36,19 +36,24 @@
                             <TextRun>
                               <Value>Cantidad</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox3</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -68,19 +73,24 @@
                             <TextRun>
                               <Value>Precio Unitario</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox5</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -100,19 +110,24 @@
                             <TextRun>
                               <Value>Producto</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox14</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -132,19 +147,24 @@
                             <TextRun>
                               <Value>U/M</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox2</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -164,19 +184,24 @@
                             <TextRun>
                               <Value>Sub-Total</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>12pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox7</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -201,6 +226,8 @@
                             <TextRun>
                               <Value>=Fields!CantidadEntrada.Value</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>f2</Format>
                               </Style>
                             </TextRun>
@@ -211,7 +238,7 @@
                       <rd:DefaultName>CantidadEntrada</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -233,6 +260,8 @@
                             <TextRun>
                               <Value>C</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
@@ -240,18 +269,22 @@
                             <TextRun>
                               <Value>=Fields!PrecioEntrada.Value</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>PrecioEntrada</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -272,7 +305,10 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!Producto.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -281,7 +317,7 @@
                       <rd:DefaultName>Producto</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -302,7 +338,10 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!UnidadMedida.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -311,7 +350,7 @@
                       <rd:DefaultName>UnidadMedida</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -333,6 +372,8 @@
                             <TextRun>
                               <Value>C</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
@@ -340,18 +381,22 @@
                             <TextRun>
                               <Value>=Fields!SubTotal.Value</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>SubTotal</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -377,7 +422,11 @@
                           <TextRuns>
                             <TextRun>
                               <Value>Total</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -388,7 +437,7 @@
                       <rd:DefaultName>Textbox16</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -414,6 +463,8 @@
                             <TextRun>
                               <Value>C</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
@@ -421,18 +472,22 @@
                             <TextRun>
                               <Value>=Sum(Fields!TotalEntrada.Value, "ds_Calculos")</Value>
                               <Style>
+                                <FontFamily>Arial Narrow</FontFamily>
+                                <FontSize>11pt</FontSize>
                                 <Format>c2</Format>
                                 <Language>en-US</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox19</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>LightGrey</Color>
+                          <Color>Gray</Color>
                           <Style>Solid</Style>
                         </Border>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -470,10 +525,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_DetalleEntrada</DataSetName>
-        <Top>4.29451cm</Top>
-        <Left>0.49953cm</Left>
+        <Top>2.86576cm</Top>
+        <Left>0.49951cm</Left>
         <Height>1.8cm</Height>
-        <Width>15.7423cm</Width>
+        <Width>15.74228cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -489,6 +544,8 @@
               <TextRun>
                 <Value>Fecha:</Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Format>d</Format>
                 </Style>
@@ -496,12 +553,16 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <Format>d</Format>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value>=First(Fields!FechaEntrada.Value, "ds_Encabezado")</Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <Format>d</Format>
                 </Style>
               </TextRun>
@@ -510,10 +571,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>FechaEntrada</rd:DefaultName>
-        <Top>0.89861cm</Top>
-        <Left>10.06412cm</Left>
+        <Top>0.44055cm</Top>
+        <Left>10.85793cm</Left>
         <Height>0.6cm</Height>
-        <Width>6.17771cm</Width>
+        <Width>5.3839cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -534,26 +595,34 @@
               <TextRun>
                 <Value>Código:</Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value xml:space="preserve"> </Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
               <TextRun>
                 <Value>=First(Fields!CodigoEntrada.Value, "ds_Encabezado")</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>CodigoEntrada</rd:DefaultName>
-        <Top>0.66958cm</Top>
+        <Top>0.44055cm</Top>
         <Left>0.49953cm</Left>
         <Height>0.6cm</Height>
-        <Width>3.66958cm</Width>
+        <Width>5.50343cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -574,26 +643,34 @@
               <TextRun>
                 <Value>Área:</Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value xml:space="preserve"> </Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
               <TextRun>
                 <Value>=First(Fields!Bodega.Value, "ds_Encabezado")</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Bodega</rd:DefaultName>
-        <Top>1.59563cm</Top>
+        <Top>1.0491cm</Top>
         <Left>0.49953cm</Left>
         <Height>0.6cm</Height>
-        <Width>3.66958cm</Width>
+        <Width>5.50343cm</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -614,23 +691,31 @@
               <TextRun>
                 <Value>Proveedor:</Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value xml:space="preserve"> </Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
               <TextRun>
                 <Value>=First(Fields!Proveedor.Value, "ds_Encabezado")</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Proveedor</rd:DefaultName>
-        <Top>2.68951cm</Top>
+        <Top>1.68438cm</Top>
         <Left>0.49953cm</Left>
         <Height>0.6cm</Height>
         <Width>9.49041cm</Width>
@@ -654,22 +739,27 @@
               <TextRun>
                 <Value>Tipo de entrada: </Value>
                 <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value>=First(Fields!TipoEntrada.Value, "ds_Encabezado")</Value>
-                <Style />
+                <Style>
+                  <FontFamily>Arial Narrow</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>TipoEntrada</rd:DefaultName>
-        <Top>1.675cm</Top>
-        <Left>10.06412cm</Left>
+        <Top>1.0491cm</Top>
+        <Left>10.85789cm</Left>
         <Height>0.6cm</Height>
-        <Width>6.17771cm</Width>
+        <Width>5.38392cm</Width>
         <ZIndex>5</ZIndex>
         <Style>
           <Border>
@@ -745,7 +835,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>REPORTE DE ENTRADAS </Value>
+                  <Value>REPORTE DE ENTRADAS - USO INTERNO</Value>
                   <Style>
                     <FontFamily>Candara</FontFamily>
                     <FontSize>12pt</FontSize>
@@ -761,7 +851,7 @@
           <Top>0.73766cm</Top>
           <Left>4.70641cm</Left>
           <Height>1.63229cm</Height>
-          <Width>12.77896cm</Width>
+          <Width>11.53542cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
