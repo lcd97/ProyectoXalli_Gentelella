@@ -261,9 +261,9 @@ function cargarMenu(uri) {
                         '</div>' +
                         '<div class="caption" id="data">' +
                         '<p>' +
-                        '<strong>' + data[i].DescripcionPlatillo + '</strong>' +
+                        '<strong id="platilloDesc" data-toggle="tooltip" title="' + data[i].DescripcionPlatillo + '">' + data[i].DescripcionPlatillo + '</strong>' +
                         '</p>' +
-                        '<p> $ ' + data[i].Precio + '</p>' +
+                        //'<p> $ ' + data[i].Precio + '</p>' +
                         '</div>' +
                         '</div >' +
                         '</div >';
