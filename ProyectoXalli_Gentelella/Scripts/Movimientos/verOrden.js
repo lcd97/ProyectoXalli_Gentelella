@@ -125,11 +125,17 @@ function buttonComanda(huesped, ordenId) {
             '<li>' +
             '<a onclick="RedirectToComanda(' + ordenId + ')">Mostrar comanda</a>' +
             '</li>' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToPay(' + ordenId + ')">Finalizar orden</a>' +
+            '</li>' +
             '</ul>';
     } else {
         link = '<ul role="menu" class="dropdown-menu">' +
             '<li>' +
             '<a id="buttonOrder" onclick="RedirectToEdit(' + ordenId + ')">Ver orden</a>' +
+            '</li>' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToPay(' + ordenId + ')">Finalizar orden</a>' +
             '</li>' +
             '</ul>';
     }
@@ -150,6 +156,12 @@ function RedirectToComanda(OrderId) {
     var url = "/Ordenes/Comanda?OrderId=" + OrderId;
     window.location.href = url;
 }
+
+function RedirectToPay(OrderId) {
+    var url = "/Facturaciones/Facturar?ordenId=" + OrderId;
+    window.location.href = url;
+}
+
 
 //CARGA LOS LINKS DE LOS BOTONES DE LOS ROLES DIFERENTE A MESEROS
 function cargarLinks(EmpleadoRole, Id, huesped) {

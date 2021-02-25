@@ -316,6 +316,7 @@
     <Compile Include="Models\Pago.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Proveedor.cs" />
+    <Compile Include="Models\TasaCambio.cs" />
     <Compile Include="Models\TipoDeEntrada.cs" />
     <Compile Include="Models\TipoDeOrden.cs" />
     <Compile Include="Models\TipoDePago.cs" />
@@ -634,6 +635,7 @@
     <Content Include="Scripts\Movimientos\activacion.js" />
     <Content Include="Scripts\Movimientos\cargarSeccionMenu.js" />
     <Content Include="Scripts\Movimientos\facturaciones.js" />
+    <Content Include="Scripts\Movimientos\facturar.js" />
     <Content Include="Scripts\Movimientos\layout.js" />
     <Content Include="Scripts\Movimientos\preparacion.js" />
     <Content Include="Scripts\Movimientos\editOrden.js" />
@@ -770,6 +772,7 @@
     <Content Include="Views\Existencias\Index.cshtml" />
     <Content Include="Views\Ventas\VentasMensuales.cshtml" />
     <Content Include="Views\Ventas\SeleccionarAnio.cshtml" />
+    <Content Include="Views\Facturaciones\Facturar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

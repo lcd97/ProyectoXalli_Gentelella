@@ -1,0 +1,396 @@
+﻿
+@{
+    ViewBag.Title = "Facturación";
+}
+
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+<style>
+    .form_wizard .stepContainer {
+        height: 100% !important;
+    }
+
+    /* custom checkbox */
+    .checkbox {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* hide the browser's default checkbox */
+        .checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    /* create custom checkbox */
+    .check {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border: 1px solid #ccc;
+    }
+
+    /* on mouse-over, add border color */
+    .checkbox:hover input ~ .check {
+        border: 2px solid #169F85;
+    }
+
+    /* add background color when the checkbox is checked */
+    .checkbox input:checked ~ .check {
+        background-color: #26B99A;
+        border: none;
+    }
+
+    /* create the checkmark and hide when not checked */
+    .check:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* show the checkmark when checked */
+    .checkbox input:checked ~ .check:after {
+        display: block;
+    }
+
+    /* checkmark style */
+    .checkbox .check:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    /* custom radio */
+    .radio {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* hide the browser's default radio button */
+        .radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* create custom radio */
+        .radio .check {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+        }
+
+        /* on mouse-over, add border color */
+        .radio:hover input ~ .check {
+            border: 2px solid #169F85;
+        }
+
+        /* add background color when the radio is checked */
+        .radio input:checked ~ .check {
+            background-color: #26B99A;
+            border: none;
+        }
+
+        /* create the radio and hide when not checked */
+        .radio .check:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* show the radio when checked */
+        .radio input:checked ~ .check:after {
+            display: block;
+        }
+
+        /* radio style */
+        .radio .check:after {
+            top: 9px;
+            left: 9px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+</style>
+
+<h1 value="@ViewBag.Message" id="mensaje" hidden></h1>
+<h1 value="@ViewBag.OrdenId" id="ordenId" hidden></h1>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Facturación</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps">
+                        <li>
+                            <a href="#step-1">
+                                <span class="step_no">1</span>
+                                <span class="step_descr">
+                                    Paso 1<br />
+                                    <small>Detalle de pago</small>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-2">
+                                <span class="step_no">2</span>
+                                <span class="step_descr">
+                                    Paso 2<br />
+                                    <small>Método de pago</small>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="step-1">
+                        <div class="form-horizontal form-label-left">
+                            <br />
+
+                            <div id="dataId" hidden></div>
+
+                            <div class="row invoice-info" id="headMaster">
+                                <!--AQUI VA EL ENCABEZADO DE CLIENTE-->
+                            </div>
+
+                            <section class="content invoice">
+
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-12 col-sm-12 table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th style="width: 59%">Platillo/Bebida</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="bodyDetalle"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <a></a>
+
+                                <div class="row">
+                                    <div class="col-xs-6 col-xs-offset-6">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody id="bodyFooter">
+                                                    <tr>
+                                                        <th style="width:50%">Subtotal:</th>
+                                                        <td id="subTotalOrden">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>IVA (15%)</th>
+                                                        <td id="ivaOrden">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Total:</th>
+                                                        <td id="totalOrden">$ 0</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                    </div>
+                    <div id="step-2">
+                        <div class="form-horizontal form-label-left">
+                            <div class="col-md-12 invoice-header">
+                                <div class="col-md-6">
+                                    <h3 id="factNo"></h3>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3 id="fechaFact"></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-xs-12 col-sm-12">
+                                <br />
+
+                                <div class="form-group col-md-3 col-sm-2 col-xs-6">
+                                    <label>Cambio</label>
+                                    <input id="cambio" class="form-control" type="text" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="form-group col-md-2 col-sm-2 col-xs-6">
+                                    <label>Descuento</label>
+                                    <input id="descuentoPago" class="form-control" type="text" maxlength="3" placeholder="10%" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-3 col-xs-6">
+                                    <label>Moneda</label>
+                                    @Html.DropDownList("MonedaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "monedaPropina" })
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-4 col-xs-4">
+                                    <label>Propina</label>
+                                    <input id="propinaPago" class="form-control" type="text" maxlength="8" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-1 col-sm-1 col-xs-2" style="margin-top: 25px !important;">
+                                    <a class="btn btn-primary" onclick="agregarVal()"><i class="fa fa-plus"></i></a>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Totales</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="bodyPago">
+                                                <tr>
+                                                    <th>Subtotal:</th>
+                                                    <td id="subDol"></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>IVA (15%)</th>
+                                                    <td id="ivaDol"></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th id="txtDesc">Descuento:</th>
+                                                    <td id="descDol"></td>
+                                                    <td></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th id="propina">Propina:</th>
+                                                    <td id="propDol"></td>
+                                                    <td></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th>Total Dólares:</th>
+                                                    <td id="totalDol"></td>
+                                                    <td id="restoDol"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total Córdobas:</th>
+                                                    <td id="totalCord"></td>
+                                                    <td id="restoCord"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-7 col-xs-12 col-md-12">
+                                <br />
+
+                                <div class="form-group col-md-3 col-sm-3 col-xs-12">
+                                    <label>Forma de Pago</label>
+                                    @Html.DropDownList("FormaPagoId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "metPago" })
+                                </div>
+
+                                <div class="form-group col-md-2 col-sm-3 col-xs-12">
+                                    <label>Moneda</label>
+                                    @Html.DropDownList("MonedaId", null, htmlAttributes: new { @class = "js-example-basic-single select2_group form-control", @style = "width: 100%", @id = "monedaPago" })
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-2 col-xs-12">
+                                    <label>Monto Pagar</label>
+                                    <input id="pagar" class="form-control" type="text" maxlength="8" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-3 col-sm-3 col-xs-10">
+                                    <label>Monto Recibido</label>
+                                    <input id="rec" class="form-control" type="text" maxlength="8" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-1 col-sm-1 col-xs-2" style="margin-top: 25px !important;">
+                                    <a class="btn btn-primary" onclick="agregarPago()"><i class="fa fa-plus"></i></a>
+                                </div>
+
+
+                                <div class="col-md-12 col-sm-12 table-responsive">
+                                    <table class="table table-hover" id="tablePagos">
+                                        <thead>
+                                            <tr>
+                                                <th>Pago</th>
+                                                <th>Moneda</th>
+                                                <th>Pagar</th>
+                                                <th>Recibido</th>
+                                                <th>Entregado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bodyPagar"></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2">Total dólares</td>
+                                                <td id="footDol">$ 0</td>
+                                                <td>Total córdobas</td>
+                                                <td colspan="2" id="footCord">C$ 0</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_small-modal")
+@Html.Partial("_xsModal")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <script src="~/Scripts/jquery-ui-dist.js"></script>
+    <script src="~/Scripts/jquery.mask.js"></script>
+    <script src="~/Scripts/Operaciones/ventanas.js"></script>
+    <script src="~/Scripts/jquery.smartWizard.js"></script>
+    <script src="~/Scripts/select2.full.min.js"></script>
+    <script src="~/Scripts/Movimientos/facturar.js"></script>
+}

@@ -17,22 +17,25 @@
     }
 </style>
 
+<h1 value="@ViewBag.Message" id="mensaje" hidden></h1>
+<h1 value="@ViewBag.OrdenId" id="ordenId" hidden></h1>
+
 <!--LETREROS DASHBOARD-->
 <div class="row top_tiles">
     <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-shopping-cart"></i></div>
             <div class="count" id="ordenesActivas"></div>
-            <h3>Ordenes Activas</h3>
-            <p>Ordenes del día</p>
+            <h3>Órdenes Activas</h3>
+            <p>Órdenes del día</p>
         </div>
     </div>
     <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="tile-stats">
             <div class="icon"><i class="fa fa-check-square-o"></i></div>
             <div class="count" id="ordenesTotales"></div>
-            <h3>Ordenes Totales</h3>
-            <p>Ordenes del mes</p>
+            <h3>Órdenes Totales</h3>
+            <p>Órdenes del mes</p>
         </div>
     </div>
     <div class="animated flipInY col-lg-4 col-md-4 co l-sm-6 col-xs-12">
@@ -49,7 +52,7 @@
 <div class="col-md-8 col-sm-8 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-            <h2>Tabla de Ordenes<small>Ordenadas por pedido</small></h2>
+            <h2>Tabla de Órdenes<small>Ordenadas por pedido</small></h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li class="pull-right">
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

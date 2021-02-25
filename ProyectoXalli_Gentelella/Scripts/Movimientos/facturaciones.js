@@ -196,7 +196,7 @@ function obtenerCambio() {
         type: "GET",
         url: "/Facturaciones/CalcularCambioHoy/",
         success: function (data) {
-            $("#cambio").val(formatoPrecio(data.toString()));
+            $("#cambio").val(data.toFixed(2));
         }
     });
 }

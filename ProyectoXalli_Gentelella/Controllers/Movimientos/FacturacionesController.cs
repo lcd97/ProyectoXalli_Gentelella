@@ -20,14 +20,77 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
         Tipo_Cambio_BCNSoapClient tipoCambio = new Tipo_Cambio_BCNSoapClient();
 
         public ActionResult CalcularCambioHoy() {
-            int dia = DateTime.Now.Day;
-            int mes = DateTime.Now.Month;
-            int anio = DateTime.Now.Year;
-            var cambio = 34.87;
+            int dia = DateTime.Now.Day, mes = DateTime.Now.Month, anio = DateTime.Now.Year;
+            double cambio = 0;
+
+            TasaCambio tasa = db.TasasCambio.Where(w => w.FechaTasa.Day == DateTime.Now.Day &&
+                                                        w.FechaTasa.Month == DateTime.Now.Month &&
+                                                        w.FechaTasa.Year == DateTime.Now.Year).FirstOrDefault();
+
+            if (tasa == null) {
+                tasa = new TasaCambio();
+                tasa.Cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
+                tasa.FechaTasa = DateTime.Now;
+
+                db.TasasCambio.Add(tasa);
+                completado = db.SaveChanges() > 0 ? true : false;
+
+                cambio = tasa.Cambio;
+            } else
+                cambio = tasa.Cambio;
 
             //var cambio = tipoCambio.RecuperaTC_Dia(anio, mes, dia);
 
             return Json(cambio, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Facturar(int ordenId) {
+            ViewBag.Message = mensaje;//MENSAJE DE RECARGO
+            ViewBag.OrdenId = ordenId;
+
+            ViewBag.FormaPagoId = new SelectList(db.TiposDePago, "Id", "DescripcionTipoPago");
+            ViewBag.MonedaId = new SelectList(db.Monedas, "Id", "DescripcionMoneda");
+
+            return View();
+        }
+
+        public ActionResult CargarOrden(int ordenId) {
+            //OBTENGO EL ENCABEZADO DEL CLIENTE
+            var cliente = (from ord in db.Ordenes
+                           join cli in db.Clientes on ord.ClienteId equals cli.Id
+                           join dato in db.Datos on cli.DatoId equals dato.Id
+                           where ord.Id == ordenId
+                           select new {
+                               clienteId = cli.Id,
+                               nombre = dato.PNombre == "DEFAULT" ? "" : dato.PNombre + dato.PApellido,
+                               ruc = dato.RUC == null ? "" : dato.RUC
+                           }).FirstOrDefault();
+
+            //OBTENGO EL DETALLE DE DETERMINADA ORDEN
+            List<detalleCliente> ordCliente = (from obj in db.Ordenes.ToList()
+                                               join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                                               join menu in db.Menus.ToList() on det.MenuId equals menu.Id
+                                               where det.OrdenId == ordenId
+                                               group new { det, menu } by new { menu.DescripcionMenu, det.NotaDetalleOrden, det.PrecioOrden, det.MenuId } into grouped
+                                               select new detalleCliente {
+                                                   Id = grouped.Key.MenuId,
+                                                   Cantidad = grouped.Sum(s => s.det.CantidadOrden),//SUMO LA CANTIDAD SOLICITADA EN CASO DE QUE SEA EL MISMO PRODUCTO
+                                                   Platillo = grouped.Key.DescripcionMenu,
+                                                   Precio = grouped.Key.PrecioOrden
+                                               }).ToList();
+
+            //BUSCO LA EVIDENCIA EN LA TABLA IMAGEN CON DIRECCION (/IMAGES/PAGO/)
+            Imagen agregar = buscarEvidencia(ordenId);//GUARDAMOS EL RESULTADO DE LA BUSQUEDA
+            bool diplomatico = false;
+            Imagen img = new Imagen();
+
+            //SI LA BUSQUEDA RECUPERA ALGO Y DIPLOMATICO SIGUE EN FALSO
+            if (agregar != null && diplomatico == false) {
+                img = agregar;//GUARDAMOS EL OBJETO DE IMAGEN
+                diplomatico = true;//ES DIPLOMATICO
+            }
+
+            return Json(new { cliente, diplomatico, img, ordCliente }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

@@ -137,7 +137,7 @@ $(function () {
         //    })
 
 
-    }
+    };
 
     $.connection.hub.start().done();
 });

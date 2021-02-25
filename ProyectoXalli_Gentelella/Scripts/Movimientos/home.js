@@ -21,6 +21,16 @@
 
     lineChart();
 
+    var mensaje = $("#mensaje").attr("value");
+
+    if (mensaje != "") {
+        var id = $("#ordenId").attr("value");
+
+        AlertTimer("Completado", mensaje, "success");
+        window.open("/Facturas/GenerarFactura/" + id, '_blank');
+    }
+
+    window.history.pushState('page2', 'Title', '/Home');
 });
 
 //MUESTRA EL GRAFICO DE PASTEL EN EL INDEX HOME
@@ -187,11 +197,17 @@ function buttonComanda(huesped, ordenId) {
             '<li>' +
             '<a onclick="RedirectToComanda(' + ordenId + ')">Mostrar comanda</a>' +
             '</li>' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToPay(' + ordenId + ')">Finalizar orden</a>' +
+            '</li>' +
             '</ul>';
     } else {
         link = '<ul role="menu" class="dropdown-menu">' +
             '<li>' +
             '<a id="buttonOrder" onclick="RedirectToEdit(' + ordenId + ')">Ver orden</a>' +
+            '</li>' +
+            '<li>' +
+            '<a id="buttonOrder" onclick="RedirectToPay(' + ordenId + ')">Finalizar orden</a>' +
             '</li>' +
             '</ul>';
     }
@@ -252,6 +268,11 @@ function cargarCodigo(data) {
 //FUNCION QUE DIRIGE AL FORMULARIO DE ORDEN PARA AGREGAR NUEVOS ITEMS
 function RedirectToPrep(OrderId, Role) {
     var url = "/Ordenes/Preparacion?ordenId=" + OrderId + "&rol=" + Role;
+    window.location.href = url;
+}
+
+function RedirectToPay(OrderId) {
+    var url = "/Facturaciones/Facturar?ordenId=" + OrderId;
     window.location.href = url;
 }
 

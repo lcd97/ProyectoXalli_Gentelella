@@ -44,6 +44,9 @@ namespace ProyectoXalli_Gentelella.Models {
         public virtual DbSet<TipoDePago> TiposDePago { get; set; }
         public virtual DbSet<Moneda> Monedas { get; set; }
 
+        //TABLA INDEPENDIENTE
+        public virtual DbSet<TasaCambio> TasasCambio { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingEntitySetNameConvention>();

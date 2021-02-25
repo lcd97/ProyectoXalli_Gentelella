@@ -12,7 +12,10 @@ namespace ProyectoXalli_Gentelella.Controllers {
         private DBControl db = new DBControl();
 
         [Authorize]
-        public ActionResult Index() {
+        public ActionResult Index(string mensaje = "", string ordenId = "") {
+            ViewBag.Message = mensaje;//MENSAJE DE RECARGO
+            ViewBag.OrdenId = ordenId;
+
             return View();
         }
 
