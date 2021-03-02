@@ -62,8 +62,8 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                            where ord.Id == ordenId
                            select new {
                                clienteId = cli.Id,
-                               nombre = dato.PNombre == "DEFAULT" ? "" : dato.PNombre + dato.PApellido,
-                               ruc = dato.RUC == null ? "" : dato.RUC
+                               nombre = dato.PNombre == "DEFAULT" ? "VISITANTE" : dato.PNombre + " "+dato.PApellido,
+                               ruc = dato.RUC == null ? "N/A" : dato.RUC
                            }).FirstOrDefault();
 
             //OBTENGO EL DETALLE DE DETERMINADA ORDEN
@@ -160,13 +160,42 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
             return Json(new { orden, ClienteId }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ordenesMesero(int MeseroId) {
+            int mesero = 0;
+
+            //RECUPERO TODAS LAS ORDENES DE DET ID
+            var orden = (from obj in db.Ordenes.ToList()
+                         join c in db.Meseros.ToList() on obj.MeseroId equals c.Id
+                         join d in db.Datos.ToList() on c.DatoId equals d.Id
+                         join det in db.DetallesDeOrden.ToList() on obj.Id equals det.OrdenId
+                         join mes in db.Mesas.ToList() on obj.MesaId equals mes.Id
+                         where obj.EstadoOrden == 2 && c.Id == MeseroId//TODAS LAS ORDENES SIN FACTURAR E INACTIVAS
+                         group new { obj, d, det, mes } by new { obj.Id, obj.CodigoOrden, obj.FechaOrden, d.PNombre, d.PApellido, mes.DescripcionMesa, obj.ClienteId } into grouped
+                         select new {
+                             OrdenId = grouped.Key.Id,
+                             CodigoOrden = grouped.Key.CodigoOrden,
+                             FechaOrden = grouped.Key.FechaOrden.ToShortDateString(),
+                             Mesero = grouped.Key.PNombre + " " + grouped.Key.PApellido,
+                             Cliente = (from o in db.Ordenes
+                                        join m in db.Clientes on o.ClienteId equals m.Id
+                                        join a in db.Datos on m.DatoId equals a.Id
+                                        where grouped.Key.Id == o.Id
+                                        select a.PNombre.ToUpper() != "DEFAULT" ? a.PNombre + " " + a.PApellido : "N/A").FirstOrDefault(),
+                             SubTotal = grouped.Sum(s => s.det.CantidadOrden * s.det.PrecioOrden),
+                             ClienteId = grouped.Key.ClienteId,
+                             Mesa = grouped.Key.DescripcionMesa
+                         }).ToList();
+
+            return Json(new { orden }, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// OBTIENE EL DETALLE DE LAS ORDENES SELECCIONADAS DEL HUESPED
         /// </summary>
         /// <param name="ordenIds">RECUPERA TODAS LAS ORDENES SELECCIONADAS DEL CLIENTE</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult CargarSeleccionadas(List<int> ordenIds, int clienteId = 0) {
+        public ActionResult CargarSeleccionadas(List<int> ordenIds) {
             //CREO LAS INSTANCIA DONDE SE ALMACENARA LAS/LA ORDEN(ES)
             List<detalleCliente> ordenesCliente = new List<detalleCliente>();
             Imagen img = new Imagen();
@@ -198,7 +227,18 @@ namespace ProyectoXalli_Gentelella.Controllers.Movimientos {
                                     Precio = grouped.Key.Precio
                                 }).ToList();
 
-            return Json(new { detalleFinal, img, diplomatico }, JsonRequestBehavior.AllowGet);
+            //OBTENGO EL ENCABEZADO DEL CLIENTE
+            var cliente = (from ord in db.Ordenes
+                           join cli in db.Clientes on ord.ClienteId equals cli.Id
+                           join dato in db.Datos on cli.DatoId equals dato.Id
+                           where ord.Id == ordenIds.FirstOrDefault()//EL PRIMER ORDEN ID QUE SE ENCUENTRE DEL CLIENTE
+                           select new {
+                               clienteId = cli.Id,
+                               nombre = dato.PNombre == "DEFAULT" ? "VISITANTE" : dato.PNombre +" " + dato.PApellido,
+                               ruc = dato.RUC == null ? "N/A" : dato.RUC
+                           }).FirstOrDefault();
+
+            return Json(new { detalleFinal, img, diplomatico, cliente }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

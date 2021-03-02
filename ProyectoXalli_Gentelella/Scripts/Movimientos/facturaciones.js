@@ -40,6 +40,9 @@
     }
 
     window.history.pushState('page2', 'Title', '/Facturaciones');
+
+    $('#filtroBusq').val('0');
+    $('#filtroBusq').trigger('change'); // Notify any JS components that the value changed
 });
 
 function tablaVacio() {
@@ -244,42 +247,6 @@ $('.js-example-basic-single').select2({
 //    }
 //});
 
-//BUSCA EN LA BD EL REGISTRO DE UN CLIENTE
-$("#identificacion").blur(function () {
-    $("#nombreCliente").val("");
-    $("#nombreCliente").attr("val", "");
-    $("#rucOrden").val("");
-
-    if ($(this).val() != "") {
-        $.ajax({
-            type: "GET",
-            url: "/Ordenes/DataClient/",
-            data: {
-                identificacion: $(this).val().trim()
-            },
-            dataType: "JSON",
-            success: function (data) {
-                $("#btnGuardarOrden").attr("disabled", false);
-
-                if (data.cliente != null) {
-                    $("#nombreCliente").val(data.cliente.Nombres);
-                    $("#nombreCliente").attr("val", data.cliente.ClienteId);
-                    $("#rucOrden").val(data.cliente.RUC);
-                } else {
-                    Alert("Error", "No existe registros con esa identificación", "error");
-                }
-            }
-        });
-    } else {//SI ESTA VACIO ELIMINAR ID CLIENTE EN CASO QUE EXISTA
-        $("#nombreCliente").attr("val", "0");
-        $("#nombreCliente").val("");
-        $("#rucOrden").val("");
-
-        limpiarPrincipal();
-        tablaVacio();
-    }
-});
-
 //LIMPIAR TABLA PRINCIPAL ORDENES
 function limpiarPrincipal() {
     //OBTENEMOS LA PRIMERA COLUMNA DE LA TABLA
@@ -297,7 +264,17 @@ function limpiarPrincipal() {
 
 //CARGA TODAS LAS ORDENES DE DET CLIENTE
 function buscarOrden() {
-    var cliente = $("#nombreCliente").attr("val") == "" ? 0 : $("#nombreCliente").attr("val");
+    var cliente = 0;//CLIENTE POR DEFECTO
+    var filtro = $("#filtroBusq").val();//EL VALOR DE LA SELECCION
+
+    if (filtro == 1) {
+        //NOMBRE DE CLIENTE
+        cliente = $("#clienteName").val();
+    } else if (filtro == 2) {
+        //IDENTIFICACION
+        cliente = $("#nombreCliente").attr("val");
+    }
+
     $(".buttonNext").removeClass("buttonDisabled");
 
     limpiarPrincipal();
@@ -372,8 +349,8 @@ function cargarCodigo(data) {
 function nextStepVal() {
     //OBTENGO EN QUE PASO ESTA ACTUALMENTE
     var step = $(".selected").attr("rel");
-    var clienteId = $("#nombreCliente").attr("val");//OBTENGO EL ID DEL CLIENTE
-    var nombre = $("#nombreCliente").val() != "" ? $("#nombreCliente").val() : "Visitante";
+    //var clienteId = 0;//OBTENGO EL ID DEL CLIENTE
+    //var nombre = $("#nombreCliente").val() != "" ? $("#nombreCliente").val() : "Visitante";
     var ruc = $("#rucOrden").val() != "" ? $("#rucOrden").val() : "N/A";
 
     //SI ESTA EN EL PASO 1 - CARGAR DATOS DE PASO 2
@@ -410,7 +387,7 @@ function nextStepVal() {
                 type: "GET",
                 traditional: true,
                 url: "/Facturaciones/CargarSeleccionadas/",
-                data: { ordenIds: ordenes, clienteId: clienteId },
+                data: { ordenIds: ordenes },
                 success: function (data) {
                     var diplomatico = data.diplomatico;
                     var tipoPersona = diplomatico ? "Persona Diplomático" : "Persona Natural";
@@ -421,9 +398,9 @@ function nextStepVal() {
                     var encabezado = '<div class="col-sm-4 invoice-col">' +
                         'Cliente' +
                         '<address>' +
-                        '<strong id="nombCliente" val="' + clienteId + '">' + nombre + '</strong>' +
+                        '<strong id="nombCliente" val="' + data.cliente.clienteId + '">' + data.cliente.nombre + '</strong>' +
                         '<br> <a id="tipoPersona" val="' + diplomatico + '">' + tipoPersona + '</a>' +
-                        '<br><p id="rucCliente"> RUC: ' + ruc + '</p>' +
+                        '<br><p id="rucCliente"> RUC: ' + data.cliente.ruc + '</p>' +
                         '</address>' +
                         '</div>' +
                         '<div id="carnetSection" class="col-sm-4 invoice-col pull-right" hidden>' +
@@ -913,4 +890,231 @@ function checkChild(element) {
             $('#check-all').prop('checked', false);
         }
     }
+}
+
+$("#filtroBusq").on("change", function () {
+    $("#secciones").remove();
+
+    var seleccion = $(this).find("option:selected").val();
+    var agregar = "";
+
+    if (seleccion == 1) {
+        //NOMBRE DE CLIENTE
+        agregar = '<div id="secciones"> <div class="col-md-5 col-sm-12 col-xs-12">' +
+            '<label class="col-md-2">Cliente:</label>' +
+            '<select class="js-example-basic-single select2_group form-control" id="clienteName">' +
+            '</select>' +
+            '</div>' +
+            '<div class="col-md-1 col-sm-12 col-xs-4" style="margin-top: 25px !important;">' +
+            '<button type="button" id="btnBuscarOrd" onclick="buscarOrden()" class="btn btn-primary">Buscar</button>' +
+            '</div></div>';
+
+        $("#seccionFiltro").append(agregar);
+
+        cargarClient();
+    } else if (seleccion == 2) {
+        //IDENTIFICACION
+        agregar = '<div id="secciones"><div class="col-md-3 col-sm-12 col-xs-12">' +
+            '<label>Buscar por:</label>' +
+            '<input id="identificacion" class="form-control" type="text" maxlength="16" placeholder="Incluya guiones si es necesario" autocomplete="off" style="text-transform:uppercase!important;">' +
+            '</div>' +
+            '<div class="col-md-3 col-sm-12 col-xs-12">' +
+            '<label>Cliente</label>' +
+            '<input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" val="0" autocomplete="off" readonly>' +
+            '</div>' +
+            '<div class="col-md-1 col-sm-12 col-xs-4" style="margin-top: 25px !important;">' +
+            '<button type="button" id="btnBuscarOrd" onclick="buscarOrden()" class="btn btn-primary">Buscar</button>' +
+            '</div></div>';
+
+        $("#seccionFiltro").append(agregar);
+
+        busqIdent();
+
+    } else if (seleccion == 3) {
+        //VISITANTES
+        agregar = '<div class="col-md-1 col-sm-12 col-xs-4" style="margin-top: 25px !important;" id="secciones">' +
+            '<button type="button" id="btnBuscarOrd" onclick="buscarOrden()" class="btn btn-primary">Buscar</button>' +
+            '</div>';
+
+        $("#seccionFiltro").append(agregar);
+
+    } else if (seleccion == 4) {
+        //MESERO
+        agregar = '<div id="secciones"><div class="col-md-5 col-sm-12 col-xs-12">' +
+            '<label class="col-md-2">Mesero:</label>' +
+            '<select class="js-example-basic-single select2_group form-control" id="meseroName">' +
+            '</select>' +
+            '</div>' +
+            '<div class="col-md-1 col-sm-12 col-xs-4" style="margin-top: 25px !important;">' +
+            '<button type="button" id="btnBuscarOrd" onclick="ordenMesero()" class="btn btn-primary">Buscar</button>' +
+            '</div></div>';
+
+        $("#seccionFiltro").append(agregar);
+
+        cargarMesero();
+
+    }
+});
+
+function cargarClient() {
+    //INICIALIZAR EL SELECT2
+    $('#clienteName').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+
+    //CARGAR DATOS DEL CLIENTE
+    $.ajax({
+        type: "GET",
+        url: "/Clientes/GetData",
+        success: function (data) {
+            var agregar = '<option value="0" disabled>Seleccione una opción</option>';
+
+            for (var i = 0; i < Object.keys(data.data).length; i++) {
+                agregar += '<option value="' + data.data[i].Id + '">' + data.data[i].Cliente + '</option>';
+            }
+
+            $("#clienteName").append(agregar);
+
+            $('#clienteName').val('0');
+            $('#clienteName').trigger('change'); // Notify any JS components that the value changed
+        }
+    });
+}
+
+function busqIdent() {
+    //BUSCA EN LA BD EL REGISTRO DE UN CLIENTE
+    $("#identificacion").blur(function () {
+        $("#nombreCliente").val("");
+        $("#nombreCliente").attr("val", "");
+        $("#rucOrden").val("");
+
+        if ($(this).val() != "") {
+            $.ajax({
+                type: "GET",
+                url: "/Ordenes/DataClient/",
+                data: {
+                    identificacion: $(this).val().trim()
+                },
+                dataType: "JSON",
+                success: function (data) {
+                    $("#btnGuardarOrden").attr("disabled", false);
+
+                    if (data.cliente != null) {
+                        $("#nombreCliente").val(data.cliente.Nombres);
+                        $("#nombreCliente").attr("val", data.cliente.ClienteId);
+                        $("#rucOrden").val(data.cliente.RUC);
+                    } else {
+                        Alert("Error", "No existe registros con esa identificación", "error");
+                    }
+                }
+            });
+        } else {//SI ESTA VACIO ELIMINAR ID CLIENTE EN CASO QUE EXISTA
+            $("#nombreCliente").attr("val", "0");
+            $("#nombreCliente").val("");
+            $("#rucOrden").val("");
+
+            limpiarPrincipal();
+            tablaVacio();
+        }
+    });
+}
+
+function cargarMesero() {
+    //INICIALIZAR EL SELECT2
+    $('#meseroName').select2({
+        //MODIFICAR LAS FRASES DEFAULT DE SELECT2
+        language: {
+
+            noResults: function () {
+
+                return "No hay resultado";
+            },
+            searching: function () {
+
+                return "Buscando...";
+            }
+        }
+    });
+
+    //CARGAR DATOS DEL CLIENTE
+    $.ajax({
+        type: "GET",
+        url: "/Meseros/GetData",
+        success: function (data) {
+            var agregar = '<option value="0" disabled>Seleccione una opción</option>';
+
+            for (var i = 0; i < Object.keys(data.data).length; i++) {
+                agregar += '<option value="' + data.data[i].Id + '">' + data.data[i].NombreMesero + '</option>';
+            }
+
+            $("#meseroName").append(agregar);
+
+            $('#meseroName').val('0');
+            $('#meseroName').trigger('change'); // Notify any JS components that the value changed
+        }
+    });
+}
+
+//CARGA TODAS LAS ORDENES QUE REALIZO EL MESERO
+function ordenMesero() {
+    var meseroId = $("#meseroName").val();
+
+    $(".buttonNext").removeClass("buttonDisabled");
+
+    limpiarPrincipal();
+
+    //SI SE ENCUENTRA VACIO QUE CARGUE TODAS LAS ORDENES DE VISITANTE
+    $.ajax({
+        type: "GET",
+        url: "/Facturaciones/ordenesMesero/",
+        data: { MeseroId: meseroId },
+        success: function (data) {
+            var agregar = "";
+
+            if (data.orden.length <= 0) {
+                agregar += '<tr class="even pointer">' +
+                    '<td class="a-right a-right" style="text-align:center" colspan="5"> SIN ORDENES QUE MOSTRAR</td>' +
+                    '</tr>';
+                $("#celdaChk").css("display", "none");
+                $(".buttonNext").addClass("buttonDisabled");
+
+            } else {
+
+                $(".buttonNext").removeClass("buttonDisabled");
+
+                var type = "radio";
+
+                var agColumnas = '<th class="" id="celdaChk"></th>';
+
+                $("#flatButton").prepend(agColumnas);
+
+                for (var i = 0; i < data.orden.length; i++) {
+                    agregar += '<tr class="even pointer">' +
+                        '<td class="a-center">' +
+                        '<label class="' + type + '"><input value="' + data.orden[i].ClienteId + '" val = "' + data.orden[i].OrdenId + '" id = "seleccion" type = "' + type + '" class="chkChildren" onclick = "checkChild(this)" name = "' + type + '" > <span class="check"></span></label > ' +
+                        '</td>' +
+                        '<td class=" ">' + cargarCodigo(data.orden[i].CodigoOrden) + '</td>' +
+                        '<td class=" ">' + data.orden[i].FechaOrden + '</td>' +
+                        '<td class=" ">' + data.orden[i].Mesa + '</td>' +
+                        '<td class=" ">' + data.orden[i].Cliente + '</td>' +
+                        '<td class=" ">' + data.orden[i].Mesero + '</td>' +
+                        '<td class="a-right a-right ">$ ' + formatoPrecio((data.orden[i].SubTotal).toString()) + '</td>' +
+                        '</tr>';
+                }
+            }
+
+            $("#bodyOrden").html(agregar);
+        }
+    });
 }

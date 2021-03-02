@@ -189,30 +189,21 @@
                     <div id="step-1">
                         <div class="form-horizontal form-label-left">
 
-                            <div class="form-group">
+                            <div class="form-group" id="seccionFiltro">
 
-                                <div class="col-md-3 col-sm-4 col-xs-12">
-                                    <label>Identificación</label>
-                                    <input id="identificacion" class="form-control" type="text" maxlength="16" placeholder="Incluya guiones si es necesario" autocomplete="off" style="text-transform:uppercase!important;">
+                                <div class="col-md-4 col-sm-12 col-xs-12">
+                                    <label>Buscar por:</label>
+                                    <select class="js-example-basic-single select2_group form-control" id="filtroBusq">
+                                        <option value="0" disabled>Seleccione una opción</option>
+                                        <option value="1">Nombre de cliente</option>
+                                        <option value="2">Identificación</option>
+                                        <option value="3">Visitantes</option>
+                                        <option value="4">Mesero</option>
+                                    </select>
                                 </div>
 
-                                <div class="col-md-2 col-sm-4 col-xs-12" style="margin-top: 25px !important;">
-                                    <button type="button" onclick="CargarParcial('/Busquedas/BuscarCliente/')" class="btn btn-primary"><i class="fa fa-search"></i> Buscar cliente</button>
-                                </div>
 
-                                <div class="col-md-3 col-sm-4 col-xs-12">
-                                    <label>Cliente</label>
-                                    <input id="nombreCliente" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" val="0" autocomplete="off" readonly>
-                                </div>
 
-                                <div class="col-md-3 col-sm-4 col-xs-8">
-                                    <label>Número RUC</label>
-                                    <input id="rucOrden" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" autocomplete="off" readonly>
-                                </div>
-
-                                <div class="col-md-1 col-sm-4 col-xs-4" style="margin-top: 25px !important;">
-                                    <button type="button" id="btnBuscarOrd" onclick="buscarOrden()" class="btn btn-primary">Buscar</button>
-                                </div>
                             </div>
                             <br />
                             <div class="table-responsive">
