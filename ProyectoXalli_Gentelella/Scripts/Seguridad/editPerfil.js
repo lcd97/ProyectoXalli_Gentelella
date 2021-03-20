@@ -48,20 +48,32 @@ function barChart(role, mesero) {
             var agPorcOrd = "", agPorcVent = "";
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
-            if (data.porcOrdenes > 0) {
-                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> más que el mes pasado';
+            if (data.porcOrdenes == -10000) {
+                agPorcOrd = '- Sin estimación de órdenes -';
+                $("#cbOrd").html(agPorcOrd);
+            } else if (data.porcOrdenes == 0) {
+                agPorcOrd = '<i class="fa fa-sort"></i> Se mantiene estimación de mes pasado';
+                $("#cbOrd").html(agPorcOrd);
+            } else if (data.porcOrdenes > 0) {
+                agPorcOrd = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcOrdenes.toFixed() + '%</i> más que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             } else {
-                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcOrdenes * -1).toFixed() + '%</i> menos que el mes pasado';
+                agPorcOrd = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcOrdenes.toFixed() * -1) + '%</i> menos que el mes pasado';
                 $("#cbOrd").html(agPorcOrd);
             }
 
             //SI EL PROCENTAJE ES DE CRECIMIENTO
-            if (data.porcVentas > 0) {
-                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> más que el mes pasado';
+            if (data.porcVentas == -10000) {
+                agPorcVent = '- Sin estimación en ventas -';
+                $("#cbVenta").html(agPorcVent);
+            } else if (data.porcVentas == 0) {
+                agPorcVent = '<i class="fa fa-sort"></i> Se mantiene estimación de mes pasado';
+                $("#cbVenta").html(agPorcVent);
+            } else if (data.porcVentas > 0) {
+                agPorcVent = '<i class="green"><i class="fa fa-sort-asc"></i>' + data.porcVentas.toFixed() + '%</i> más que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             } else {
-                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcVentas * -1).toFixed() + '%</i> menos que el mes pasado';
+                agPorcVent = '<i class="red"><i class="fa fa-sort-desc"></i>' + (data.porcVentas.toFixed() * -1) + '%</i> menos que el mes pasado';
                 $("#cbVenta").html(agPorcVent);
             }
 

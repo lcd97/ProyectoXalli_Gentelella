@@ -221,27 +221,27 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 //SACAR ESTADISTICAS DE CUADROS
                 //((Valor Reciente / Valor Anterior) – 1) x 100 --> CALCULA EL CRECIMIENTO
                 recOrd = db.Ordenes.Where(w => w.FechaOrden.Month == mes && w.MeseroId == MeseroId).Count();//CANTIDAD DE ORDENES ATENDIDAS DEL MES ACTUAL
-                if ((mes - 1) != 0) {
-                    var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1) && w.MeseroId == MeseroId).Count();//CANTIDAD DE ORDENES ATENDIDAS DEL MES ANTERIOR
-                    porcOrdenes = pasOrd == 0 ? 100 : ((recOrd / pasOrd) - 1) * 100;
-                } else {//SI LA FECHA ACTUAL ES EN ENERO
-                    var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
-                        .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12 && f.Orden.MeseroId == MeseroId)
-                        .Count();//SACAMOS LA CANTIDAD DE ORDENES DE DICIEMBRE DEL AÑO ANTERIOR
-                    porcOrdenes = ant == 0 ? 100 : ((recOrd / ant) - 1) * 100;
-                }
-
                 //SACAR EL TOTAL DE VENTAS DEL MES
                 recVenta = ordenes[(mes - 1)].TotalVentas;//AGARRO EL TOTAL DE VENTAS DEL MES ACTUAL (EN LISTA ES DE 0-11)
-                if ((mes - 1) < 0) {//
-                    var pasVenta = ordenes[(mes - 1) - 1].TotalVentas;
-                    porcVentas = pasVenta == 0 ? 100 : ((recVenta / pasVenta) - 1) * 100;
+                //SI EL MES ES DE ENERO
+                if (mes == 1) {
+                    porcOrdenes = -10000;
+                    porcVentas = -10000;
                 } else {
-                    var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
-                        .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12 && f.Orden.MeseroId == MeseroId)
-                        .Sum(s => (double?)s.CantidadOrden * s.PrecioOrden) ?? 0;//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
-                    porcVentas = ant == 0 ? 100 : ((recVenta / ant) - 1) * 100;
-                }
+
+                    var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1) && w.MeseroId == MeseroId).Count();//CANTIDAD DE ORDENES ATENDIDAS DEL MES ANTERIOR
+                    if (pasOrd == 0 || recOrd == 0)
+                        porcOrdenes = -10000;
+                    else
+                        porcOrdenes = (recOrd - pasOrd) / pasOrd * 100;
+
+                    var pasVenta = ordenes[(mes - 1) - 1].TotalVentas;
+                    if (pasVenta == 0 || recVenta == 0)
+                        porcVentas = -10000;
+                    else
+                        porcVentas = (recVenta - pasVenta) / pasVenta * 100;
+                }//FIN CONDICIONAL ENERO
+
             } else if (Role.ToUpper() == "RECEPCIONISTA" || Role.ToUpper() == "ADMIN") {
                 //SE REALIZA LA CONSULTA DONDE DEVUELVE REGISTROS DEL AÑO ACTUAL
                 var consulta = db.DetallesDeOrden.Where(f => f.Orden.FechaOrden.Year == anio);
@@ -261,26 +261,24 @@ namespace ProyectoXalli_Gentelella.Controllers.Busquedas {
                 //SACAR ESTADISTICAS DE CUADROS
                 //((Valor Reciente / Valor Anterior) – 1) x 100 --> CALCULA EL CRECIMIENTO
                 recOrd = db.Ordenes.Where(w => w.FechaOrden.Month == mes).Count();
-                if ((mes - 1) != 0) {
-                    var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1)).Count();
-                    porcOrdenes = pasOrd == 0 ? 100 : ((recOrd / pasOrd) - 1) * 100;
-                } else {//SI LA FECHA ACTUAL ES EN ENERO
-                    var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
-                        .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12)
-                        .Count();//SACAMOS LA CANTIDAD DE ORDENES DE DICIEMBRE DEL AÑO ANTERIOR
-                    porcOrdenes = ant == 0 ? 100 : ((recOrd / ant) - 1) * 100;
-                }
-
                 //SACAR EL TOTAL DE VENTAS DEL MES
                 recVenta = ordenes[(mes - 1)].TotalVentas;
-                if ((mes - 1) < 0) {
-                    var pasVenta = ordenes[(mes - 1) - 1].TotalVentas;
-                    porcVentas = pasVenta == 0 ? 100 : ((recVenta / pasVenta) - 1) * 100;
+
+                if (mes == 1) {
+                    porcOrdenes = -10000;
+                    porcVentas = -10000;
                 } else {
-                    var ant = db.DetallesDeOrden.Include(d => d.OrdenId)
-                        .Where(f => f.Orden.FechaOrden.Year == (anio - 1) && f.Orden.FechaOrden.Month == 12)
-                        .Sum(s => (double?)s.CantidadOrden * s.PrecioOrden) ?? 0;//SACAMOS EL TOTAL DE VENTAS DE DICIEMBRE DEL AÑO ANTERIOR
-                    porcVentas = ant == 0 ? 100 : ((recVenta / ant) - 1) * 100;
+                    var pasOrd = db.Ordenes.Where(w => w.FechaOrden.Month == (mes - 1)).Count();
+                    if (pasOrd == 0 || recOrd == 0)
+                        porcVentas = -10000;
+                    else
+                        porcOrdenes = (recOrd - pasOrd) / pasOrd * 100;
+
+                    var pasVenta = ordenes[(mes - 1) - 1].TotalVentas;
+                    if (pasVenta == 0 || recVenta == 0)
+                        porcVentas = -10000;
+                    else
+                        porcVentas = (recVenta - pasVenta) / pasVenta * 100;
                 }
             } else {
                 List<OrdenesBodega> ordenesBodegas = new List<OrdenesBodega>();
