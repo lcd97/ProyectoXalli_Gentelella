@@ -7,71 +7,73 @@
 <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
 <link href="~/Content/select2.min.css" rel="stylesheet" />
 
-<div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>Información de Colaboradores</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="pull-right">
-                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-                <div data-parsley-validate class="form-horizontal form-label-left">
+<div data-parsley-validate id="formValidate">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Información de Colaboradores</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li class="pull-right">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="form-horizontal form-label-left">
 
-                    <div class="form-group">
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("Cédula", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
-                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Cédula")
+                                <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required="required" style="text-transform:uppercase;">
+                            </div>
 
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("INSS", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required style="text-transform:uppercase;">
-                        </div>
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("INSS")
+                                <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required="required" style="text-transform:uppercase;">
+                            </div>
 
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
-                        </div>
-
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <hr />
-                        <h4 style="text-align:center !important;"><strong>Horario Laboral</strong></h4>
-                        <br />
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            @Html.Label("Hora Entrada", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                            <div class="input-group date" id="hentrada">
-                                <span class="input-group-addon">
-                                    <span class="fa fa-clock-o"></span>
-                                </span>
-                                <input type='text' class="form-control" id="entrada" style="text-transform:uppercase;" />
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("RUC")
+                                <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" style="text-transform:uppercase;">
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            @Html.Label("Hora Salida", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                            <div class="input-group date" id="hsalida">
-                                <span class="input-group-addon">
-                                    <span class="fa fa-clock-o"></span>
-                                </span>
-                                <input type='text' class="form-control" id="salida" style="text-transform:uppercase;" />
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                @Html.Label("Nombre")
+                                <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                @Html.Label("Apellido")
+                                <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <hr />
+                            <h4 style="text-align:center !important;"><strong>Horario Laboral</strong></h4>
+                            <br />
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                @Html.Label("Hora Entrada")
+                                <div class="input-group date" id="hentrada">
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-clock-o"></span>
+                                    </span>
+                                    <input type='text' class="form-control" id="entrada" style="text-transform:uppercase;" required="required" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                @Html.Label("Hora Salida")
+                                <div class="input-group date" id="hsalida">
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-clock-o"></span>
+                                    </span>
+                                    <input type='text' class="form-control" id="salida" style="text-transform:uppercase;" required="required" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,52 +81,52 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>Información de acceso</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="pull-right">
-                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-                @*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary("", new { @class = "text-danger" })*@
-                <div data-parsley-validate class="form-horizontal form-label-left">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Información de acceso</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li class="pull-right">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    @*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary("", new { @class = "text-danger" })*@
+                    <div data-parsley-validate class="form-horizontal form-label-left">
 
-                    <div class="form-group">
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("Usuario", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="username" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required readonly>
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Usuario")
+                                <input id="username" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required="required" readonly>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Contraseña")
+                                <input id="password" class="form-control" type="text" autocomplete="off" required readonly>
+                                <small class="text-navy">Contraseña autogenerada por el sistema.</small>
+                            </div>
+
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                @Html.Label("Rol")
+                                @Html.DropDownList("RoleList", null, "- Seleccione -", htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "role" })
+                            </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("Contraseña", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            <input id="password" class="form-control" type="text" autocomplete="off" required readonly>
-                            <small class="text-navy">Contraseña autogenerada por el sistema.</small>
+                        <div class="ln_solid"></div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6 col-xs-offset-6 col-sm-offset-6">
+                                <a onclick="crearAcceso()" class="btn btn-success">Guardar</a>
+                            </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            @Html.Label("Rol", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                            @Html.DropDownList("RoleList", null, "- Seleccione -", htmlAttributes: new { @class = "js-example-basic-single form-control", @Style = "width:100%", @id = "role" })
-                        </div>
                     </div>
-
-                    <div class="ln_solid"></div>
-
-                    <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6 col-xs-offset-6 col-sm-offset-6">
-                            <a onclick="crearAcceso()" class="btn btn-success">Guardar</a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -133,6 +135,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/parsley.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/select2.full.min.js"></script>

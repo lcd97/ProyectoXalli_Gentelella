@@ -10,34 +10,34 @@ function saveCustomer() {
     telefono = $("#telefono").val();
     tipo = $("#documento").val();
 
-    if (validado() == true) {
-        if (correoValido()) {
-            //FUNCION AJAX
-            $.ajax({
-                type: "POST",
-                url: "/Clientes/Create",
-                dataType: "JSON",
-                data: {
-                    Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
-                    Email: email, Telefono: telefono, Tipo: tipo
-                },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
-                success: function (data) {
-                    if (data.success) {
-                        $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
-                        $("#small-modal").modal("hide"); //CERRAR MODAL
-                        AlertTimer("Completado", data.message, "success");
-                    } else
-                        Alert("Error", data.message, "error");//MENSAJE DE ERROR
-                },
-                error: function () {
-                    Alert("Error", "Intentelo de nuevo", "error");
-                }
-            });//FIN AJAX
-        } else {
-            Alert("Error", "Correo invalido", "error");
-        }
-    } else {
-        Alert("Error", "Campos vacios", "error");
+    //if (validado() == true) {
+    if ($("#formValidate").parsley().validate()) {
+        //if (correoValido()) {
+        //FUNCION AJAX
+        $.ajax({
+            type: "POST",
+            url: "/Clientes/Create",
+            dataType: "JSON",
+            data: {
+                Nombre: nombre, Apellido: apellido, Documento: documento, RUC: ruc,
+                Email: email, Telefono: telefono, Tipo: tipo
+            },//OTRA MANERA DE ENVIAR PARAMETROS AL CONTROLADOR
+            success: function (data) {
+                if (data.success) {
+                    $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
+                    $("#small-modal").modal("hide"); //CERRAR MODAL
+                    AlertTimer("Completado", data.message, "success");
+                } else
+                    Alert("Error", data.message, "error");//MENSAJE DE ERROR
+            },
+            error: function () {
+                Alert("Error", "Intentelo de nuevo", "error");
+            }
+        });//FIN AJAX
+        //}
+        //} else {
+        //    Alert("Error", "Campos vacios", "error");
+        //}
     }
 }
 
@@ -57,33 +57,27 @@ function editCustomer(Id) {
         tipoDocumento = 2;
     }
 
-    if (validado() === true) {
-        if (correoValido()) {
-            $.ajax({
-                type: "POST",
-                url: "/Clientes/Edit",
-                data: {
-                    Id: Id, Nombre: Nombre, Apellido: Apellido, Documento: Documento, RUC: ruc, Email: Email,
-                    Telefono: Telefono, TipoDocumento: tipoDocumento, Estado: Estado
-                },
-                success: function (data) {
-                    if (data.success) {
-                        $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
-                        $("#small-modal").modal("hide"); //CERRAR MODAL
-                        AlertTimer("Completado", data.message, "success");
-                    } else {
-                        Alert("Error", data.message, "error");
-                    }
-                },
-                error: function () {
-                    Alert("Error", "Intentelo de nuevo", "error");
+    if ($("#formValidate").parsley().validate()) {
+        $.ajax({
+            type: "POST",
+            url: "/Clientes/Edit",
+            data: {
+                Id: Id, Nombre: Nombre, Apellido: Apellido, Documento: Documento, RUC: ruc, Email: Email,
+                Telefono: Telefono, TipoDocumento: tipoDocumento, Estado: Estado
+            },
+            success: function (data) {
+                if (data.success) {
+                    $("#Table").DataTable().ajax.reload(); //RECARGAR DATATABLE PARA VER LOS CAMBIOS
+                    $("#small-modal").modal("hide"); //CERRAR MODAL
+                    AlertTimer("Completado", data.message, "success");
+                } else {
+                    Alert("Error", data.message, "error");
                 }
-            });
-        } else {
-            Alert("Error", "Correo inválido", "error");
-        }
-    } else {
-        Alert("Error", "Campos vacios", "error");
+            },
+            error: function () {
+                Alert("Error", "Intentelo de nuevo", "error");
+            }
+        });
     }
 }//FIN FUNCTION
 

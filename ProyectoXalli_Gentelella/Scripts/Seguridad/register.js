@@ -196,29 +196,31 @@ function crearAcceso() {
     var nombres = $("#nombre").val().trim(), apellidos = $("#apellido").val().trim(), cedula = $("#cedula").val().toUpperCase().trim(), inss = $("#inss").val().trim(),
         ruc = $("#ruc").val().toUpperCase().trim(), hentrada = $("#entrada").val().trim(), hsalida = $("#salida").val().trim();
 
-    if (validarRol() == true) {
-        $.ajax({
-            type: "POST",
-            url: "/Meseros/Create",
-            data:
-                "Nombres=" + nombres + "&Apellido=" + apellidos + "&Cedula=" + cedula + "&INSS=" + inss + "&RUC=" + ruc +
-                "&HoraEntrada=" + hentrada + "&HoraSalida=" + hsalida
-            ,
-            dataType: "JSON",
-            success: function (data) {
-                //alert(data.meseroId);
-                if (data.success) {
-                    Acceso(data.meseroId);
-                } else
-                    Alert("Error", data.message, "error");
+    if ($("#formValidate").parsley().validate()) {
+        if ($("#role").val() != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Meseros/Create",
+                data:
+                    "Nombres=" + nombres + "&Apellido=" + apellidos + "&Cedula=" + cedula + "&INSS=" + inss + "&RUC=" + ruc +
+                    "&HoraEntrada=" + hentrada + "&HoraSalida=" + hsalida
+                ,
+                dataType: "JSON",
+                success: function (data) {
+                    //alert(data.meseroId);
+                    if (data.success) {
+                        Acceso(data.meseroId);
+                    } else
+                        Alert("Error", data.message, "error");
 
-            },
-            error: function () {
-                Alert("Error", "Revisar", "error");
-            }
-        });
-    } else
-        Alert("Error", "Campos vacios", "error");
+                },
+                error: function () {
+                    Alert("Error", "Revisar", "error");
+                }
+            });
+        } else
+            Alert("Error", "Seleccione un rol para el usuario", "error")
+    }
 }
 
 function Acceso(meseroId) {

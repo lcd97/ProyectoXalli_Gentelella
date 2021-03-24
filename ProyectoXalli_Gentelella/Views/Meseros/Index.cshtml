@@ -13,10 +13,10 @@
             <div class="x_title">
                 <h2>Lista de Colaboradores</h2>
                 @*<ul class="nav navbar-right panel_toolbox">
-                    <li class="pull-right">
-                        <a onclick="CargarParcial('/Meseros/Create')"><i class="fa fa-plus"></i></a>
-                    </li>
-                </ul>*@
+                        <li class="pull-right">
+                            <a onclick="CargarParcial('/Meseros/Create')"><i class="fa fa-plus"></i></a>
+                        </li>
+                    </ul>*@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -40,6 +40,7 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/datatableJS")
+    <script src="~/Scripts/parsley.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/Operaciones/ventanas.js"></script>

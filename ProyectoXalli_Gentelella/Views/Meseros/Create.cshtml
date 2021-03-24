@@ -4,34 +4,34 @@
 
 <div class="row">
     <div class="x_content">
-        <div data-parsley-validate class="form-horizontal form-label-left">
+        <div data-parsley-validate id="formValidate" class="form-horizontal form-label-left">
 
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-4 col-sm-4 col-xs-4">
                     @Html.Label("Cédula", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                    <input id="cedula" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required="required" style="text-transform:uppercase;">
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4">
                     @Html.Label("INSS", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required style="text-transform:uppercase;">
+                    <input id="inss" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required="required" style="text-transform:uppercase;">
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4">
                     @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase;">
+                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" style="text-transform:uppercase;">
                 </div>
             </div>
 

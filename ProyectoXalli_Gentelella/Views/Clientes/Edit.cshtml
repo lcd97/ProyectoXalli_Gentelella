@@ -6,17 +6,17 @@
 
 <div class="row">
     <div class="x_content">
-        <div data-parsley-validate class="form-horizontal form-label-left">
+        <div data-parsley-validate id="formValidate" class="form-horizontal form-label-left">
 
             <div class="form-group">
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Nombre", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="nombre" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                     @Html.Label("Apellido", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="apellido" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required="required">
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
 
                 <div class="col-md-5 col-sm-5 col-xs-5">
                     @Html.Label("Número", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="numero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="16" autocomplete="off" disabled style="text-transform:uppercase">
+                    <input id="numero" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="16" autocomplete="off" disabled style="text-transform:uppercase" required="required">
                 </div>
 
                 <div class="col-md-2 col-sm-2 col-xs-2">
@@ -42,17 +42,17 @@
             <div class="form-group">
                 <div class="col-md-4 col-sm-4 col-xs-12">
                     @Html.Label("RUC", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" required style="text-transform:uppercase">
+                    <input id="ruc" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="14" autocomplete="off" style="text-transform:uppercase">
                 </div>
 
                 <div class="col-md-5 col-sm-5 col-xs-12">
                     @Html.Label("Correo Electrónico", htmlAttributes: new { @class = "col-md-12 col-sm-12 col-xs-12" })
-                    <input id="email" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="50" autocomplete="off" required>
+                    <input id="email" class="form-control col-md-2 col-sm-2 col-xs-2" type="email" data-parsley-type="email" maxlength="50" autocomplete="off" required="required">
                 </div>
 
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     @Html.Label("Teléfono", htmlAttributes: new { @class = "col-md-4 col-sm-4 col-xs-4" })
-                    <input id="telefono" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off" required>
+                    <input id="telefono" class="form-control col-md-2 col-sm-2 col-xs-2" type="text" maxlength="9" autocomplete="off">
                 </div>
             </div>
 

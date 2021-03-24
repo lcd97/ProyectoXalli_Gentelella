@@ -3,7 +3,7 @@ function saveWaiter() {
     var nombres = $("#nombre").val(), apellidos = $("#apellido").val(), cedula = $("#cedula").val().toUpperCase(), inss = $("#inss").val(),
         ruc = $("#ruc").val().toUpperCase(), hentrada = $("#entrada").val(), hsalida = $("#salida").val();
 
-    if (validado() == true) {
+    if ($("#formValidate").parsley().validate()) {
         $.ajax({
             type: "POST",
             url: "/Meseros/Create",
@@ -25,8 +25,7 @@ function saveWaiter() {
                 Alert("Error", "Revisar", "error");
             }
         });
-    } else
-        Alert("Error", "Campos vacios", "error");
+    }
 }//FIN FUNCTION
 
 //FUNCION PARA EDITAR EL MESERO SELECCIONADO
@@ -34,7 +33,7 @@ function editWaiter() {
     var name = $("#nombre").val(), lastName = $("#apellido").val(), RUC = $("#ruc").val().toUpperCase(), entrada = $("#entrada").val(), salida = $("#salida").val(),
         cedula = $("#cedula").val().toUpperCase(), estado = $("#activo").is(":checked");
 
-    if (validado() == true) {
+    if ($("#formValidate").parsley().validate()) {
         $.ajax({
             type: "POST",
             url: "/Meseros/Edit",
@@ -53,8 +52,6 @@ function editWaiter() {
                 Alert("Error", "Revisar", "error");
             }
         });
-    } else {
-        Alert("Error", "Campos vacios", "error");
     }
 }//FIN FUNCTION
 

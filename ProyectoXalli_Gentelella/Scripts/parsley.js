@@ -2381,11 +2381,11 @@
         return Parsley.addAsyncValidator.apply(Parsley, arguments);
     };
 
-    // This is included with the Parsley library itself,
+    // This is included with the Parsley library itself,AQUI ESTUVE YO
     Parsley.addMessages('en', {
         defaultMessage: "This value seems to be invalid.",
         type: {
-            email: "This value should be a valid email.",
+            email: "Formato inválido de correo electrónico",
             url: "This value should be a valid url.",
             number: "This value should be a valid number.",
             integer: "This value should be a valid integer.",
@@ -2393,7 +2393,7 @@
             alphanum: "This value should be alphanumeric."
         },
         notblank: "This value should not be blank.",
-        required: "This value is required.",
+        required: "El campo es obligatorio",
         pattern: "This value seems to be invalid.",
         min: "This value should be greater than or equal to %s.",
         max: "This value should be lower than or equal to %s.",
