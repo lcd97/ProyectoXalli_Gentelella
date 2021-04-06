@@ -18,7 +18,8 @@ function saveSeller() {
         NombreComercial = $("#nombre").val();
     }//FIN IF-ELSE    
 
-    if (validado(Local) === true) {
+    //if (validado(Local) === true) {
+    if ($("#formValidate").parsley().validate()) {
         $.ajax({
             type: "POST",
             url: "/Proveedores/Create",
@@ -39,8 +40,6 @@ function saveSeller() {
                 Alert("Error", "Intentelo de nuevo", "error");
             }
         });//FIN AJAX
-    } else {
-        Alert("Error", "Campos vacios", "error");
     }
 }//FIN FUNCTION
 
@@ -64,7 +63,8 @@ function UpdateProvider(Id) {
     }//FIN IF-ELSE
 
     //VALIDACION SHAMPOO
-    if (validado(Local) === true) {
+    //if (validado(Local) === true) {
+    if ($("#formValidate").parsley().validate()) {
         //FUNCION AJAX
         $.ajax({
             type: "POST",
@@ -86,9 +86,9 @@ function UpdateProvider(Id) {
                 Alert("Error", "Intentelo de nuevo", "error");
             }
         });//FIN AJAX   
-    } else {
-        Alert("Eror", "Campos vacios", "error");
-    }
+    }// else {
+    //    Alert("Eror", "Campos vacios", "error");
+    //}
 }//FIN FUNCTION
 
 //VALIDACIONES
